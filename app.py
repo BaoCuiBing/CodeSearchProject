@@ -4,9 +4,13 @@ from sanic_cors import CORS
 import os
 import config
 from models.db_init import init_database
+from router.user_router import user_bp
+from router.upload_router import upload_bp
 
 app = Sanic("CodeSearchProject")
 CORS(app)
+app.blueprint(user_bp)
+app.blueprint(upload_bp)
 static_path = os.path.join(config.PROJECT_DIR, "static")
 app.static("/static", static_path, name="static_files")
 

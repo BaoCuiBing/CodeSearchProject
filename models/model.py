@@ -5,6 +5,7 @@ from models.db_base import Base
 class User(Base):
     __tablename__ = "users"
     id = Column(BigInteger, primary_key=True, autoincrement=True)  # 主键ID
+    usernumber = Column(String(50), nullable=False)  # 账号
     username = Column(String(50), nullable=False)  # 用户名
     password = Column(String(255), nullable=False)  # 密码
     email = Column(String(100), nullable=True)  # 邮箱
