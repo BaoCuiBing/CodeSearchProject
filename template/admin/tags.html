@@ -6,7 +6,57 @@
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
 </head>
 <body>
-    <table id="tagTable" lay-filter="tagTable"></table>
-    <script src="/static/webs/layui/layui.js"></script>
+    <div class="layui-card" style="margin:15px;">
+        <div class="layui-card-header">
+            <div class="layui-form layui-row">
+                <div class="layui-col-md2"><input type="text" id="searchKeyword" placeholder="标签名称关键词" class="layui-input"></div>
+                <div class="layui-col-md1"><button class="layui-btn" id="searchBtn">搜索</button></div>
+                <div class="layui-col-md1"><button class="layui-btn layui-btn-normal" id="addTagBtn">新建标签</button></div>
+            </div>
+        </div>
+        <div class="layui-card-body"><table id="tagTable" lay-filter="tagTable"></table></div>
+    </div>
+    <script type="text/html" id="toolbarTpl">
+        <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+    </script>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script>
+    layui.use(['table', 'form'], function() {
+        var table = layui.table, form = layui.form, layer = layui.layer;
+        if (!lostoryOption.checkAuth()) { return; }
+        var adminId = lostoryOption.getAdminId();
+        adminApi.setAdminId(adminId);
+        form.render('select');
+        var tableIns = table.render({
+            elem: '#tagTable', url: '/api/admin/tag/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
+            where: { admin_id: adminId },
+            request: { pageName: 'page', limitName: 'page_size' },
+            parseData: function(res) { return { code: res.code, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            cols: [[
+                {type: 'checkbox'}, {field: 'tag_id', title: 'ID', width: 80},
+                {field: 'name', title: '标签名称', width: 150},
+                {field: 'post_count', title: '关联内容', width: 100},
+                {field: 'created_at', title: '创建时间', width: 160},
+                {title: '操作', width: 200, toolbar: '#toolbarTpl'}
+            ]]
+        });
+        document.getElementById('searchBtn').onclick = function() {
+            tableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('searchKeyword').value, page: 1 } });
+        };
+        document.getElementById('addTagBtn').onclick = function() {
+            lostoryOption.openDialog('新建标签', '/admin/dialogs/tag_create.html', ['500px', '250px']);
+        };
+        table.on('tool(tagTable)', function(obj) {
+            var d = obj.data;
+            if (obj.event === 'detail') { lostoryOption.openDialog('标签详情', '/admin/dialogs/tag_detail.html?tag_id=' + d.tag_id, ['500px', '300px']); }
+            if (obj.event === 'edit') { lostoryOption.openDialog('编辑标签', '/admin/dialogs/tag_edit.html?tag_id=' + d.tag_id + '&name=' + encodeURIComponent(d.name), ['500px', '250px']); }
+            if (obj.event === 'delete') { lostoryOption.confirmDialog('确认删除该标签？', function() { adminApi.tag.delete(d.tag_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); }); }); }
+        });
+    });
+    </script>
 </body>
 </html>

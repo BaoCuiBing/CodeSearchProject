@@ -6,14 +6,41 @@
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
 </head>
 <body>
-    <div class="layui-container" style="margin-top:20px;">
-        <form class="layui-form">
-            <div class="layui-form-item"><label class="layui-form-label">用户名</label><div class="layui-input-block"><input type="text" name="username" class="layui-input"></div></div>
-            <div class="layui-form-item"><label class="layui-form-label">邮箱</label><div class="layui-input-block"><input type="text" name="email" class="layui-input"></div></div>
-            <div class="layui-form-item"><label class="layui-form-label">新密码</label><div class="layui-input-block"><input type="password" name="password" class="layui-input"></div></div>
-            <div class="layui-form-item"><button class="layui-btn" lay-submit>保存</button></div>
-        </form>
+    <div style="padding:15px;">
+        <div class="layui-card">
+            <div class="layui-card-header">个人信息</div>
+            <div class="layui-card-body">
+                <form class="layui-form" lay-filter="profileForm">
+                    <div class="layui-form-item"><label class="layui-form-label">用户名</label><div class="layui-input-block"><input type="text" name="username" class="layui-input" readonly></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">邮箱</label><div class="layui-input-block"><input type="text" name="email" class="layui-input" readonly></div></div>
+                    <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" type="button" id="editProfileBtn">编辑</button></div></div>
+                </form>
+            </div>
+        </div>
+        <div class="layui-card" style="margin-top:15px;">
+            <div class="layui-card-header">修改密码</div>
+            <div class="layui-card-body"><button class="layui-btn layui-btn-warm" type="button" id="changePwdBtn">修改密码</button></div>
+        </div>
     </div>
-    <script src="/static/webs/layui/layui.js"></script>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script>
+    layui.use(['form'], function() {
+        var form = layui.form;
+        if (!lostoryOption.checkAuth()) { return; }
+        var adminId = lostoryOption.getAdminId();
+        adminApi.setAdminId(adminId);
+        adminApi.auth.getMe().then(function(res) {
+            if (res.code === 200) { form.val('profileForm', { username: res.data.username, email: res.data.email || '' }); }
+        });
+        document.getElementById('editProfileBtn').onclick = function() {
+            lostoryOption.openDialog('编辑个人信息', '/admin/dialogs/profile_edit.html', ['500px', '300px']);
+        };
+        document.getElementById('changePwdBtn').onclick = function() {
+            lostoryOption.openDialog('修改密码', '/admin/dialogs/profile_change_pwd.html', ['500px', '350px']);
+        };
+    });
+    </script>
 </body>
 </html>

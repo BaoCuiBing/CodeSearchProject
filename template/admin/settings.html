@@ -6,12 +6,54 @@
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
 </head>
 <body>
-    <div class="layui-container" style="margin-top:20px;">
-        <form class="layui-form">
-            <div class="layui-form-item"><label class="layui-form-label">站点名称</label><div class="layui-input-block"><input type="text" name="site_name" class="layui-input"></div></div>
-            <div class="layui-form-item"><button class="layui-btn" lay-submit>保存设置</button></div>
-        </form>
+    <div style="padding:15px;">
+        <div class="layui-card">
+            <div class="layui-card-header">基本设置</div>
+            <div class="layui-card-body">
+                <form class="layui-form" lay-filter="settingsForm">
+                    <div class="layui-form-item"><label class="layui-form-label">站点名称</label><div class="layui-input-block"><input type="text" name="site_name" class="layui-input"></div></div>
+                    <div class="layui-form-item"><label class="layui-form-label">站点描述</label><div class="layui-input-block"><textarea name="site_description" class="layui-textarea"></textarea></div></div>
+                    <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" type="button" id="editBasicBtn">编辑</button></div></div>
+                </form>
+            </div>
+        </div>
+        <div class="layui-card" style="margin-top:15px;">
+            <div class="layui-card-header">邮件测试</div>
+            <div class="layui-card-body">
+                <button class="layui-btn" type="button" id="testEmailBtn">发送测试邮件</button>
+            </div>
+        </div>
+        <div class="layui-card" style="margin-top:15px;">
+            <div class="layui-card-header">缓存管理</div>
+            <div class="layui-card-body"><button class="layui-btn layui-btn-warm" id="clearCacheBtn">清除全部缓存</button></div>
+        </div>
     </div>
-    <script src="/static/webs/layui/layui.js"></script>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script>
+    layui.use(['form'], function() {
+        var form = layui.form, layer = layui.layer;
+        if (!lostoryOption.checkAuth()) { return; }
+        var adminId = lostoryOption.getAdminId();
+        adminApi.setAdminId(adminId);
+        adminApi.system.getSettings().then(function(res) {
+            if (res.code === 200) {
+                var data = {};
+                res.data.forEach(function(s) { data[s.key] = s.value; });
+                form.val('settingsForm', data);
+            }
+        });
+        document.getElementById('editBasicBtn').onclick = function() {
+            lostoryOption.openDialog('基本设置', '/admin/dialogs/settings_basic.html', ['600px', '350px']);
+        };
+        document.getElementById('testEmailBtn').onclick = function() {
+            lostoryOption.openDialog('邮件测试', '/admin/dialogs/settings_email.html', ['500px', '250px']);
+        };
+        document.getElementById('clearCacheBtn').onclick = function() {
+            lostoryOption.confirmDialog('确认清除全部缓存？', function() { adminApi.system.clearCache().then(function(r) { layer.msg(r.msg); }); });
+        };
+    });
+    </script>
 </body>
 </html>

@@ -12,7 +12,8 @@ MAX_SIZE = config.MAX_UPLOAD_SIZE * 1024 * 1024  # 字节
 
 @upload_bp.post("/file")
 @openapi.summary("文件上传")
-async def upload_file(request, db):
+async def upload_file(request):
+    db = request.ctx.db
     file = request.files.get("file")
     if not file:
         return response.json({"code": 400, "msg": "未选择文件"})
@@ -26,7 +27,9 @@ async def upload_file(request, db):
     with open(file_path, "wb") as f:
         f.write(file_body)
     file_url = f"/static/uploads/{unique_name}"
-    file_record = File(user_id=0, filename=file.name, file_path=file_path, file_size=len(file_body), file_type=ext.lstrip("."), file_url=file_url)
+    user_id = request.form.get("user_id")
+    user_id = int(user_id) if user_id else None
+    file_record = File(user_id=user_id, filename=file.name, file_path=file_path, file_size=len(file_body), file_type=ext.lstrip("."), file_url=file_url)
     db.add(file_record)
     db.commit()
-    return response.json({"code": 200, "msg": "上传成功", "data": {"filename": file.name, "url": file_url}})
+    return response.json({"code": 200, "msg": "上传成功", "data": {"filename": file.name, "file_url": file_url}})

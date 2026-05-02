@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户详情</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+</head>
+<body>
+    <div style="padding:15px;">
+        <table class="layui-table">
+            <tr><td>ID</td><td id="d_user_id"></td></tr>
+            <tr><td>用户名</td><td id="d_username"></td></tr>
+            <tr><td>账号</td><td id="d_usernumber"></td></tr>
+            <tr><td>邮箱</td><td id="d_email"></td></tr>
+            <tr><td>角色</td><td id="d_role"></td></tr>
+            <tr><td>状态</td><td id="d_status"></td></tr>
+            <tr><td>文章数</td><td id="d_article_count"></td></tr>
+            <tr><td>评论数</td><td id="d_comment_count"></td></tr>
+            <tr><td>粉丝数</td><td id="d_follower_count"></td></tr>
+            <tr><td>注册时间</td><td id="d_created_at"></td></tr>
+        </table>
+    </div>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script>
+    layui.use(function() {
+        var adminId = localStorage.getItem('admin_id');
+        if (!adminId) { parent.window.location.href = '/admin/login'; return; }
+        adminApi.setAdminId(adminId);
+        var urlParams = new URLSearchParams(window.location.search);
+        var userId = urlParams.get('user_id');
+        if (!userId) { return; }
+        adminApi.user.getDetail(userId).then(function(res) {
+            if (res.code === 200) {
+                var u = res.data;
+                document.getElementById('d_user_id').innerText = u.user_id;
+                document.getElementById('d_username').innerText = u.username;
+                document.getElementById('d_usernumber').innerText = u.usernumber || '-';
+                document.getElementById('d_email').innerText = u.email || '-';
+                document.getElementById('d_role').innerText = u.role === 'admin' ? '管理员' : '用户';
+                document.getElementById('d_status').innerText = u.status === 'active' ? '正常' : '封禁';
+                document.getElementById('d_article_count').innerText = u.stats ? u.stats.article_count : 0;
+                document.getElementById('d_comment_count').innerText = u.stats ? u.stats.comment_count : 0;
+                document.getElementById('d_follower_count').innerText = u.stats ? u.stats.follower_count : 0;
+                document.getElementById('d_created_at').innerText = u.created_at || '-';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

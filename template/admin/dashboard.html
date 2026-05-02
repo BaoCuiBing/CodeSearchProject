@@ -6,36 +6,45 @@
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
 </head>
 <body>
-    <div class="layui-layout layui-layout-admin">
-        <div class="layui-header">
-            <div class="layui-logo">管理后台</div>
-            <ul class="layui-nav layui-layout-right">
-                <li class="layui-nav-item"><a href="/admin/profile">管理员</a></li>
-                <li class="layui-nav-item"><a href="/admin/login">退出</a></li>
-            </ul>
+    <div style="padding:15px;">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-header">用户总数</div><div class="layui-card-body" id="totalUsers" style="font-size:28px;text-align:center;">-</div></div></div>
+            <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-header">内容总数</div><div class="layui-card-body" id="totalArticles" style="font-size:28px;text-align:center;">-</div></div></div>
+            <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-header">今日活跃</div><div class="layui-card-body" id="activeToday" style="font-size:28px;text-align:center;">-</div></div></div>
+            <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-header">待处理举报</div><div class="layui-card-body" id="pendingReports" style="font-size:28px;text-align:center;">-</div></div></div>
         </div>
-        <div class="layui-side layui-bg-black">
-            <ul class="layui-nav layui-nav-tree">
-                <li class="layui-nav-item layui-this"><a href="/admin/">仪表盘</a></li>
-                <li class="layui-nav-item"><a href="/admin/users">用户管理</a></li>
-                <li class="layui-nav-item"><a href="/admin/articles">内容管理</a></li>
-                <li class="layui-nav-item"><a href="/admin/tags">标签管理</a></li>
-                <li class="layui-nav-item"><a href="/admin/comments">评论管理</a></li>
-                <li class="layui-nav-item"><a href="/admin/messages">消息管理</a></li>
-                <li class="layui-nav-item"><a href="/admin/files">文件管理</a></li>
-                <li class="layui-nav-item"><a href="/admin/stats">数据统计</a></li>
-                <li class="layui-nav-item"><a href="/admin/settings">系统设置</a></li>
-            </ul>
-        </div>
-        <div class="layui-body" style="padding:15px;">
-            <div class="layui-row layui-col-space15">
-                <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-header">用户总数</div><div class="layui-card-body" id="totalUsers">-</div></div></div>
-                <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-header">内容总数</div><div class="layui-card-body">-</div></div></div>
-                <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-header">今日新增</div><div class="layui-card-body">-</div></div></div>
-                <div class="layui-col-md3"><div class="layui-card"><div class="layui-card-header">待处理举报</div><div class="layui-card-body">-</div></div></div>
-            </div>
+        <div class="layui-row layui-col-space15" style="margin-top:15px;">
+            <div class="layui-col-md6"><div class="layui-card"><div class="layui-card-header">近7日新增</div><div class="layui-card-body"><table class="layui-table"><thead><tr><th>指标</th><th>数量</th></tr></thead><tbody><tr><td>新用户</td><td id="newUsers">-</td></tr><tr><td>新文章</td><td id="newArticles">-</td></tr><tr><td>新问题</td><td id="newQuestions">-</td></tr><tr><td>新评论</td><td id="newComments">-</td></tr></tbody></table></div></div></div>
+            <div class="layui-col-md6"><div class="layui-card"><div class="layui-card-header">总体统计</div><div class="layui-card-body"><table class="layui-table"><thead><tr><th>指标</th><th>数量</th></tr></thead><tbody><tr><td>总浏览量</td><td id="totalViews">-</td></tr><tr><td>总评论数</td><td id="totalComments">-</td></tr><tr><td>总问题数</td><td id="totalQuestions">-</td></tr><tr><td>近7日浏览</td><td id="newViews">-</td></tr></tbody></table></div></div></div>
         </div>
     </div>
-    <script src="/static/webs/layui/layui.js"></script>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script>
+    layui.use(['element'], function() {
+        var element = layui.element;
+        if (!lostoryOption.checkAuth()) { return; }
+        var adminId = lostoryOption.getAdminId();
+        adminApi.setAdminId(adminId);
+        adminApi.stats.getDashboard('week').then(function(res) {
+            if (res.code === 200) {
+                var d = res.data.summary;
+                document.getElementById('totalUsers').innerText = d.total_users;
+                document.getElementById('totalArticles').innerText = d.total_articles;
+                document.getElementById('activeToday').innerText = d.active_users_today;
+                document.getElementById('pendingReports').innerText = d.reported_items;
+                document.getElementById('newUsers').innerText = d.new_users;
+                document.getElementById('newArticles').innerText = d.new_articles;
+                document.getElementById('newQuestions').innerText = d.new_questions;
+                document.getElementById('newComments').innerText = d.new_comments;
+                document.getElementById('totalViews').innerText = d.total_views;
+                document.getElementById('totalComments').innerText = d.total_comments;
+                document.getElementById('totalQuestions').innerText = d.total_questions;
+                document.getElementById('newViews').innerText = d.new_views;
+            }
+        });
+    });
+    </script>
 </body>
 </html>

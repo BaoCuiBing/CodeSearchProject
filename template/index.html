@@ -1,13 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <title>CodeSearchProject</title>
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+    <style>
+        .layui-layout-admin .layui-side { width: 200px; }
+        .layui-layout-admin .layui-body { left: 200px; }
+        .layui-layout-admin .layui-footer { left: 200px; }
+        #mainFrame { width: 100%; height: 100%; border: none; }
+    </style>
 </head>
 <body>
-    <div class="layui-container">
-        <h1>欢迎使用 CodeSearchProject</h1>
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">CodeSearchProject</div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item"><a href="javascript:;" onclick="document.getElementById('mainFrame').src='/admin/profile';">管理员</a></li>
+                <li class="layui-nav-item"><a href="/admin/login">退出</a></li>
+            </ul>
+        </div>
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="leftNav">
+                    <li class="layui-nav-item layui-this"><a href="javascript:;" data-url="/admin/dashboard">仪表盘</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/users">用户管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/articles">内容管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/tags">标签管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/comments">评论管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/messages">消息管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/files">文件管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/stats">数据统计</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/settings">系统设置</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="layui-body">
+            <iframe id="mainFrame" src="/admin/dashboard"></iframe>
+        </div>
     </div>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script>
+    layui.use(['element'], function() {
+        var element = layui.element;
+        var adminId = lostoryOption.getAdminId();
+        if (!adminId) { window.location.href = '/admin/login'; return; }
+        element.on('nav(leftNav)', function(elem) {
+            var url = elem.attr('data-url');
+            if (url) {
+                document.querySelectorAll('.layui-nav-tree .layui-nav-item').forEach(function(el) { el.classList.remove('layui-this'); });
+                elem.parent().addClass('layui-this');
+                document.getElementById('mainFrame').src = url;
+            }
+        });
+    });
+    </script>
 </body>
 </html>

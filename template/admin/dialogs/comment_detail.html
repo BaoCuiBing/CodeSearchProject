@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>评论详情</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+</head>
+<body>
+    <div style="padding:15px;">
+        <table class="layui-table">
+            <tr><td>ID</td><td id="d_comment_id"></td></tr>
+            <tr><td>作者</td><td id="d_author"></td></tr>
+            <tr><td>内容</td><td id="d_content"></td></tr>
+            <tr><td>文章ID</td><td id="d_post_id"></td></tr>
+            <tr><td>状态</td><td id="d_status"></td></tr>
+            <tr><td>点赞</td><td id="d_like_count"></td></tr>
+            <tr><td>评论时间</td><td id="d_created_at"></td></tr>
+            <tr><td>回复数</td><td id="d_reply_count"></td></tr>
+        </table>
+    </div>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script>
+    layui.use(function() {
+        var adminId = localStorage.getItem('admin_id');
+        if (!adminId) { parent.window.location.href = '/admin/login'; return; }
+        adminApi.setAdminId(adminId);
+        var urlParams = new URLSearchParams(window.location.search);
+        var commentId = urlParams.get('comment_id');
+        if (!commentId) { return; }
+        adminApi.comment.getDetail(commentId).then(function(res) {
+            if (res.code === 200) {
+                var c = res.data;
+                document.getElementById('d_comment_id').innerText = c.comment_id;
+                document.getElementById('d_author').innerText = c.author ? c.author.username : '-';
+                document.getElementById('d_content').innerText = c.content;
+                document.getElementById('d_post_id').innerText = c.post_id;
+                document.getElementById('d_status').innerText = c.status;
+                document.getElementById('d_like_count').innerText = c.like_count || 0;
+                document.getElementById('d_created_at').innerText = c.created_at || '-';
+                document.getElementById('d_reply_count').innerText = c.replies ? c.replies.total : 0;
+            }
+        });
+    });
+    </script>
+</body>
+</html>

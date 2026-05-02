@@ -2,17 +2,63 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>文章详情</title>
+    <title>内容详情</title>
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
 </head>
 <body>
-    <div class="layui-container" style="margin-top:20px;">
-        <form class="layui-form">
-            <div class="layui-form-item"><input type="text" name="title" placeholder="标题" class="layui-input"></div>
-            <div class="layui-form-item"><textarea name="content" placeholder="内容" class="layui-textarea"></textarea></div>
-            <div class="layui-form-item"><button class="layui-btn" lay-submit>保存</button></div>
-        </form>
+    <div style="padding:15px;">
+        <div class="layui-card">
+            <div class="layui-card-header" id="articleTitle">内容详情</div>
+            <div class="layui-card-body">
+                <div class="layui-form-item"><label class="layui-form-label">ID</label><div class="layui-input-block"><input type="text" id="postId" class="layui-input" readonly></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">标题</label><div class="layui-input-block"><input type="text" id="postTitle" class="layui-input" readonly></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">作者</label><div class="layui-input-block"><input type="text" id="postAuthor" class="layui-input" readonly></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-block"><input type="text" id="postType" class="layui-input" readonly></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">状态</label><div class="layui-input-block"><input type="text" id="postStatus" class="layui-input" readonly></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">浏览量</label><div class="layui-input-block"><input type="text" id="postViews" class="layui-input" readonly></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">点赞数</label><div class="layui-input-block"><input type="text" id="postLikes" class="layui-input" readonly></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">创建时间</label><div class="layui-input-block"><input type="text" id="postCreated" class="layui-input" readonly></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">更新时间</label><div class="layui-input-block"><input type="text" id="postUpdated" class="layui-input" readonly></div></div>
+                <div class="layui-form-item"><label class="layui-form-label">摘要</label><div class="layui-input-block"><textarea id="postSummary" class="layui-textarea" readonly></textarea></div></div>
+                <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn layui-btn-normal" id="editBtn">编辑</button><button class="layui-btn layui-btn-danger" id="deleteBtn">删除</button></div></div>
+            </div>
+        </div>
     </div>
-    <script src="/static/webs/layui/layui.js"></script>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script>
+    layui.use(['layer'], function() {
+        var layer = layui.layer;
+        if (!lostoryOption.checkAuth()) { return; }
+        var adminId = lostoryOption.getAdminId();
+        adminApi.setAdminId(adminId);
+        var urlParams = new URLSearchParams(window.location.search);
+        var postId = urlParams.get('post_id');
+        if (!postId) { layer.msg('缺少参数'); return; }
+        adminApi.article.getDetail(postId).then(function(res) {
+            if (res.code === 200) {
+                var d = res.data;
+                document.getElementById('articleTitle').innerText = d.title || '内容详情';
+                document.getElementById('postId').value = d.post_id;
+                document.getElementById('postTitle').value = d.title || '';
+                document.getElementById('postAuthor').value = d.author_name || d.author_id || '';
+                document.getElementById('postType').value = d.post_type === 'question' ? '问题' : '文章';
+                document.getElementById('postStatus').value = d.status === 'published' ? '已发布' : d.status === 'draft' ? '草稿' : d.status;
+                document.getElementById('postViews').value = d.view_count || 0;
+                document.getElementById('postLikes').value = d.like_count || 0;
+                document.getElementById('postCreated').value = d.created_at || '';
+                document.getElementById('postUpdated').value = d.updated_at || '';
+                document.getElementById('postSummary').value = d.summary || '';
+            } else { layer.msg(res.msg); }
+        });
+        document.getElementById('editBtn').onclick = function() {
+            lostoryOption.openDialog('编辑内容', '/admin/dialogs/article_edit.html?post_id=' + postId, ['600px', '400px']);
+        };
+        document.getElementById('deleteBtn').onclick = function() {
+            lostoryOption.confirmDialog('确认删除该内容？', function() { adminApi.article.delete(postId).then(function(r) { if (r.code === 200) { layer.msg('删除成功'); setTimeout(function() { window.location.href = '/admin/articles'; }, 1000); } else { layer.msg(r.msg); } }); });
+        };
+    });
+    </script>
 </body>
 </html>

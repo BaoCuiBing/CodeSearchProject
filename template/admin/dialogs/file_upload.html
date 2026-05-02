@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>上传文件</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+</head>
+<body>
+    <div style="padding:15px;">
+        <div class="layui-upload">
+            <button type="button" class="layui-btn" id="uploadBtn"><i class="layui-icon layui-icon-upload"></i> 选择文件</button>
+            <div class="layui-upload-list">
+                <table class="layui-table">
+                    <thead><tr><th>文件名</th><th>大小</th><th>状态</th></tr></thead>
+                    <tbody id="uploadList"></tbody>
+                </table>
+            </div>
+            <button type="button" class="layui-btn" id="startUpload">开始上传</button>
+        </div>
+    </div>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script>
+    layui.use(['upload'], function() {
+        var upload = layui.upload, layer = layui.layer;
+        var adminId = localStorage.getItem('admin_id');
+        if (!adminId) { parent.window.location.href = '/admin/login'; return; }
+        adminApi.setAdminId(adminId);
+        var uploadListIns = upload.render({
+            elem: '#uploadBtn', url: '/api/upload/file', data: { user_id: adminId }, auto: false, bindAction: '#startUpload',
+            choose: function(obj) {
+                var files = this.files = obj.pushFile();
+                obj.preview(function(index, file) {
+                    var tr = document.createElement('tr');
+                    tr.id = 'upload-' + index;
+                    tr.innerHTML = '<td>' + file.name + '</td><td>' + (file.size / 1024).toFixed(1) + 'KB</td><td>等待上传</td>';
+                    document.getElementById('uploadList').appendChild(tr);
+                });
+            },
+            done: function(res, index) {
+                var tr = document.getElementById('upload-' + index);
+                if (tr) { tr.querySelector('td:last-child').innerText = '上传成功'; }
+                layer.msg(res.msg);
+            },
+            error: function(index) {
+                var tr = document.getElementById('upload-' + index);
+                if (tr) { tr.querySelector('td:last-child').innerText = '上传失败'; }
+            },
+            allDone: function() { var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }
+        });
+    });
+    </script>
+</body>
+</html>

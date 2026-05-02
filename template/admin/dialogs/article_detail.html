@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>文章详情</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+</head>
+<body>
+    <div style="padding:15px;">
+        <table class="layui-table">
+            <tr><td>ID</td><td id="d_post_id"></td></tr>
+            <tr><td>标题</td><td id="d_title"></td></tr>
+            <tr><td>作者</td><td id="d_author"></td></tr>
+            <tr><td>分类</td><td id="d_category"></td></tr>
+            <tr><td>状态</td><td id="d_status"></td></tr>
+            <tr><td>浏览</td><td id="d_view_count"></td></tr>
+            <tr><td>点赞</td><td id="d_like_count"></td></tr>
+            <tr><td>评论</td><td id="d_comment_count"></td></tr>
+            <tr><td>发布时间</td><td id="d_created_at"></td></tr>
+        </table>
+    </div>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script>
+    layui.use(function() {
+        var adminId = localStorage.getItem('admin_id');
+        if (!adminId) { parent.window.location.href = '/admin/login'; return; }
+        adminApi.setAdminId(adminId);
+        var urlParams = new URLSearchParams(window.location.search);
+        var postId = urlParams.get('post_id');
+        if (!postId) { return; }
+        adminApi.article.getDetail(postId).then(function(res) {
+            if (res.code === 200) {
+                var d = res.data;
+                document.getElementById('d_post_id').innerText = d.post_id;
+                document.getElementById('d_title').innerText = d.title;
+                document.getElementById('d_author').innerText = d.author ? d.author.username : '-';
+                document.getElementById('d_category').innerText = d.category ? d.category.name : '-';
+                document.getElementById('d_status').innerText = d.status;
+                document.getElementById('d_view_count').innerText = d.view_count || 0;
+                document.getElementById('d_like_count').innerText = d.like_count || 0;
+                document.getElementById('d_comment_count').innerText = d.comment_count || 0;
+                document.getElementById('d_created_at').innerText = d.created_at || '-';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

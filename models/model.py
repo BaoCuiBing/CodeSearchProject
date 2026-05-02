@@ -31,7 +31,7 @@ class User(Base):
 class File(Base):
     __tablename__ = "files"
     id = Column(BigInteger, primary_key=True, autoincrement=True)  # 主键ID
-    user_id = Column(BigInteger, ForeignKey("users.id"), nullable=False)  # 用户ID外键
+    user_id = Column(BigInteger, ForeignKey("users.id"), nullable=True)  # 用户ID外键，匿名上传为NULL
     filename = Column(String(255), nullable=False)  # 文件名
     file_path = Column(String(500), nullable=False)  # 文件路径
     file_size = Column(BigInteger, default=0, nullable=True)  # 文件大小

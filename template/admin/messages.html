@@ -6,7 +6,75 @@
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
 </head>
 <body>
-    <table id="messageTable" lay-filter="messageTable"></table>
-    <script src="/static/webs/layui/layui.js"></script>
+    <div class="layui-card" style="margin:15px;">
+        <div class="layui-card-header">
+            <div class="layui-form layui-row">
+                <div class="layui-col-md2"><input type="text" id="searchKeyword" placeholder="标题/内容关键词" class="layui-input"></div>
+                <div class="layui-col-md1"><select id="searchType"><option value="all">全部类型</option><option value="system">系统消息</option><option value="announcement">公告</option></select></div>
+                <div class="layui-col-md1"><select id="searchStatus"><option value="all">全部状态</option><option value="draft">草稿</option><option value="sent">已发送</option></select></div>
+                <div class="layui-col-md1"><button class="layui-btn" id="searchBtn">搜索</button></div>
+                <div class="layui-col-md1"><button class="layui-btn layui-btn-normal" id="addMsgBtn">新建消息</button></div>
+                <div class="layui-col-md1 layui-col-md-offset3"><button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDelete">批量删除</button></div>
+            </div>
+        </div>
+        <div class="layui-card-body"><table id="messageTable" lay-filter="messageTable"></table></div>
+    </div>
+    <script type="text/html" id="toolbarTpl">
+        <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</a>
+        {{# if(d.status === 'draft') { }}
+        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="send">发送</a>
+        {{# } }}
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+    </script>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script>
+    layui.use(['table', 'form'], function() {
+        var table = layui.table, form = layui.form, layer = layui.layer;
+        if (!lostoryOption.checkAuth()) { return; }
+        var adminId = lostoryOption.getAdminId();
+        adminApi.setAdminId(adminId);
+        form.render('select');
+        var tableIns = table.render({
+            elem: '#messageTable', url: '/api/admin/system_messages/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
+            where: { admin_id: adminId },
+            request: { pageName: 'page', limitName: 'page_size' },
+            parseData: function(res) { return { code: res.code, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            cols: [[
+                {type: 'checkbox'}, {field: 'system_message_id', title: 'ID', width: 80},
+                {field: 'title', title: '标题', width: 200},
+                {field: 'type', title: '类型', width: 80, templet: function(d) { return d.type === 'announcement' ? '公告' : '系统消息'; }},
+                {field: 'target_type', title: '目标', width: 80, templet: function(d) { return d.target_type === 'all' ? '全部用户' : '指定用户'; }},
+                {field: 'target_count', title: '目标数', width: 70}, {field: 'read_count', title: '已读', width: 70},
+                {field: 'status', title: '状态', width: 80, templet: function(d) { return d.status === 'sent' ? '<span style="color:#5FB878;">已发送</span>' : '<span style="color:#FFB800;">草稿</span>'; }},
+                {field: 'send_time', title: '发送时间', width: 160}, {field: 'created_at', title: '创建时间', width: 160},
+                {title: '操作', width: 200, toolbar: '#toolbarTpl'}
+            ]]
+        });
+        document.getElementById('searchBtn').onclick = function() {
+            tableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('searchKeyword').value, type: document.getElementById('searchType').value, status: document.getElementById('searchStatus').value, page: 1 } });
+        };
+        document.getElementById('addMsgBtn').onclick = function() {
+            lostoryOption.openDialog('新建消息', '/admin/dialogs/message_create.html', ['600px', '450px']);
+        };
+        table.on('toolbar(messageTable)', function(obj) {
+            var ids = [];
+            var checkStatus = table.checkStatus('messageTable');
+            if (checkStatus.data.length === 0) { layer.msg('请先选择消息'); return; }
+            checkStatus.data.forEach(function(d) { ids.push(d.system_message_id); });
+            if (obj.event === 'batchDelete') { lostoryOption.confirmDialog('确认删除选中消息？', function() { adminApi.message.batchDelete(ids).then(function(r) { layer.msg(r.msg); tableIns.reload(); }); }); }
+        });
+        table.on('tool(messageTable)', function(obj) {
+            var d = obj.data;
+            if (obj.event === 'detail') { lostoryOption.openDialog('消息详情', '/admin/dialogs/message_detail.html?system_message_id=' + d.system_message_id, ['500px', '450px']); }
+            if (obj.event === 'edit') { lostoryOption.openDialog('编辑消息', '/admin/dialogs/message_edit.html?system_message_id=' + d.system_message_id + '&title=' + encodeURIComponent(d.title), ['500px', '250px']); }
+            if (obj.event === 'send') { lostoryOption.confirmDialog('确认发送该消息？', function() { adminApi.message.send(d.system_message_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); }); }); }
+            if (obj.event === 'delete') { lostoryOption.confirmDialog('确认删除该消息？', function() { adminApi.message.delete(d.system_message_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); }); }); }
+        });
+        document.getElementById('batchDelete').onclick = function() { table.triggerToolbar('messageTable', 'batchDelete'); };
+    });
+    </script>
 </body>
 </html>

@@ -28,6 +28,8 @@
     <script>
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
+        var adminId = localStorage.getItem('admin_id');
+        if (adminId) { window.location.href = '/admin/'; return; }
         form.on('submit(login)', function(data) {
             adminApi.auth.login(data.field.usernumber, data.field.password).then(function(res) {
                 if (res.code === 200) {

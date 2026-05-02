@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>标签详情</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+</head>
+<body>
+    <div style="padding:15px;">
+        <table class="layui-table">
+            <tr><td>ID</td><td id="d_tag_id"></td></tr>
+            <tr><td>标签名称</td><td id="d_name"></td></tr>
+            <tr><td>关联内容数</td><td id="d_post_count"></td></tr>
+            <tr><td>创建时间</td><td id="d_created_at"></td></tr>
+        </table>
+    </div>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script>
+    layui.use(function() {
+        var adminId = localStorage.getItem('admin_id');
+        if (!adminId) { parent.window.location.href = '/admin/login'; return; }
+        adminApi.setAdminId(adminId);
+        var urlParams = new URLSearchParams(window.location.search);
+        var tagId = urlParams.get('tag_id');
+        if (!tagId) { return; }
+        adminApi.tag.getDetail(tagId).then(function(res) {
+            if (res.code === 200) {
+                var t = res.data;
+                document.getElementById('d_tag_id').innerText = t.tag_id;
+                document.getElementById('d_name').innerText = t.name;
+                document.getElementById('d_post_count').innerText = t.post_count || 0;
+                document.getElementById('d_created_at').innerText = t.created_at || '-';
+            }
+        });
+    });
+    </script>
+</body>
+</html>
