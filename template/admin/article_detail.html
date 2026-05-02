@@ -27,15 +27,17 @@
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['layer'], function() {
         var layer = layui.layer;
-        if (!lostoryOption.checkAuth()) { return; }
+        if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'article_detail'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
         var urlParams = new URLSearchParams(window.location.search);
         var postId = urlParams.get('post_id');
-        if (!postId) { layer.msg('缺少参数'); return; }
+        if (!postId) { SendLog.log_warning('缺少post_id参数', 'article_detail'); layer.msg('缺少参数'); return; }
+        SendLog.log_info('加载内容详情: ' + postId, 'article_detail');
         adminApi.article.getDetail(postId).then(function(res) {
             if (res.code === 200) {
                 var d = res.data;
@@ -50,13 +52,16 @@
                 document.getElementById('postCreated').value = d.created_at || '';
                 document.getElementById('postUpdated').value = d.updated_at || '';
                 document.getElementById('postSummary').value = d.summary || '';
-            } else { layer.msg(res.msg); }
-        });
+                SendLog.log_info('内容详情加载成功: ' + postId, 'article_detail');
+            } else { SendLog.log_warning('内容详情加载失败: ' + res.msg, 'article_detail'); layer.msg(res.msg); }
+        }).catch(function(err) { SendLog.log_error('内容详情请求异常: ' + err.message, 'article_detail'); layer.msg('请求异常'); });
         document.getElementById('editBtn').onclick = function() {
+            SendLog.log_info('打开编辑内容弹窗: ' + postId, 'article_detail');
             lostoryOption.openDialog('编辑内容', '/admin/dialogs/article_edit.html?post_id=' + postId, ['600px', '400px']);
         };
         document.getElementById('deleteBtn').onclick = function() {
-            lostoryOption.confirmDialog('确认删除该内容？', function() { adminApi.article.delete(postId).then(function(r) { if (r.code === 200) { layer.msg('删除成功'); setTimeout(function() { window.location.href = '/admin/articles'; }, 1000); } else { layer.msg(r.msg); } }); });
+            SendLog.log_info('删除内容: ' + postId, 'article_detail');
+            lostoryOption.confirmDialog('确认删除该内容？', function() { adminApi.article.delete(postId).then(function(r) { if (r.code === 200) { SendLog.log_info('内容删除成功: ' + postId, 'article_detail'); layer.msg('删除成功'); setTimeout(function() { window.location.href = '/admin/articles'; }, 1000); } else { SendLog.log_warning('内容删除失败: ' + r.msg, 'article_detail'); layer.msg(r.msg); } }).catch(function(err) { SendLog.log_error('内容删除异常: ' + err.message, 'article_detail'); layer.msg('删除异常'); }); });
         };
     });
     </script>

@@ -20,6 +20,7 @@
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
@@ -29,6 +30,7 @@
         var urlParams = new URLSearchParams(window.location.search);
         var postId = urlParams.get('post_id');
         document.getElementById('postId').value = postId || '';
+        SendLog.log_info('加载编辑文章页面: ' + postId, 'article_edit');
         adminApi.category.getList({ page_size: 100 }).then(function(res) {
             if (res.code === 200) {
                 var sel = document.getElementById('categorySelect');
@@ -39,6 +41,7 @@
                         if (r.code === 200) {
                             var d = r.data;
                             form.val('articleEditForm', { post_id: d.post_id, title: d.title, summary: d.summary || '', content: d.content, category_id: d.category ? d.category.category_id : '', status: d.status, is_top: d.is_top });
+                            SendLog.log_info('文章数据加载成功: ' + postId, 'article_edit');
                         }
                     });
                 }
@@ -47,7 +50,8 @@
         form.on('submit(saveArticle)', function(data) {
             var d = data.field;
             d.is_top = d.is_top ? true : false;
-            adminApi.article.edit(d).then(function(r) { layer.msg(r.msg); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); });
+            SendLog.log_info('保存文章: ' + data.field.post_id, 'article_edit');
+            adminApi.article.edit(d).then(function(r) { layer.msg(r.msg); SendLog.log_info('文章保存成功: ' + data.field.post_id, 'article_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('文章保存失败', 'article_edit'); });
             return false;
         });
     });

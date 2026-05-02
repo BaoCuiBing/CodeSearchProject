@@ -14,6 +14,7 @@
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
@@ -21,7 +22,8 @@
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
         form.on('submit(createTag)', function(data) {
-            adminApi.tag.create(data.field).then(function(r) { layer.msg(r.msg); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); });
+            SendLog.log_info('创建标签: ' + data.field.name, 'tag_create');
+            adminApi.tag.create(data.field).then(function(r) { layer.msg(r.msg); SendLog.log_info('标签创建成功: ' + data.field.name, 'tag_create'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('标签创建失败', 'tag_create'); });
             return false;
         });
     });

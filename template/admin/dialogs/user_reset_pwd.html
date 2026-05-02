@@ -15,6 +15,7 @@
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
@@ -25,7 +26,8 @@
         var userId = urlParams.get('user_id');
         document.getElementById('userId').value = userId || '';
         form.on('submit(resetPwd)', function(data) {
-            adminApi.user.resetPassword(data.field.user_id, data.field.password).then(function(r) { layer.msg(r.msg); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); });
+            SendLog.log_info('重置用户密码: ' + data.field.user_id, 'user_reset_pwd');
+            adminApi.user.resetPassword(data.field.user_id, data.field.password).then(function(r) { layer.msg(r.msg); SendLog.log_info('密码重置成功: ' + data.field.user_id, 'user_reset_pwd'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('密码重置失败', 'user_reset_pwd'); });
             return false;
         });
     });

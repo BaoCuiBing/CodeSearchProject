@@ -15,6 +15,7 @@
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
@@ -27,7 +28,8 @@
         document.getElementById('msgId').value = msgId || '';
         form.val('msgEditForm', { system_message_id: msgId || '', title: title });
         form.on('submit(saveMsg)', function(data) {
-            adminApi.message.edit(data.field).then(function(r) { layer.msg(r.msg); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); });
+            SendLog.log_info('编辑消息: ' + data.field.system_message_id, 'message_edit');
+            adminApi.message.edit(data.field).then(function(r) { layer.msg(r.msg); SendLog.log_info('消息编辑成功: ' + data.field.system_message_id, 'message_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('消息编辑失败', 'message_edit'); });
             return false;
         });
     });

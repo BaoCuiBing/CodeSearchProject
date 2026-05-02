@@ -16,6 +16,7 @@
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(function() {
         var adminId = localStorage.getItem('admin_id');
@@ -24,6 +25,7 @@
         var urlParams = new URLSearchParams(window.location.search);
         var tagId = urlParams.get('tag_id');
         if (!tagId) { return; }
+        SendLog.log_info('加载标签详情: ' + tagId, 'tag_detail');
         adminApi.tag.getDetail(tagId).then(function(res) {
             if (res.code === 200) {
                 var t = res.data;
@@ -31,8 +33,9 @@
                 document.getElementById('d_name').innerText = t.name;
                 document.getElementById('d_post_count').innerText = t.post_count || 0;
                 document.getElementById('d_created_at').innerText = t.created_at || '-';
+                SendLog.log_info('标签详情加载成功: ' + tagId, 'tag_detail');
             }
-        });
+        }).catch(function(err) { SendLog.log_error('标签详情请求异常: ' + err.message, 'tag_detail'); });
     });
     </script>
 </body>

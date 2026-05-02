@@ -41,14 +41,17 @@
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['element'], function() {
         var element = layui.element;
         var adminId = lostoryOption.getAdminId();
-        if (!adminId) { window.location.href = '/admin/login'; return; }
+        if (!adminId) { SendLog.log_warning('未登录跳转到管理后台', 'index'); window.location.href = '/admin/login'; return; }
+        SendLog.log_info('管理员进入后台: ' + adminId, 'index');
         element.on('nav(leftNav)', function(elem) {
             var url = elem.attr('data-url');
             if (url) {
+                SendLog.log_info('导航到: ' + url, 'index');
                 document.querySelectorAll('.layui-nav-tree .layui-nav-item').forEach(function(el) { el.classList.remove('layui-this'); });
                 elem.parent().addClass('layui-this');
                 document.getElementById('mainFrame').src = url;

@@ -15,23 +15,28 @@
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
+        SendLog.log_info('加载基本设置数据', 'settings_basic');
         adminApi.system.getSettings().then(function(res) {
             if (res.code === 200) {
                 var data = {};
                 res.data.forEach(function(s) { data[s.key] = s.value; });
                 form.val('basicSettingsForm', data);
+                SendLog.log_info('基本设置数据加载成功', 'settings_basic');
             }
-        });
+        }).catch(function(err) { SendLog.log_error('基本设置数据请求异常: ' + err.message, 'settings_basic'); });
         form.on('submit(saveBasic)', function(data) {
             var d = data.field;
+            SendLog.log_info('保存基本设置', 'settings_basic');
             Object.keys(d).forEach(function(k) { adminApi.system.updateSettings(k, d[k]); });
             layer.msg('保存成功');
+            SendLog.log_info('基本设置保存成功', 'settings_basic');
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);
             return false;

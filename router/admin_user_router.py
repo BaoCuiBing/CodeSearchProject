@@ -1,10 +1,13 @@
 from datetime import datetime, timedelta
+import logging
 from sanic import Blueprint, response
 from sanic_ext import openapi
 from sqlalchemy import func
 from models.model import User, Post, Comment, Follow, Favorite, Like, Notification
 from models.db_init import get_db_session
 from utils.password_analysis import generate_salt, hash_password, verify_password
+
+logger = logging.getLogger(__name__)
 
 admin_user_bp = Blueprint("admin_user", url_prefix="/api/admin/user")
 
@@ -14,9 +17,11 @@ async def get_user_list(request):
     db = request.ctx.db
     admin_id = request.args.get("admin_id")
     if not admin_id:
+        logger.warning("获取用户列表失败:缺少admin_id参数")
         return response.json({"code": 403, "msg": "权限不足"})
     admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
     if not admin:
+        logger.warning(f"获取用户列表失败:admin_id={admin_id}不是管理员")
         return response.json({"code": 403, "msg": "权限不足"})
     page = int(request.args.get("page", 1))
     page_size = int(request.args.get("page_size", 20))
@@ -26,19 +31,26 @@ async def get_user_list(request):
     order = request.args.get("order", "desc")
     register_start = request.args.get("register_start")
     register_end = request.args.get("register_end")
+    logger.info(f"管理员{admin_id}查询用户列表:page={page},page_size={page_size},keyword={keyword},status={status},sort={sort},order={order}")
     query = db.query(User)
     if keyword:
         query = query.filter(User.username.contains(keyword) | User.usernumber.contains(keyword) | User.email.contains(keyword))
+        logger.debug(f"查询条件:keyword过滤={keyword}")
     if status != "all":
         query = query.filter(User.status == status)
+        logger.debug(f"查询条件:status过滤={status}")
     if register_start:
         query = query.filter(User.created_at >= register_start)
+        logger.debug(f"查询条件:register_start={register_start}")
     if register_end:
         query = query.filter(User.created_at <= register_end)
+        logger.debug(f"查询条件:register_end={register_end}")
     sort_map = {"created_time": User.created_at, "last_login": User.last_login_time}
     order_func = sort_map.get(sort, User.created_at).desc() if order == "desc" else sort_map.get(sort, User.created_at).asc()
     total = query.count()
+    logger.debug(f"查询结果:total={total}")
     users = query.order_by(order_func).offset((page - 1) * page_size).limit(page_size).all()
+    logger.info(f"管理员{admin_id}查询用户列表成功:共{total}条,返回{len(users)}条")
     user_list = []
     for u in users:
         article_count = db.query(Post).filter(Post.user_id == u.id, Post.type == "article").count()
@@ -49,6 +61,7 @@ async def get_user_list(request):
         like_count = db.query(Post).filter(Post.user_id == u.id).with_entities(func.sum(Post.like_count)).scalar() or 0
         view_count = db.query(Post).filter(Post.user_id == u.id).with_entities(func.sum(Post.view_count)).scalar() or 0
         user_list.append({"user_id": u.id, "usernumber": u.usernumber, "username": u.username, "email": u.email, "avatar": u.avatar, "status": u.status, "role": u.role, "article_count": article_count, "question_count": question_count, "comment_count": comment_count, "follower_count": follower_count, "following_count": following_count, "like_count": like_count, "view_count": view_count, "last_login_time": str(u.last_login_time) if u.last_login_time else None, "created_at": str(u.created_at)})
+    logger.debug(f"数据处理完成:构建{len(user_list)}条用户记录")
     return response.json({"code": 200, "msg": "获取成功", "data": {"list": user_list, "total": total, "page": page, "page_size": page_size}})
 
 @admin_user_bp.get("/<user_id>")
@@ -57,12 +70,16 @@ async def get_user_detail(request, user_id):
     db = request.ctx.db
     admin_id = request.args.get("admin_id")
     if not admin_id:
+        logger.warning("获取用户详情失败:缺少admin_id参数")
         return response.json({"code": 403, "msg": "权限不足"})
     admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
     if not admin:
+        logger.warning(f"获取用户详情失败:admin_id={admin_id}不是管理员")
         return response.json({"code": 403, "msg": "权限不足"})
+    logger.info(f"管理员{admin_id}查询用户详情:user_id={user_id}")
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
+        logger.warning(f"获取用户详情失败:用户不存在,user_id={user_id}")
         return response.json({"code": 404, "msg": "用户不存在"})
     article_count = db.query(Post).filter(Post.user_id == user.id, Post.type == "article").count()
     question_count = db.query(Post).filter(Post.user_id == user.id, Post.type == "question").count()
@@ -73,6 +90,7 @@ async def get_user_detail(request, user_id):
     like_received = db.query(Post).filter(Post.user_id == user.id).with_entities(func.sum(Post.like_count)).scalar() or 0
     like_given = db.query(Like).filter(Like.user_id == user.id).count()
     view_count = db.query(Post).filter(Post.user_id == user.id).with_entities(func.sum(Post.view_count)).scalar() or 0
+    logger.info(f"管理员{admin_id}查询用户详情成功:username={user.username}")
     return response.json({"code": 200, "msg": "获取成功", "data": {"user_id": user.id, "usernumber": user.usernumber, "username": user.username, "email": user.email, "phone": user.phone, "avatar": user.avatar, "bio": user.bio, "location": user.location, "website": user.website, "github": user.github, "status": user.status, "role": user.role, "stats": {"article_count": article_count, "question_count": question_count, "comment_count": comment_count, "favorite_count": favorite_count, "follower_count": follower_count, "following_count": following_count, "like_received": like_received, "like_given": like_given, "view_count": view_count}, "created_at": str(user.created_at), "last_login_time": str(user.last_login_time) if user.last_login_time else None, "login_ip": user.login_ip, "device_info": user.device_info, "is_verified": bool(user.is_verified), "ban_reason": user.ban_reason, "ban_expire_time": str(user.ban_expire_time) if user.ban_expire_time else None}})
 
 @admin_user_bp.post("/ban")
@@ -82,20 +100,25 @@ async def toggle_user_ban(request):
     data = request.json
     admin_id = data.get("admin_id")
     if not admin_id:
+        logger.warning("封禁用户失败:缺少admin_id参数")
         return response.json({"code": 403, "msg": "权限不足"})
     admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
     if not admin:
+        logger.warning("封禁用户失败:admin_id不是管理员")
         return response.json({"code": 403, "msg": "权限不足"})
     user_id = data.get("user_id")
     action = data.get("action")
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
+        logger.warning(f"封禁用户失败:用户不存在,user_id={user_id}")
         return response.json({"code": 404, "msg": "用户不存在"})
     if action == "ban":
         reason = data.get("reason")
         if not reason:
+            logger.warning("封禁用户失败:封禁原因为空")
             return response.json({"code": 400, "msg": "封禁原因不能为空"})
         duration = data.get("duration", 7)
+        logger.info(f"管理员{admin_id}封禁用户:user_id={user_id},reason={reason},duration={duration}")
         user.status = "banned"
         user.ban_reason = reason
         if duration > 0:
@@ -104,13 +127,16 @@ async def toggle_user_ban(request):
             user.ban_expire_time = None
         msg = "已封禁该用户"
     elif action == "unban":
+        logger.info(f"管理员{admin_id}解封用户:user_id={user_id}")
         user.status = "active"
         user.ban_reason = None
         user.ban_expire_time = None
         msg = "已解封该用户"
     else:
+        logger.warning(f"封禁用户失败:无效操作,action={action}")
         return response.json({"code": 400, "msg": "无效操作"})
     db.commit()
+    logger.info(f"管理员{admin_id}封禁/解封用户成功:user_id={user_id},action={action}")
     return response.json({"code": 200, "msg": msg, "data": {"user_id": user.id, "status": user.status, "ban_reason": user.ban_reason, "ban_expire_time": str(user.ban_expire_time) if user.ban_expire_time else None}})
 
 @admin_user_bp.delete("/<user_id>")
@@ -119,15 +145,20 @@ async def delete_user(request, user_id):
     db = request.ctx.db
     admin_id = request.args.get("admin_id")
     if not admin_id:
+        logger.warning("删除用户失败:缺少admin_id参数")
         return response.json({"code": 403, "msg": "权限不足"})
     admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
     if not admin:
+        logger.warning("删除用户失败:admin_id不是管理员")
         return response.json({"code": 403, "msg": "权限不足"})
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
+        logger.warning(f"删除用户失败:用户不存在,user_id={user_id}")
         return response.json({"code": 404, "msg": "用户不存在"})
+    logger.info(f"管理员{admin_id}删除用户:user_id={user_id},username={user.username}")
     db.delete(user)
     db.commit()
+    logger.info(f"管理员{admin_id}删除用户成功:user_id={user_id}")
     return response.json({"code": 200, "msg": "删除成功"})
 
 @admin_user_bp.put("/")
@@ -137,25 +168,35 @@ async def edit_user_info(request):
     data = request.json
     admin_id = data.get("admin_id")
     if not admin_id:
+        logger.warning("编辑用户失败:缺少admin_id参数")
         return response.json({"code": 403, "msg": "权限不足"})
     admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
     if not admin:
+        logger.warning("编辑用户失败:admin_id不是管理员")
         return response.json({"code": 403, "msg": "权限不足"})
     user_id = data.get("user_id")
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
+        logger.warning(f"编辑用户失败:用户不存在,user_id={user_id}")
         return response.json({"code": 404, "msg": "用户不存在"})
+    logger.info(f"管理员{admin_id}编辑用户:user_id={user_id}")
     if "username" in data:
         user.username = data["username"]
+        logger.debug(f"更新字段:username={data['username']}")
     if "email" in data:
         user.email = data["email"]
+        logger.debug(f"更新字段:email={data['email']}")
     if "role" in data:
         user.role = data["role"]
+        logger.debug(f"更新字段:role={data['role']}")
     if "bio" in data:
         user.bio = data["bio"]
+        logger.debug(f"更新字段:bio={data['bio']}")
     if "is_verified" in data:
         user.is_verified = 1 if data["is_verified"] else 0
+        logger.debug(f"更新字段:is_verified={data['is_verified']}")
     db.commit()
+    logger.info(f"管理员{admin_id}编辑用户成功:user_id={user_id}")
     return response.json({"code": 200, "msg": "编辑成功"})
 
 @admin_user_bp.post("/reset-password")
@@ -165,21 +206,27 @@ async def reset_user_password(request):
     data = request.json
     admin_id = data.get("admin_id")
     if not admin_id:
+        logger.warning("重置密码失败:缺少admin_id参数")
         return response.json({"code": 403, "msg": "权限不足"})
     admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
     if not admin:
+        logger.warning("重置密码失败:admin_id不是管理员")
         return response.json({"code": 403, "msg": "权限不足"})
     user_id = data.get("user_id")
     new_password = data.get("new_password")
     if not new_password or len(new_password) < 6:
+        logger.warning("重置密码失败:新密码长度不足")
         return response.json({"code": 400, "msg": "新密码不能少于6位"})
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
+        logger.warning(f"重置密码失败:用户不存在,user_id={user_id}")
         return response.json({"code": 404, "msg": "用户不存在"})
+    logger.info(f"管理员{admin_id}重置用户密码:user_id={user_id}")
     salt = generate_salt()
     user.salt = salt
     user.password = hash_password(new_password, salt)
     db.commit()
+    logger.info(f"管理员{admin_id}重置用户密码成功:user_id={user_id}")
     return response.json({"code": 200, "msg": "密码重置成功"})
 
 @admin_user_bp.post("/batch-action")
@@ -189,27 +236,36 @@ async def batch_action_users(request):
     data = request.json
     admin_id = data.get("admin_id")
     if not admin_id:
+        logger.warning("批量操作用户失败:缺少admin_id参数")
         return response.json({"code": 403, "msg": "权限不足"})
     admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
     if not admin:
+        logger.warning("批量操作用户失败:admin_id不是管理员")
         return response.json({"code": 403, "msg": "权限不足"})
     ids = data.get("ids", [])
     action = data.get("action")
     if not ids:
+        logger.warning("批量操作用户失败:未选择用户")
         return response.json({"code": 400, "msg": "请选择要操作的用户"})
+    logger.info(f"管理员{admin_id}批量操作用户:ids={ids},action={action}")
     users = db.query(User).filter(User.id.in_(ids)).all()
     if action == "ban":
         for u in users:
             u.status = "banned"
+        logger.debug(f"批量操作:封禁{len(users)}个用户")
     elif action == "unban":
         for u in users:
             u.status = "active"
+        logger.debug(f"批量操作:解封{len(users)}个用户")
     elif action == "delete":
         for u in users:
             db.delete(u)
+        logger.debug(f"批量操作:删除{len(users)}个用户")
     else:
+        logger.warning(f"批量操作用户失败:无效操作,action={action}")
         return response.json({"code": 400, "msg": "无效操作"})
     db.commit()
+    logger.info(f"管理员{admin_id}批量操作用户成功:共{len(users)}条,操作:{action}")
     return response.json({"code": 200, "msg": "批量操作成功"})
 
 @admin_user_bp.post("/export")
@@ -219,12 +275,16 @@ async def export_users(request):
     data = request.json
     admin_id = data.get("admin_id")
     if not admin_id:
+        logger.warning("导出用户失败:缺少admin_id参数")
         return response.json({"code": 403, "msg": "权限不足"})
     admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
     if not admin:
+        logger.warning("导出用户失败:admin_id不是管理员")
         return response.json({"code": 403, "msg": "权限不足"})
+    logger.info(f"管理员{admin_id}导出用户数据")
     users = db.query(User).all()
     user_list = [{"user_id": u.id, "usernumber": u.usernumber, "username": u.username, "email": u.email, "role": u.role, "status": u.status, "created_at": str(u.created_at)} for u in users]
+    logger.info(f"管理员{admin_id}导出用户成功:共{len(user_list)}条")
     return response.json({"code": 200, "msg": "导出成功", "data": {"filename": "users.xlsx", "file_url": "/static/exports/users.xlsx"}})
 
 @admin_user_bp.get("/stats/overview")
@@ -233,11 +293,14 @@ async def get_user_stats_overview(request):
     db = request.ctx.db
     admin_id = request.args.get("admin_id")
     if not admin_id:
+        logger.warning("获取用户统计失败:缺少admin_id参数")
         return response.json({"code": 403, "msg": "权限不足"})
     admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
     if not admin:
+        logger.warning("获取用户统计失败:admin_id不是管理员")
         return response.json({"code": 403, "msg": "权限不足"})
     period = request.args.get("period", "month")
+    logger.info(f"管理员{admin_id}查询用户统计:period={period}")
     total_users = db.query(User).count()
     new_users_today = db.query(User).filter(func.date(User.created_at) == datetime.now().date()).count()
     new_users_week = db.query(User).filter(User.created_at >= datetime.now() - timedelta(days=7)).count()
@@ -245,6 +308,7 @@ async def get_user_stats_overview(request):
     active_users = db.query(User).filter(User.status == "active").count()
     banned_users = db.query(User).filter(User.status == "banned").count()
     verified_users = db.query(User).filter(User.is_verified == 1).count()
+    logger.info(f"管理员{admin_id}查询用户统计成功:total={total_users},today={new_users_today}")
     return response.json({"code": 200, "msg": "获取成功", "data": {"total_users": total_users, "new_users_today": new_users_today, "new_users_week": new_users_week, "new_users_month": new_users_month, "active_users": active_users, "banned_users": banned_users, "verified_users": verified_users, "growth_rate": round((new_users_month / total_users * 100) if total_users > 0 else 0, 2), "trend_data": []}})
 
 @admin_user_bp.post("/<user_id>/notify")
@@ -252,11 +316,22 @@ async def get_user_stats_overview(request):
 async def send_system_notification_to_user(request, user_id):
     db = request.ctx.db
     data = request.json
+    admin_id = data.get("admin_id")
+    if not admin_id:
+        logger.warning("发送用户通知失败:缺少admin_id参数")
+        return response.json({"code": 403, "msg": "权限不足"})
+    admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
+    if not admin:
+        logger.warning("发送用户通知失败:admin_id不是管理员")
+        return response.json({"code": 403, "msg": "权限不足"})
     title = data.get("title")
     content = data.get("content")
     if not title or not content:
+        logger.warning("发送用户通知失败:标题和内容为空")
         return response.json({"code": 400, "msg": "标题和内容不能为空"})
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
+        logger.warning(f"发送用户通知失败:用户不存在,user_id={user_id}")
         return response.json({"code": 404, "msg": "用户不存在"})
+    logger.info(f"管理员{admin_id}发送通知给用户:user_id={user_id},title={title}")
     return response.json({"code": 200, "msg": "通知已发送"})

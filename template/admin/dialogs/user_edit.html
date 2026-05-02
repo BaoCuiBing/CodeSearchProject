@@ -16,6 +16,7 @@
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
@@ -27,11 +28,12 @@
         document.getElementById('userId').value = userId || '';
         if (userId) {
             adminApi.user.getDetail(userId).then(function(res) {
-                if (res.code === 200) { form.val('userEditForm', { user_id: res.data.user_id, username: res.data.username, email: res.data.email || '' }); }
+                if (res.code === 200) { form.val('userEditForm', { user_id: res.data.user_id, username: res.data.username, email: res.data.email || '' }); SendLog.log_info('加载用户编辑数据: ' + userId, 'user_edit'); }
             });
         }
         form.on('submit(saveUser)', function(data) {
-            adminApi.user.edit(data.field).then(function(r) { layer.msg(r.msg); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); });
+            SendLog.log_info('保存用户: ' + data.field.user_id, 'user_edit');
+            adminApi.user.edit(data.field).then(function(r) { layer.msg(r.msg); SendLog.log_info('用户保存成功: ' + data.field.user_id, 'user_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('用户保存失败', 'user_edit'); });
             return false;
         });
     });

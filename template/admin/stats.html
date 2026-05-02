@@ -20,44 +20,51 @@
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['element'], function() {
         var element = layui.element;
-        if (!lostoryOption.checkAuth()) { return; }
+        if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'stats'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
+        SendLog.log_info('加载数据统计', 'stats');
         adminApi.stats.getUsers('month').then(function(res) {
             if (res.code === 200) {
                 var d = res.data.overview;
                 document.getElementById('userStats').innerHTML = '<table class="layui-table"><tr><td>总用户</td><td>' + d.total_users + '</td></tr><tr><td>活跃用户</td><td>' + d.active_users + '</td></tr><tr><td>本月新增</td><td>' + d.new_users_month + '</td></tr><tr><td>已认证</td><td>' + d.verified_users + '</td></tr><tr><td>封禁用户</td><td>' + d.banned_users + '</td></tr></table>';
-            }
-        });
+                SendLog.log_info('用户统计加载成功', 'stats');
+            } else { SendLog.log_warning('用户统计加载失败: ' + res.msg, 'stats'); }
+        }).catch(function(err) { SendLog.log_error('用户统计请求异常: ' + err.message, 'stats'); });
         adminApi.stats.getContent('month').then(function(res) {
             if (res.code === 200) {
                 var d = res.data.overview;
                 document.getElementById('contentStats').innerHTML = '<table class="layui-table"><tr><td>总文章</td><td>' + d.total_articles + '</td></tr><tr><td>总问题</td><td>' + d.total_questions + '</td></tr><tr><td>总评论</td><td>' + d.total_comments + '</td></tr><tr><td>今日发布</td><td>' + d.published_today + '</td></tr><tr><td>本周发布</td><td>' + d.published_week + '</td></tr></table>';
-            }
-        });
+                SendLog.log_info('内容统计加载成功', 'stats');
+            } else { SendLog.log_warning('内容统计加载失败: ' + res.msg, 'stats'); }
+        }).catch(function(err) { SendLog.log_error('内容统计请求异常: ' + err.message, 'stats'); });
         adminApi.stats.getDashboard('week').then(function(res) {
             if (res.code === 200) {
                 var d = res.data.summary;
                 document.getElementById('activeStats').innerHTML = '<table class="layui-table"><tr><td>今日活跃</td><td>' + d.active_users_today + '</td></tr><tr><td>总浏览量</td><td>' + d.total_views + '</td></tr><tr><td>近7日浏览</td><td>' + d.new_views + '</td></tr><tr><td>待处理举报</td><td>' + d.reported_items + '</td></tr></table>';
-            }
-        });
+                SendLog.log_info('活跃度统计加载成功', 'stats');
+            } else { SendLog.log_warning('活跃度统计加载失败: ' + res.msg, 'stats'); }
+        }).catch(function(err) { SendLog.log_error('活跃度统计请求异常: ' + err.message, 'stats'); });
         adminApi.stats.getSearchKeywords('week', 10).then(function(res) {
             if (res.code === 200) {
                 var tbody = document.querySelector('#keywordTable tbody');
                 tbody.innerHTML = '';
                 res.data.top_keywords.forEach(function(k) { tbody.innerHTML += '<tr><td>' + k.keyword + '</td><td>' + k.search_count + '</td></tr>'; });
-            }
-        });
+                SendLog.log_info('搜索关键词加载成功', 'stats');
+            } else { SendLog.log_warning('搜索关键词加载失败: ' + res.msg, 'stats'); }
+        }).catch(function(err) { SendLog.log_error('搜索关键词请求异常: ' + err.message, 'stats'); });
         adminApi.tag.getStatsOverview().then(function(res) {
             if (res.code === 200) {
                 var tbody = document.querySelector('#hotTagTable tbody');
                 tbody.innerHTML = '';
                 res.data.top_tags.forEach(function(t) { tbody.innerHTML += '<tr><td>' + t.name + '</td><td>' + t.post_count + '</td></tr>'; });
-            }
-        });
+                SendLog.log_info('热门标签加载成功', 'stats');
+            } else { SendLog.log_warning('热门标签加载失败: ' + res.msg, 'stats'); }
+        }).catch(function(err) { SendLog.log_error('热门标签请求异常: ' + err.message, 'stats'); });
     });
     </script>
 </body>

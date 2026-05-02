@@ -3,6 +3,7 @@ from sanic.response import html, json
 from sanic_cors import CORS
 from sanic_ext import Extend
 import os
+import logging
 import config
 from models.db_init import init_database
 from router.admin_user_router import admin_user_bp
@@ -17,6 +18,18 @@ from router.admin_report_router import admin_report_bp
 from router.admin_stats_router import admin_stats_bp
 from router.admin_system_router import admin_system_bp
 from router.admin_tag_router import admin_tag_bp
+from router.log_router import log_bp
+
+os.makedirs(config.LOG_DIR, exist_ok=True)
+logging.basicConfig(
+    level=config.LOG_LEVEL,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[
+        logging.FileHandler(config.LOG_FILE, encoding="utf-8"),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
 
 app = Sanic("CodeSearchProject")
 CORS(app)
@@ -33,6 +46,7 @@ app.blueprint(admin_report_bp)
 app.blueprint(admin_stats_bp)
 app.blueprint(admin_system_bp)
 app.blueprint(admin_tag_bp)
+app.blueprint(log_bp)
 static_path = os.path.join(config.PROJECT_DIR, "static")
 app.static("/static", static_path, name="static_files")
 

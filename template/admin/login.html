@@ -25,17 +25,20 @@
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
         form.on('submit(login)', function(data) {
+            SendLog.log_info('尝试登录: ' + data.field.usernumber, 'admin_login');
             adminApi.auth.login(data.field.usernumber, data.field.password).then(function(res) {
                 if (res.code === 200) {
                     lostoryOption.setAdminId(res.data.admin_id);
                     lostoryOption.setAdminName(res.data.username);
+                    SendLog.log_info('登录成功: ' + res.data.username, 'admin_login');
                     window.location.href = '/admin/';
-                } else { layer.msg(res.msg); }
-            });
+                } else { SendLog.log_warning('登录失败: ' + res.msg, 'admin_login'); layer.msg(res.msg); }
+            }).catch(function(err) { SendLog.log_error('登录请求异常: ' + err.message, 'admin_login'); layer.msg('登录异常'); });
             return false;
         });
     });

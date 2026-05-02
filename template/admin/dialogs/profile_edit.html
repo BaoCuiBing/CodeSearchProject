@@ -15,17 +15,20 @@
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
+        SendLog.log_info('加载个人信息编辑数据', 'profile_edit');
         adminApi.auth.getMe().then(function(res) {
-            if (res.code === 200) { form.val('profileEditForm', { username: res.data.username, email: res.data.email || '' }); }
-        });
+            if (res.code === 200) { form.val('profileEditForm', { username: res.data.username, email: res.data.email || '' }); SendLog.log_info('个人信息编辑数据加载成功', 'profile_edit'); }
+        }).catch(function(err) { SendLog.log_error('个人信息编辑数据请求异常: ' + err.message, 'profile_edit'); });
         form.on('submit(saveProfile)', function(data) {
-            adminApi.user.edit({ user_id: adminId, email: data.field.email }).then(function(r) { layer.msg(r.msg); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); });
+            SendLog.log_info('保存个人信息: ' + data.field.email, 'profile_edit');
+            adminApi.user.edit({ user_id: adminId, email: data.field.email }).then(function(r) { layer.msg(r.msg); SendLog.log_info('个人信息保存成功', 'profile_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('个人信息保存失败', 'profile_edit'); });
             return false;
         });
     });

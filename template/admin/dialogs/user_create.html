@@ -18,6 +18,7 @@
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
@@ -25,7 +26,8 @@
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
         form.on('submit(createUser)', function(data) {
-            adminApi.user.create(data.field).then(function(r) { layer.msg(r.msg); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); });
+            SendLog.log_info('创建用户: ' + data.field.username, 'user_create');
+            adminApi.user.create(data.field).then(function(r) { layer.msg(r.msg); SendLog.log_info('用户创建成功: ' + data.field.username, 'user_create'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('用户创建失败', 'user_create'); });
             return false;
         });
     });

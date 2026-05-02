@@ -24,12 +24,14 @@
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['table', 'form'], function() {
         var table = layui.table, form = layui.form, layer = layui.layer;
-        if (!lostoryOption.checkAuth()) { return; }
+        if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'tags'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
+        SendLog.log_info('加载标签列表', 'tags');
         form.render('select');
         var tableIns = table.render({
             elem: '#tagTable', url: '/api/admin/tag/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
@@ -45,16 +47,18 @@
             ]]
         });
         document.getElementById('searchBtn').onclick = function() {
+            SendLog.log_info('搜索标签: ' + document.getElementById('searchKeyword').value, 'tags');
             tableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('searchKeyword').value, page: 1 } });
         };
         document.getElementById('addTagBtn').onclick = function() {
+            SendLog.log_info('打开新建标签弹窗', 'tags');
             lostoryOption.openDialog('新建标签', '/admin/dialogs/tag_create.html', ['500px', '250px']);
         };
         table.on('tool(tagTable)', function(obj) {
             var d = obj.data;
-            if (obj.event === 'detail') { lostoryOption.openDialog('标签详情', '/admin/dialogs/tag_detail.html?tag_id=' + d.tag_id, ['500px', '300px']); }
-            if (obj.event === 'edit') { lostoryOption.openDialog('编辑标签', '/admin/dialogs/tag_edit.html?tag_id=' + d.tag_id + '&name=' + encodeURIComponent(d.name), ['500px', '250px']); }
-            if (obj.event === 'delete') { lostoryOption.confirmDialog('确认删除该标签？', function() { adminApi.tag.delete(d.tag_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); }); }); }
+            if (obj.event === 'detail') { SendLog.log_info('查看标签详情: ' + d.tag_id, 'tags'); lostoryOption.openDialog('标签详情', '/admin/dialogs/tag_detail.html?tag_id=' + d.tag_id, ['500px', '300px']); }
+            if (obj.event === 'edit') { SendLog.log_info('编辑标签: ' + d.tag_id, 'tags'); lostoryOption.openDialog('编辑标签', '/admin/dialogs/tag_edit.html?tag_id=' + d.tag_id + '&name=' + encodeURIComponent(d.name), ['500px', '250px']); }
+            if (obj.event === 'delete') { SendLog.log_info('删除标签: ' + d.tag_id, 'tags'); lostoryOption.confirmDialog('确认删除该标签？', function() { adminApi.tag.delete(d.tag_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('标签删除成功: ' + d.tag_id, 'tags'); }).catch(function(err) { SendLog.log_error('标签删除失败: ' + d.tag_id, 'tags'); }); }); }
         });
     });
     </script>

@@ -23,12 +23,14 @@
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['table', 'form', 'upload'], function() {
         var table = layui.table, form = layui.form, layer = layui.layer, upload = layui.upload;
-        if (!lostoryOption.checkAuth()) { return; }
+        if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'files'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
+        SendLog.log_info('加载文件列表', 'files');
         form.render('select');
         var tableIns = table.render({
             elem: '#fileTable', url: '/api/admin/file/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
@@ -46,15 +48,17 @@
             ]]
         });
         document.getElementById('searchBtn').onclick = function() {
+            SendLog.log_info('搜索文件: ' + document.getElementById('searchKeyword').value, 'files');
             tableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('searchKeyword').value, page: 1 } });
         };
         document.getElementById('uploadBtn').onclick = function() {
+            SendLog.log_info('打开上传文件弹窗', 'files');
             lostoryOption.openDialog('上传文件', '/admin/dialogs/file_upload.html', ['600px', '400px']);
         };
         table.on('tool(fileTable)', function(obj) {
             var d = obj.data;
-            if (obj.event === 'preview') { window.open(d.file_url); }
-            if (obj.event === 'delete') { lostoryOption.confirmDialog('确认删除该文件？', function() { adminApi.file.delete(d.file_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); }); }); }
+            if (obj.event === 'preview') { SendLog.log_info('预览文件: ' + d.file_id, 'files'); window.open(d.file_url); }
+            if (obj.event === 'delete') { SendLog.log_info('删除文件: ' + d.file_id, 'files'); lostoryOption.confirmDialog('确认删除该文件？', function() { adminApi.file.delete(d.file_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('文件删除成功: ' + d.file_id, 'files'); }).catch(function(err) { SendLog.log_error('文件删除失败: ' + d.file_id, 'files'); }); }); }
         });
     });
     </script>

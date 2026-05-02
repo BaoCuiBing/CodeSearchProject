@@ -28,12 +28,14 @@
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['table', 'form'], function() {
         var table = layui.table, form = layui.form, layer = layui.layer;
-        if (!lostoryOption.checkAuth()) { return; }
+        if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'articles'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
+        SendLog.log_info('加载内容列表', 'articles');
         form.render('select');
         var tableIns = table.render({
             elem: '#articleTable', url: '/api/admin/article/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
@@ -52,24 +54,27 @@
             ]]
         });
         document.getElementById('searchBtn').onclick = function() {
+            SendLog.log_info('搜索内容: ' + document.getElementById('searchKeyword').value, 'articles');
             tableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('searchKeyword').value, type: document.getElementById('searchType').value, status: document.getElementById('searchStatus').value, page: 1 } });
         };
         document.getElementById('addArticleBtn').onclick = function() {
+            SendLog.log_info('打开新建内容弹窗', 'articles');
             lostoryOption.openDialog('新建内容', '/admin/dialogs/article_create.html', ['600px', '450px']);
         };
         table.on('tool(articleTable)', function(obj) {
             var d = obj.data;
-            if (obj.event === 'detail') { lostoryOption.openDialog('内容详情', '/admin/dialogs/article_detail.html?post_id=' + d.post_id, ['600px', '500px']); }
-            if (obj.event === 'edit') { lostoryOption.openDialog('编辑内容', '/admin/dialogs/article_edit.html?post_id=' + d.post_id, ['600px', '400px']); }
-            if (obj.event === 'toggle') { adminApi.article.toggleStatus(d.post_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); }); }
-            if (obj.event === 'delete') { lostoryOption.confirmDialog('确认删除该内容？', function() { adminApi.article.delete(d.post_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); }); }); }
+            if (obj.event === 'detail') { SendLog.log_info('查看内容详情: ' + d.post_id, 'articles'); lostoryOption.openDialog('内容详情', '/admin/dialogs/article_detail.html?post_id=' + d.post_id, ['600px', '500px']); }
+            if (obj.event === 'edit') { SendLog.log_info('编辑内容: ' + d.post_id, 'articles'); lostoryOption.openDialog('编辑内容', '/admin/dialogs/article_edit.html?post_id=' + d.post_id, ['600px', '400px']); }
+            if (obj.event === 'toggle') { SendLog.log_info('切换内容状态: ' + d.post_id, 'articles'); adminApi.article.toggleStatus(d.post_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('内容状态切换成功: ' + d.post_id, 'articles'); }).catch(function(err) { SendLog.log_error('内容状态切换失败: ' + d.post_id, 'articles'); }); }
+            if (obj.event === 'delete') { SendLog.log_info('删除内容: ' + d.post_id, 'articles'); lostoryOption.confirmDialog('确认删除该内容？', function() { adminApi.article.delete(d.post_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('内容删除成功: ' + d.post_id, 'articles'); }).catch(function(err) { SendLog.log_error('内容删除失败: ' + d.post_id, 'articles'); }); }); }
         });
         document.getElementById('batchDelete').onclick = function() {
             var checkStatus = table.checkStatus('articleTable');
             if (checkStatus.data.length === 0) { layer.msg('请先选择内容'); return; }
             var ids = [];
             checkStatus.data.forEach(function(d) { ids.push(d.post_id); });
-            lostoryOption.confirmDialog('确认批量删除选中内容？', function() { adminApi.article.batchDelete(ids).then(function(r) { layer.msg(r.msg); tableIns.reload(); }); });
+            SendLog.log_info('批量删除内容: ' + ids.join(','), 'articles');
+            lostoryOption.confirmDialog('确认批量删除选中内容？', function() { adminApi.article.batchDelete(ids).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('批量删除内容成功', 'articles'); }).catch(function(err) { SendLog.log_error('批量删除内容失败', 'articles'); }); });
         };
     });
     </script>
