@@ -1,15 +1,17 @@
 from sanic import Sanic
-from sanic.response import text, json
+from sanic.response import html, json
 from sanic_cors import CORS
 import os
 import config
 from models.db_init import init_database
-from router.user_router import user_bp
+from router.admin_user_router import admin_user_bp
+from router.admin_view_router import admin_view_bp
 from router.upload_router import upload_bp
 
 app = Sanic("CodeSearchProject")
 CORS(app)
-app.blueprint(user_bp)
+app.blueprint(admin_user_bp)
+app.blueprint(admin_view_bp)
 app.blueprint(upload_bp)
 static_path = os.path.join(config.PROJECT_DIR, "static")
 app.static("/static", static_path, name="static_files")
@@ -22,12 +24,10 @@ def init_app():
 @app.get("/")
 async def index(request):
     """首页接口"""
-    return text("Hello, CodeSearchProject!")
-
-@app.get("/health")
-async def health_check(request):
-    """健康检查接口"""
-    return json({"status": "ok"})
+    template_path = os.path.join(config.PROJECT_DIR, "template", "index.html")
+    with open(template_path, "r", encoding="utf-8") as f:
+        content = f.read()
+    return html(content)
 
 if __name__ == "__main__":
     init_app()

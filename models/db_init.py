@@ -1,5 +1,6 @@
 from models.db_base import Database
-from models.model import User, File
+from models.model import User, File, Report, SearchHistory, Category, Post, Tag, PostTag, Comment, Favorite, Like, Follow, Message, Notification
+from utils.password_analysis import generate_salt, hash_password
 
 def init_database():
     """初始化数据库,创建表结构"""
@@ -9,7 +10,9 @@ def init_database():
     try:
         admin = session.query(User).filter(User.usernumber == "admin").first()
         if not admin:
-            admin_user = User(usernumber="admin", username="管理员", password="admin123", email="admin@example.com")
+            salt = generate_salt()
+            hashed_password = hash_password("admin123", salt)
+            admin_user = User(usernumber="admin", username="管理员", password=hashed_password, salt=salt, email="admin@example.com", role="admin")
             session.add(admin_user)
             session.commit()
     finally:

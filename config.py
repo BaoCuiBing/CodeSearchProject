@@ -1,6 +1,6 @@
 import os
 
-PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # 项目根目录
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))  # 项目根目录
 
 MYSQL_DB_USER = "JhcwtwieiysHbE4p"  # 数据库用户名
 MYSQL_DB_PASSWORD = "2JBBedBB4YRChhhC"  # 数据库密码
@@ -11,3 +11,4 @@ SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_DB_USER}:{MYSQL_DB_PASSWORD}@
 
 SANIC_HOST = "0.0.0.0"  # Sanic主机
 SANIC_PORT = 8848  # Sanic端口
+MAX_UPLOAD_SIZE = 2  # 最大上传大小（单位：MB）

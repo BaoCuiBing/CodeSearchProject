@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+</head>
+<body>
+    <table id="userTable" lay-filter="userTable"></table>
+    <script src="/static/webs/layui/layui.js"></script>
+    <script>
+    layui.use('table', function(){
+        var table = layui.table;
+        table.render({
+            elem: '#userTable',
+            url: '/api/admin/user/list',
+            cols: [[
+                {field:'id', title:'ID'},
+                {field:'username', title:'用户名'},
+                {field:'email', title:'邮箱'},
+                {field:'role', title:'角色'},
+                {field:'created_at', title:'注册时间'}
+            ]]
+        });
+    });
+    </script>
+</body>
+</html>
