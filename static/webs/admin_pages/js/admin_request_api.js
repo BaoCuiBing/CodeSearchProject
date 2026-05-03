@@ -43,6 +43,7 @@ var adminApi = {
         batchAction: function(ids, action) { return adminApi._post('/api/admin/user/batch-action', { admin_id: adminApi.getAdminId(), ids: ids, action: action }); },
         exportData: function() { return adminApi._post('/api/admin/user/export', { admin_id: adminApi.getAdminId() }); },
         getStatsOverview: function(period) { return adminApi._get('/api/admin/user/stats/overview', { admin_id: adminApi.getAdminId(), period: period }); },
+        create: function(data) { data.admin_id = adminApi.getAdminId(); return adminApi._post('/api/admin/user/', data); },
         sendNotify: function(userId, title, content) { return adminApi._post('/api/admin/user/' + userId + '/notify', { title: title, content: content }); }
     },
     article: {
@@ -112,6 +113,10 @@ var adminApi = {
         resetSettings: function(key) { return adminApi._post('/api/admin/system/settings/reset', { admin_id: adminApi.getAdminId(), key: key }); },
         testEmail: function(toEmail) { return adminApi._post('/api/admin/system/test-email', { admin_id: adminApi.getAdminId(), to_email: toEmail }); },
         clearCache: function(cacheTypes) { return adminApi._post('/api/admin/system/clear-cache', { admin_id: adminApi.getAdminId(), cache_types: cacheTypes || ['all'] }); }
+    },
+    file: {
+        getList: function(params) { params = params || {}; params.admin_id = adminApi.getAdminId(); return adminApi._get('/api/admin/file/list', params); },
+        delete: function(fileId) { return adminApi._delete('/api/admin/file/' + fileId, { admin_id: adminApi.getAdminId() }); }
     },
     upload: {
         uploadFile: function(file, userId) {

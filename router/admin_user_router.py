@@ -93,6 +93,40 @@ async def get_user_detail(request, user_id):
     logger.info(f"管理员{admin_id}查询用户详情成功:username={user.username}")
     return response.json({"code": 200, "msg": "获取成功", "data": {"user_id": user.id, "usernumber": user.usernumber, "username": user.username, "email": user.email, "phone": user.phone, "avatar": user.avatar, "bio": user.bio, "location": user.location, "website": user.website, "github": user.github, "status": user.status, "role": user.role, "stats": {"article_count": article_count, "question_count": question_count, "comment_count": comment_count, "favorite_count": favorite_count, "follower_count": follower_count, "following_count": following_count, "like_received": like_received, "like_given": like_given, "view_count": view_count}, "created_at": str(user.created_at), "last_login_time": str(user.last_login_time) if user.last_login_time else None, "login_ip": user.login_ip, "device_info": user.device_info, "is_verified": bool(user.is_verified), "ban_reason": user.ban_reason, "ban_expire_time": str(user.ban_expire_time) if user.ban_expire_time else None}})
 
+@admin_user_bp.post("/")
+@openapi.summary("创建用户")
+async def create_user(request):
+    db = request.ctx.db
+    data = request.json
+    admin_id = data.get("admin_id")
+    if not admin_id:
+        logger.warning("创建用户失败:缺少admin_id参数")
+        return response.json({"code": 403, "msg": "权限不足"})
+    admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
+    if not admin:
+        logger.warning("创建用户失败:admin_id不是管理员")
+        return response.json({"code": 403, "msg": "权限不足"})
+    username = data.get("username")
+    usernumber = data.get("usernumber")
+    password = data.get("password")
+    email = data.get("email", "")
+    role = data.get("role", "user")
+    if not username or not usernumber or not password:
+        logger.warning("创建用户失败:必填字段为空")
+        return response.json({"code": 400, "msg": "用户名、账号、密码不能为空"})
+    exist_user = db.query(User).filter(User.usernumber == usernumber).first()
+    if exist_user:
+        logger.warning(f"创建用户失败:账号已存在,usernumber={usernumber}")
+        return response.json({"code": 400, "msg": "账号已存在"})
+    logger.info(f"管理员{admin_id}创建用户:username={username},usernumber={usernumber}")
+    salt = generate_salt()
+    hashed_password = hash_password(password, salt)
+    new_user = User(username=username, usernumber=usernumber, password=hashed_password, salt=salt, email=email, role=role)
+    db.add(new_user)
+    db.commit()
+    logger.info(f"管理员{admin_id}创建用户成功:user_id={new_user.id},username={username}")
+    return response.json({"code": 200, "msg": "创建成功", "data": {"user_id": new_user.id, "username": new_user.username}})
+
 @admin_user_bp.post("/ban")
 @openapi.summary("封禁/解封用户")
 async def toggle_user_ban(request):

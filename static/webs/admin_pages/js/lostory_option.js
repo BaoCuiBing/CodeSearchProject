@@ -39,6 +39,15 @@ var lostoryOption = {
         localStorage.setItem('admin_name', name);
         this._setCache('admin_name', name);
     },
+    getCurrentPage: function() {
+        var page = this._getCache('current_page');
+        if (!page) { page = localStorage.getItem('current_page'); if (page) { this._setCache('current_page', page); } }
+        return page || '/admin/dashboard';
+    },
+    setCurrentPage: function(page) {
+        localStorage.setItem('current_page', page);
+        this._setCache('current_page', page);
+    },
     clearAuth: function() {
         localStorage.removeItem('admin_id');
         localStorage.removeItem('admin_name');

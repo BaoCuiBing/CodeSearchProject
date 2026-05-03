@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <title>CodeSearchProject</title>
+    <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
+    <title>后台管理系统</title>
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
     <style>
         .layui-layout-admin .layui-side { width: 200px; }
@@ -14,7 +15,7 @@
 <body>
     <div class="layui-layout layui-layout-admin">
         <div class="layui-header">
-            <div class="layui-logo">CodeSearchProject</div>
+            <div class="layui-logo"><img src="/static/imgs/bo_luo_tb.png" style="height:24px;vertical-align:middle;margin-right:8px;">后台管理系统</div>
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item"><a href="javascript:;" onclick="document.getElementById('mainFrame').src='/admin/profile';">管理员</a></li>
                 <li class="layui-nav-item"><a href="/admin/login">退出</a></li>
@@ -23,15 +24,14 @@
         <div class="layui-side layui-bg-black">
             <div class="layui-side-scroll">
                 <ul class="layui-nav layui-nav-tree" lay-filter="leftNav">
-                    <li class="layui-nav-item layui-this"><a href="javascript:;" data-url="/admin/dashboard">仪表盘</a></li>
-                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/users">用户管理</a></li>
-                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/articles">内容管理</a></li>
-                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/tags">标签管理</a></li>
-                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/comments">评论管理</a></li>
-                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/messages">消息管理</a></li>
-                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/files">文件管理</a></li>
-                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/stats">数据统计</a></li>
-                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/settings">系统设置</a></li>
+                    <li class="layui-nav-item layui-this"><a href="javascript:;" data-url="/admin/dashboard"><i class="layui-icon layui-icon-home"></i> 仪表盘</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/users"><i class="layui-icon layui-icon-user"></i> 用户管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/articles"><i class="layui-icon layui-icon-file"></i> 内容管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/tags"><i class="layui-icon layui-icon-flag"></i> 标签管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/comments"><i class="layui-icon layui-icon-reply-fill"></i> 评论管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/messages"><i class="layui-icon layui-icon-notice"></i> 消息管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/files"><i class="layui-icon layui-icon-upload"></i> 文件管理</a></li>
+                    <li class="layui-nav-item"><a href="javascript:;" data-url="/admin/settings"><i class="layui-icon layui-icon-set"></i> 系统设置</a></li>
                 </ul>
             </div>
         </div>
@@ -54,8 +54,14 @@
                 SendLog.log_info('导航到: ' + url, 'index');
                 document.querySelectorAll('.layui-nav-tree .layui-nav-item').forEach(function(el) { el.classList.remove('layui-this'); });
                 elem.parent().addClass('layui-this');
+                lostoryOption.setCurrentPage(url);
                 document.getElementById('mainFrame').src = url;
             }
+        });
+        var currentPage = lostoryOption.getCurrentPage();
+        document.getElementById('mainFrame').src = currentPage;
+        document.querySelectorAll('.layui-nav-tree .layui-nav-item').forEach(function(el) {
+            if (el.querySelector('a').getAttribute('data-url') === currentPage) { el.classList.add('layui-this'); }
         });
     });
     </script>

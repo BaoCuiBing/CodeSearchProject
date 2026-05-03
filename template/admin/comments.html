@@ -2,17 +2,18 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
     <title>评论管理</title>
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
 </head>
 <body>
     <div class="layui-card" style="margin:15px;">
         <div class="layui-card-header">
-            <div class="layui-form layui-row">
+            <div class="layui-form layui-row layui-col-space10">
                 <div class="layui-col-md2"><input type="text" id="searchKeyword" placeholder="评论内容关键词" class="layui-input"></div>
                 <div class="layui-col-md1"><select id="searchStatus"><option value="all">全部状态</option><option value="normal">正常</option><option value="hidden">已隐藏</option></select></div>
                 <div class="layui-col-md1"><button class="layui-btn" id="searchBtn">搜索</button></div>
-                <div class="layui-col-md1 layui-col-md-offset3"><button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDelete">批量删除</button></div>
+                <div class="layui-col-md8" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDelete">批量删除</button></div>
             </div>
         </div>
         <div class="layui-card-body"><table id="commentTable" lay-filter="commentTable"></table></div>

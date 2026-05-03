@@ -2,19 +2,20 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
     <title>消息管理</title>
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
 </head>
 <body>
     <div class="layui-card" style="margin:15px;">
         <div class="layui-card-header">
-            <div class="layui-form layui-row">
+            <div class="layui-form layui-row layui-col-space10">
                 <div class="layui-col-md2"><input type="text" id="searchKeyword" placeholder="标题/内容关键词" class="layui-input"></div>
                 <div class="layui-col-md1"><select id="searchType"><option value="all">全部类型</option><option value="system">系统消息</option><option value="announcement">公告</option></select></div>
                 <div class="layui-col-md1"><select id="searchStatus"><option value="all">全部状态</option><option value="draft">草稿</option><option value="sent">已发送</option></select></div>
                 <div class="layui-col-md1"><button class="layui-btn" id="searchBtn">搜索</button></div>
                 <div class="layui-col-md1"><button class="layui-btn layui-btn-normal" id="addMsgBtn">新建消息</button></div>
-                <div class="layui-col-md1 layui-col-md-offset3"><button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDelete">批量删除</button></div>
+                <div class="layui-col-md6" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDelete">批量删除</button></div>
             </div>
         </div>
         <div class="layui-card-body"><table id="messageTable" lay-filter="messageTable"></table></div>
