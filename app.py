@@ -6,20 +6,32 @@ import os
 import logging
 import config
 from models.db_init import init_database
-from router.admin_user_router import admin_user_bp
-from router.admin_view_router import admin_view_bp
+from router.admin_router.admin_user_router import admin_user_bp
+from router.admin_router.admin_view_router import admin_view_bp
 from router.upload_router import upload_bp
-from router.admin_auth_router import admin_auth_bp
-from router.admin_article_router import admin_article_bp
-from router.admin_category_router import admin_category_bp
-from router.admin_comment_router import admin_comment_bp
-from router.admin_message_router import admin_message_bp
-from router.admin_report_router import admin_report_bp
-from router.admin_stats_router import admin_stats_bp
-from router.admin_system_router import admin_system_bp
-from router.admin_tag_router import admin_tag_bp
-from router.admin_file_router import admin_file_bp
+from router.admin_router.admin_auth_router import admin_auth_bp
+from router.admin_router.admin_article_router import admin_article_bp
+from router.admin_router.admin_category_router import admin_category_bp
+from router.admin_router.admin_comment_router import admin_comment_bp
+from router.admin_router.admin_message_router import admin_message_bp
+from router.admin_router.admin_report_router import admin_report_bp
+from router.admin_router.admin_stats_router import admin_stats_bp
+from router.admin_router.admin_system_router import admin_system_bp
+from router.admin_router.admin_tag_router import admin_tag_bp
+from router.admin_router.admin_file_router import admin_file_bp
 from router.log_router import log_bp
+from router.app_router.app_user_router import user_bp
+from router.app_router.app_profile_router import profile_bp
+from router.app_router.app_article_router import article_bp
+from router.app_router.app_category_router import category_bp
+from router.app_router.app_tag_router import tag_bp
+from router.app_router.app_comment_router import comment_bp
+from router.app_router.app_follow_router import follow_bp
+from router.app_router.app_favorite_router import favorite_bp
+from router.app_router.app_message_router import message_bp
+from router.app_router.app_search_router import search_bp
+from router.app_router.app_ranking_router import ranking_bp
+from router.app_router.app_report_router import report_bp
 
 os.makedirs(config.LOG_DIR, exist_ok=True)
 logging.basicConfig(
@@ -49,6 +61,18 @@ app.blueprint(admin_system_bp)  # 系统设置路由
 app.blueprint(admin_tag_bp)  # 标签管理路由
 app.blueprint(admin_file_bp)  # 文件管理路由
 app.blueprint(log_bp)  # 日志路由
+app.blueprint(user_bp)  # APP用户路由
+app.blueprint(profile_bp)  # APP用户资料路由
+app.blueprint(article_bp)  # APP文章路由
+app.blueprint(category_bp)  # APP分类路由
+app.blueprint(tag_bp)  # APP标签路由
+app.blueprint(comment_bp)  # APP评论路由
+app.blueprint(follow_bp)  # APP关注路由
+app.blueprint(favorite_bp)  # APP收藏路由
+app.blueprint(message_bp)  # APP消息路由
+app.blueprint(search_bp)  # APP搜索路由
+app.blueprint(ranking_bp)  # APP排行榜路由
+app.blueprint(report_bp)  # APP举报路由
 static_path = os.path.join(config.PROJECT_DIR, "static")
 app.static("/static", static_path, name="static_files")
 

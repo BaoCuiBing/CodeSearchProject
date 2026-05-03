@@ -17,5 +17,4 @@ MAX_UPLOAD_SIZE = 2  # 最大上传大小（单位：MB）
 LOG_DIR = os.path.join(PROJECT_DIR, "static", "logs")  # 日志目录
 LOG_FILE = os.path.join(LOG_DIR, "sanic.log")  # 日志文件
 LOG_LEVEL = logging.INFO  # 日志级别（及以上级别会被记录）
-
 WEB_LOG_FILE = os.path.join(LOG_DIR, "web_log.log")  # 前端日志文件
