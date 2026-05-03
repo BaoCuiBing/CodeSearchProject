@@ -19,7 +19,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+        var form = layui.form, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -28,7 +28,7 @@
         document.getElementById('commentId').value = commentId || '';
         form.on('submit(replyComment)', function(data) {
             SendLog.log_info('回复评论: ' + data.field.comment_id, 'comment_reply');
-            adminApi.comment.reply(data.field).then(function(r) { layer.msg(r.msg); SendLog.log_info('评论回复成功: ' + data.field.comment_id, 'comment_reply'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('评论回复失败', 'comment_reply'); });
+            adminApi.comment.reply(data.field).then(function(r) { L.msg(r.msg); SendLog.log_info('评论回复成功: ' + data.field.comment_id, 'comment_reply'); parent.layui.table.reload('commentTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('评论回复失败', 'comment_reply'); });
             return false;
         });
     });

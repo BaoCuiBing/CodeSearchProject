@@ -19,7 +19,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+        var form = layui.form, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -36,7 +36,7 @@
             var d = data.field;
             SendLog.log_info('保存基本设置', 'settings_basic');
             Object.keys(d).forEach(function(k) { adminApi.system.updateSettings(k, d[k]); });
-            layer.msg('保存成功');
+            L.msg('保存成功');
             SendLog.log_info('基本设置保存成功', 'settings_basic');
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);

@@ -27,7 +27,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['table', 'form', 'upload'], function() {
-        var table = layui.table, form = layui.form, layer = layui.layer, upload = layui.upload;
+        var table = layui.table, form = layui.form, L = parent.layer, upload = layui.upload;
         if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'files'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
@@ -37,15 +37,15 @@
             elem: '#fileTable', url: '/api/admin/file/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
             where: { admin_id: adminId },
             request: { pageName: 'page', limitName: 'page_size' },
-            parseData: function(res) { return { code: res.code, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
             cols: [[
-                {type: 'checkbox'}, {field: 'file_id', title: 'ID', width: 80},
-                {field: 'filename', title: '文件名', width: 250},
-                {field: 'file_type', title: '类型', width: 80},
-                {field: 'file_size', title: '大小', width: 100, templet: function(d) { var s = d.file_size || 0; return s < 1024 ? s + 'B' : s < 1048576 ? (s / 1024).toFixed(1) + 'KB' : (s / 1048576).toFixed(1) + 'MB'; }},
-                {field: 'file_url', title: '链接', width: 200, templet: function(d) { return '<a href="' + d.file_url + '" target="_blank">' + d.file_url + '</a>'; }},
-                {field: 'created_at', title: '上传时间', width: 160},
-                {title: '操作', width: 150, toolbar: '#toolbarTpl'}
+                {type: 'checkbox', fixed: 'left'}, {field: 'file_id', title: 'ID', width: '8%'},
+                {field: 'filename', title: '文件名', width: '25%'},
+                {field: 'file_type', title: '类型', width: '8%'},
+                {field: 'file_size', title: '大小', width: '10%', templet: function(d) { var s = d.file_size || 0; return s < 1024 ? s + 'B' : s < 1048576 ? (s / 1024).toFixed(1) + 'KB' : (s / 1048576).toFixed(1) + 'MB'; }},
+                {field: 'file_url', title: '链接', width: '20%', templet: function(d) { return '<a href="' + d.file_url + '" target="_blank">' + d.file_url + '</a>'; }},
+                {field: 'created_at', title: '上传时间', width: '14%'},
+                {title: '操作', width: '130', toolbar: '#toolbarTpl', fixed: 'right'}
             ]]
         });
         document.getElementById('searchBtn').onclick = function() {
@@ -58,8 +58,18 @@
         };
         table.on('tool(fileTable)', function(obj) {
             var d = obj.data;
-            if (obj.event === 'preview') { SendLog.log_info('预览文件: ' + d.file_id, 'files'); window.open(d.file_url); }
-            if (obj.event === 'delete') { SendLog.log_info('删除文件: ' + d.file_id, 'files'); lostoryOption.confirmDialog('确认删除该文件？', function() { adminApi.file.delete(d.file_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('文件删除成功: ' + d.file_id, 'files'); }).catch(function(err) { SendLog.log_error('文件删除失败: ' + d.file_id, 'files'); }); }); }
+            if (obj.event === 'preview') {
+                SendLog.log_info('预览文件: ' + d.file_id, 'files');
+                var fileType = d.file_type || '';
+                var isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg'].indexOf(fileType.toLowerCase()) !== -1;
+                var targetLayer = (typeof parent !== 'undefined' && parent.layer) ? parent.layer : layer;
+                if (isImage) {
+                    targetLayer.photos({ photos: { data: [{ src: d.file_url }] } });
+                } else {
+                    targetLayer.open({ type: 2, title: '文件预览: ' + d.filename, area: ['80%', '80%'], maxmin: false, content: d.file_url });
+                }
+            }
+            if (obj.event === 'delete') { SendLog.log_info('删除文件: ' + d.file_id, 'files'); lostoryOption.confirmDialog('确认删除该文件？', function() { adminApi.file.delete(d.file_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('文件删除成功: ' + d.file_id, 'files'); }).catch(function(err) { SendLog.log_error('文件删除失败: ' + d.file_id, 'files'); }); }); }
         });
     });
     </script>

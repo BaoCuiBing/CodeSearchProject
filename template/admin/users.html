@@ -22,7 +22,8 @@
     <script type="text/html" id="toolbarTpl">
         <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
         <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="toggle">{{# if(d.status === 'banned') { }}解封{{# } else { }}封禁{{# } }}</a>
+        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="resetPwd">重置密码</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="ban">{{# if(d.status === 'banned') { }}解封{{# } else { }}封禁{{# } }}</a>
         <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
     </script>
     <script src="/static/webs/layui/js/layui.js"></script>
@@ -31,7 +32,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['table', 'form'], function() {
-        var table = layui.table, form = layui.form, layer = layui.layer;
+        var table = layui.table, form = layui.form, L = lostoryOption.getLayer();
         if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'users'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
@@ -41,15 +42,18 @@
             elem: '#userTable', url: '/api/admin/user/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
             where: { admin_id: adminId },
             request: { pageName: 'page', limitName: 'page_size' },
-            parseData: function(res) { return { code: res.code, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
             cols: [[
-                {type: 'checkbox'}, {field: 'user_id', title: 'ID', width: 80},
-                {field: 'username', title: '用户名', width: 120},
-                {field: 'usernumber', title: '账号', width: 120},
-                {field: 'email', title: '邮箱', width: 180},
-                {field: 'status', title: '状态', width: 90, templet: function(d) { return d.status === 'banned' ? '<span style="color:#FF5722;">已封禁</span>' : '<span style="color:#5FB878;">正常</span>'; }},
-                {field: 'created_at', title: '注册时间', width: 160},
-                {title: '操作', width: 220, toolbar: '#toolbarTpl'}
+                {type: 'checkbox', fixed: 'left'}, {field: 'user_id', title: 'ID', width: '6%'},
+                {field: 'avatar', title: '头像', width: '8%', templet: function(d) { return d.avatar ? '<img src="' + d.avatar + '" style="width:40px;height:40px;border-radius:50%;">' : '无'; }},
+                {field: 'username', title: '用户名', width: '10%', sort: true},
+                {field: 'usernumber', title: '账号', width: '10%'},
+                {field: 'phone', title: '手机号', width: '11%'},
+                {field: 'email', title: '邮箱', width: '15%'},
+                {field: 'role', title: '角色', width: '7%', templet: function(d) { return d.role === 'admin' ? '<span style="color:#FF5722;">管理员</span>' : '普通用户'; }},
+                {field: 'status', title: '状态', width: '7%', templet: function(d) { return d.status === 'banned' ? '<span style="color:#FF5722;">已封禁</span>' : '<span style="color:#5FB878;">正常</span>'; }},
+                {field: 'created_at', title: '注册时间', width: '13%', sort: true},
+                {title: '操作', width: '310', toolbar: '#toolbarTpl', fixed: 'right'}
             ]]
         });
         document.getElementById('searchBtn').onclick = function() {
@@ -58,22 +62,33 @@
         };
         document.getElementById('addUserBtn').onclick = function() {
             SendLog.log_info('打开新增用户弹窗', 'users');
-            lostoryOption.openDialog('新增用户', '/admin/dialogs/user_create.html', ['500px', '350px']);
+            lostoryOption.openDialog('新增用户', '/admin/dialogs/user_create.html', ['600px', '550px']);
         };
         table.on('tool(userTable)', function(obj) {
             var d = obj.data;
-            if (obj.event === 'detail') { SendLog.log_info('查看用户详情: ' + d.user_id, 'users'); lostoryOption.openDialog('用户详情', '/admin/dialogs/user_detail.html?user_id=' + d.user_id, ['600px', '500px']); }
-            if (obj.event === 'edit') { SendLog.log_info('编辑用户: ' + d.user_id, 'users'); lostoryOption.openDialog('编辑用户', '/admin/dialogs/user_edit.html?user_id=' + d.user_id, ['500px', '300px']); }
-            if (obj.event === 'toggle') { SendLog.log_info('切换用户状态: ' + d.user_id, 'users'); adminApi.user.toggleStatus(d.user_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('用户状态切换成功: ' + d.user_id, 'users'); }).catch(function(err) { SendLog.log_error('用户状态切换失败: ' + d.user_id, 'users'); }); }
-            if (obj.event === 'delete') { SendLog.log_info('删除用户: ' + d.user_id, 'users'); lostoryOption.confirmDialog('确认删除该用户？', function() { adminApi.user.delete(d.user_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('用户删除成功: ' + d.user_id, 'users'); }).catch(function(err) { SendLog.log_error('用户删除失败: ' + d.user_id, 'users'); }); }); }
+            if (obj.event === 'detail') { SendLog.log_info('查看用户详情: ' + d.user_id, 'users'); lostoryOption.openDialog('用户详情', '/admin/dialogs/user_detail.html?user_id=' + d.user_id, ['600px', '600px']); }
+            if (obj.event === 'edit') { SendLog.log_info('编辑用户: ' + d.user_id, 'users'); lostoryOption.openDialog('编辑用户', '/admin/dialogs/user_edit.html?user_id=' + d.user_id, ['600px', '550px']); }
+            if (obj.event === 'resetPwd') { SendLog.log_info('重置用户密码: ' + d.user_id, 'users'); lostoryOption.openDialog('重置密码', '/admin/dialogs/user_reset_pwd.html?user_id=' + d.user_id, ['400px', '200px']); }
+            if (obj.event === 'ban') {
+                if (d.status === 'banned') {
+                    SendLog.log_info('解封用户: ' + d.user_id, 'users');
+                    lostoryOption.confirmDialog('确认解封该用户？', function() { adminApi.user.toggleStatus(d.user_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('用户解封成功: ' + d.user_id, 'users'); }).catch(function(err) { SendLog.log_error('用户解封失败: ' + d.user_id, 'users'); }); });
+                } else {
+                    SendLog.log_info('封禁用户: ' + d.user_id, 'users');
+                    lostoryOption.openDialog('封禁用户', '/admin/dialogs/user_ban.html?user_id=' + d.user_id, ['400px', '250px']);
+                }
+            }
+            if (obj.event === 'delete') { SendLog.log_info('删除用户: ' + d.user_id, 'users'); lostoryOption.confirmDialog('确认删除该用户？', function() { adminApi.user.delete(d.user_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('用户删除成功: ' + d.user_id, 'users'); }).catch(function(err) { SendLog.log_error('用户删除失败: ' + d.user_id, 'users'); }); }); }
         });
         document.getElementById('batchDelete').onclick = function() {
             var checkStatus = table.checkStatus('userTable');
-            if (checkStatus.data.length === 0) { layer.msg('请先选择用户'); return; }
+            if (checkStatus.data.length === 0) { L.msg('请先选择用户'); return; }
             var ids = [];
-            checkStatus.data.forEach(function(d) { ids.push(d.user_id); });
+            var adminCount = 0;
+            checkStatus.data.forEach(function(d) { ids.push(d.user_id); if (d.role === 'admin') { adminCount++; } });
+            if (adminCount > 0) { L.msg('批量删除包含管理员账号,请使用单个删除功能'); return; }
             SendLog.log_info('批量删除用户: ' + ids.join(','), 'users');
-            lostoryOption.confirmDialog('确认批量删除选中用户？', function() { adminApi.user.batchDelete(ids).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('批量删除用户成功', 'users'); }).catch(function(err) { SendLog.log_error('批量删除用户失败', 'users'); }); });
+            lostoryOption.confirmDialog('确认批量删除选中用户？', function() { adminApi.user.batchDelete(ids).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('批量删除用户成功', 'users'); }).catch(function(err) { SendLog.log_error('批量删除用户失败', 'users'); }); });
         };
     });
     </script>

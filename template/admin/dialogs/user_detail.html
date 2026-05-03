@@ -9,16 +9,29 @@
 <body>
     <div style="padding:15px;">
         <table class="layui-table">
-            <tr><td>ID</td><td id="d_user_id"></td></tr>
-            <tr><td>用户名</td><td id="d_username"></td></tr>
+            <tr><td width="120">ID</td><td id="d_user_id"></td></tr>
             <tr><td>账号</td><td id="d_usernumber"></td></tr>
+            <tr><td>用户名</td><td id="d_username"></td></tr>
             <tr><td>邮箱</td><td id="d_email"></td></tr>
+            <tr><td>手机号</td><td id="d_phone"></td></tr>
+            <tr><td>头像</td><td id="d_avatar"></td></tr>
             <tr><td>角色</td><td id="d_role"></td></tr>
             <tr><td>状态</td><td id="d_status"></td></tr>
+            <tr><td>个人简介</td><td id="d_bio"></td></tr>
+            <tr><td>所在地</td><td id="d_location"></td></tr>
+            <tr><td>个人网站</td><td id="d_website"></td></tr>
+            <tr><td>GitHub</td><td id="d_github"></td></tr>
+            <tr><td>是否认证</td><td id="d_is_verified"></td></tr>
+            <tr><td>封禁原因</td><td id="d_ban_reason"></td></tr>
+            <tr><td>封禁过期时间</td><td id="d_ban_expire_time"></td></tr>
+            <tr><td>最后登录时间</td><td id="d_last_login_time"></td></tr>
+            <tr><td>登录IP</td><td id="d_login_ip"></td></tr>
+            <tr><td>设备信息</td><td id="d_device_info"></td></tr>
             <tr><td>文章数</td><td id="d_article_count"></td></tr>
             <tr><td>评论数</td><td id="d_comment_count"></td></tr>
             <tr><td>粉丝数</td><td id="d_follower_count"></td></tr>
             <tr><td>注册时间</td><td id="d_created_at"></td></tr>
+            <tr><td>更新时间</td><td id="d_updated_at"></td></tr>
         </table>
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
@@ -26,6 +39,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(function() {
+        var layer = layui.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -37,15 +51,28 @@
             if (res.code === 200) {
                 var u = res.data;
                 document.getElementById('d_user_id').innerText = u.user_id;
-                document.getElementById('d_username').innerText = u.username;
                 document.getElementById('d_usernumber').innerText = u.usernumber || '-';
+                document.getElementById('d_username').innerText = u.username;
                 document.getElementById('d_email').innerText = u.email || '-';
-                document.getElementById('d_role').innerText = u.role === 'admin' ? '管理员' : '用户';
-                document.getElementById('d_status').innerText = u.status === 'active' ? '正常' : '封禁';
+                document.getElementById('d_phone').innerText = u.phone || '-';
+                document.getElementById('d_avatar').innerHTML = u.avatar ? '<img src="' + u.avatar + '" style="max-width:100px;">' : '-';
+                document.getElementById('d_role').innerText = u.role === 'admin' ? '管理员' : '普通用户';
+                document.getElementById('d_status').innerHTML = u.status === 'active' ? '<span style="color:#5FB878;">正常</span>' : '<span style="color:#FF5722;">封禁</span>';
+                document.getElementById('d_bio').innerText = u.bio || '-';
+                document.getElementById('d_location').innerText = u.location || '-';
+                document.getElementById('d_website').innerHTML = u.website ? '<a href="' + u.website + '" target="_blank">' + u.website + '</a>' : '-';
+                document.getElementById('d_github').innerHTML = u.github ? '<a href="' + u.github + '" target="_blank">' + u.github + '</a>' : '-';
+                document.getElementById('d_is_verified').innerText = u.is_verified === 1 ? '已认证' : '未认证';
+                document.getElementById('d_ban_reason').innerText = u.ban_reason || '-';
+                document.getElementById('d_ban_expire_time').innerText = u.ban_expire_time || '-';
+                document.getElementById('d_last_login_time').innerText = u.last_login_time || '-';
+                document.getElementById('d_login_ip').innerText = u.login_ip || '-';
+                document.getElementById('d_device_info').innerText = u.device_info || '-';
                 document.getElementById('d_article_count').innerText = u.stats ? u.stats.article_count : 0;
                 document.getElementById('d_comment_count').innerText = u.stats ? u.stats.comment_count : 0;
                 document.getElementById('d_follower_count').innerText = u.stats ? u.stats.follower_count : 0;
                 document.getElementById('d_created_at').innerText = u.created_at || '-';
+                document.getElementById('d_updated_at').innerText = u.updated_at || '-';
                 SendLog.log_info('用户详情加载成功: ' + userId, 'user_detail');
             }
         }).catch(function(err) { SendLog.log_error('用户详情请求异常: ' + err.message, 'user_detail'); });

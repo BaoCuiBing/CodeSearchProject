@@ -10,8 +10,17 @@
     <div style="padding:15px;">
         <form class="layui-form" lay-filter="userEditForm">
             <input type="hidden" name="user_id" id="userId">
+            <div class="layui-form-item"><label class="layui-form-label">账号</label><div class="layui-input-block"><input type="text" name="usernumber" lay-verify="required" class="layui-input"></div></div>
             <div class="layui-form-item"><label class="layui-form-label">用户名</label><div class="layui-input-block"><input type="text" name="username" lay-verify="required" class="layui-input"></div></div>
-            <div class="layui-form-item"><label class="layui-form-label">邮箱</label><div class="layui-input-block"><input type="text" name="email" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">邮箱</label><div class="layui-input-block"><input type="text" name="email" lay-verify="email" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">手机号</label><div class="layui-input-block"><input type="text" name="phone" lay-verify="phone" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">头像</label><div class="layui-input-block"><button type="button" class="layui-btn" id="avatarUpload"><i class="layui-icon">&#xe67c;</i>上传头像</button><input type="hidden" name="avatar" id="avatarUrl"><div class="layui-upload-list"><img class="layui-upload-img" id="avatarPreview" style="max-width:100px;"></div></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">角色</label><div class="layui-input-block"><select name="role"><option value="user">普通用户</option><option value="admin">管理员</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">状态</label><div class="layui-input-block"><select name="status"><option value="active">正常</option><option value="banned">封禁</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">个人简介</label><div class="layui-input-block"><textarea name="bio" class="layui-textarea"></textarea></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">所在地</label><div class="layui-input-block"><input type="text" name="location" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">个人网站</label><div class="layui-input-block"><input type="text" name="website" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">GitHub</label><div class="layui-input-block"><input type="text" name="github" class="layui-input"></div></div>
             <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" lay-submit lay-filter="saveUser">保存</button></div></div>
         </form>
     </div>
@@ -19,8 +28,8 @@
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
-    layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+    layui.use(['form', 'upload'], function() {
+        var form = layui.form, L = parent.layer, upload = layui.upload;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -29,12 +38,29 @@
         document.getElementById('userId').value = userId || '';
         if (userId) {
             adminApi.user.getDetail(userId).then(function(res) {
-                if (res.code === 200) { form.val('userEditForm', { user_id: res.data.user_id, username: res.data.username, email: res.data.email || '' }); SendLog.log_info('加载用户编辑数据: ' + userId, 'user_edit'); }
+                if (res.code === 200) {
+                    var u = res.data;
+                    form.val('userEditForm', { user_id: u.user_id, usernumber: u.usernumber, username: u.username, email: u.email || '', phone: u.phone || '', avatar: u.avatar || '', role: u.role || 'user', status: u.status || 'active', bio: u.bio || '', location: u.location || '', website: u.website || '', github: u.github || '' });
+                    if (u.avatar) { document.getElementById('avatarPreview').src = u.avatar; }
+                    SendLog.log_info('加载用户编辑数据: ' + userId, 'user_edit');
+                }
             });
         }
+        upload.render({
+            elem: '#avatarUpload', url: '/api/upload/file', accept: 'images', field: 'file',
+            done: function(res) {
+                if (res.code === 200) {
+                    document.getElementById('avatarUrl').value = res.data.file_url;
+                    var preview = document.getElementById('avatarPreview');
+                    preview.src = res.data.file_url;
+                    preview.style.display = 'block';
+                    L.msg('头像上传成功');
+                } else { L.msg(res.msg || '上传失败'); }
+            }
+        });
         form.on('submit(saveUser)', function(data) {
             SendLog.log_info('保存用户: ' + data.field.user_id, 'user_edit');
-            adminApi.user.edit(data.field).then(function(r) { layer.msg(r.msg); SendLog.log_info('用户保存成功: ' + data.field.user_id, 'user_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('用户保存失败', 'user_edit'); });
+            adminApi.user.edit(data.field).then(function(r) { L.msg(r.msg); SendLog.log_info('用户保存成功: ' + data.field.user_id, 'user_edit'); parent.layui.table.reload('userTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('用户保存失败', 'user_edit'); });
             return false;
         });
     });

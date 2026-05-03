@@ -1,6 +1,7 @@
 var lostoryOption = {
     _cache: {},
     _cacheExpire: 60000,
+    getLayer: function() { return (typeof parent !== 'undefined' && parent.layer) ? parent.layer : layer; },
     _setCache: function(key, data) {
         var item = { data: data, time: Date.now() };
         this._cache[key] = item;
@@ -60,16 +61,17 @@ var lostoryOption = {
     },
     openDialog: function(title, url, area) {
         var a = area || ['600px', '400px'];
-        return layer.open({ type: 2, title: title, area: a, shade: 0.6, shadeClose: true, maxmin: true, content: url });
+        return this.getLayer().open({ type: 2, title: title, area: a, shade: 0.6, shadeClose: true, maxmin: false, content: url });
     },
     openPageDialog: function(title, html, area) {
         var a = area || ['500px', '300px'];
-        return layer.open({ type: 1, title: title, area: a, shade: 0.6, shadeClose: true, maxmin: true, content: '<div style="padding:15px;">' + html + '</div>' });
+        return this.getLayer().open({ type: 1, title: title, area: a, shade: 0.6, shadeClose: true, maxmin: false, content: '<div style="padding:15px;">' + html + '</div>' });
     },
     confirmDialog: function(msg, callback) {
-        layer.confirm(msg, { btn: ['确认', '取消'] }, function(index) { callback(); layer.close(index); });
+        var L = this.getLayer();
+        L.confirm(msg, { btn: ['确认', '取消'] }, function(index) { callback(); L.close(index); });
     },
     msg: function(text, icon) {
-        layer.msg(text, { icon: icon || 1, time: 2000 });
+        this.getLayer().msg(text, { icon: icon || 1, time: 2000 });
     }
 };

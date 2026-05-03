@@ -32,7 +32,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['table', 'form'], function() {
-        var table = layui.table, form = layui.form, layer = layui.layer;
+        var table = layui.table, form = layui.form, L = lostoryOption.getLayer();
         if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'articles'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
@@ -40,18 +40,18 @@
         form.render('select');
         var tableIns = table.render({
             elem: '#articleTable', url: '/api/admin/article/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
-            where: { admin_id: adminId },
+            where: { admin_id: adminId, status: 'all' },
             request: { pageName: 'page', limitName: 'page_size' },
-            parseData: function(res) { return { code: res.code, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
             cols: [[
-                {type: 'checkbox'}, {field: 'post_id', title: 'ID', width: 80},
-                {field: 'title', title: '标题', width: 250},
-                {field: 'post_type', title: '类型', width: 80, templet: function(d) { return d.post_type === 'question' ? '问题' : '文章'; }},
-                {field: 'author_name', title: '作者', width: 120},
-                {field: 'status', title: '状态', width: 90, templet: function(d) { return d.status === 'published' ? '<span style="color:#5FB878;">已发布</span>' : d.status === 'draft' ? '<span style="color:#FFB800;">草稿</span>' : '<span style="color:#FF5722;">已隐藏</span>'; }},
-                {field: 'view_count', title: '浏览', width: 80},
-                {field: 'created_at', title: '创建时间', width: 160},
-                {title: '操作', width: 220, toolbar: '#toolbarTpl'}
+                {type: 'checkbox', fixed: 'left'}, {field: 'post_id', title: 'ID', width: '8%'},
+                {field: 'title', title: '标题', width: '25%'},
+                {field: 'post_type', title: '类型', width: '8%', templet: function(d) { return d.post_type === 'question' ? '问题' : '文章'; }},
+                {field: 'author_name', title: '作者', width: '12%'},
+                {field: 'status', title: '状态', width: '9%', templet: function(d) { return d.status === 'published' ? '<span style="color:#5FB878;">已发布</span>' : d.status === 'draft' ? '<span style="color:#FFB800;">草稿</span>' : '<span style="color:#FF5722;">已隐藏</span>'; }},
+                {field: 'view_count', title: '浏览', width: '8%'},
+                {field: 'created_at', title: '创建时间', width: '15%'},
+                {title: '操作', width: '240', toolbar: '#toolbarTpl', fixed: 'right'}
             ]]
         });
         document.getElementById('searchBtn').onclick = function() {
@@ -66,16 +66,16 @@
             var d = obj.data;
             if (obj.event === 'detail') { SendLog.log_info('查看内容详情: ' + d.post_id, 'articles'); lostoryOption.openDialog('内容详情', '/admin/dialogs/article_detail.html?post_id=' + d.post_id, ['600px', '500px']); }
             if (obj.event === 'edit') { SendLog.log_info('编辑内容: ' + d.post_id, 'articles'); lostoryOption.openDialog('编辑内容', '/admin/dialogs/article_edit.html?post_id=' + d.post_id, ['600px', '400px']); }
-            if (obj.event === 'toggle') { SendLog.log_info('切换内容状态: ' + d.post_id, 'articles'); adminApi.article.toggleStatus(d.post_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('内容状态切换成功: ' + d.post_id, 'articles'); }).catch(function(err) { SendLog.log_error('内容状态切换失败: ' + d.post_id, 'articles'); }); }
-            if (obj.event === 'delete') { SendLog.log_info('删除内容: ' + d.post_id, 'articles'); lostoryOption.confirmDialog('确认删除该内容？', function() { adminApi.article.delete(d.post_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('内容删除成功: ' + d.post_id, 'articles'); }).catch(function(err) { SendLog.log_error('内容删除失败: ' + d.post_id, 'articles'); }); }); }
+            if (obj.event === 'toggle') { SendLog.log_info('切换内容状态: ' + d.post_id, 'articles'); adminApi.article.toggleStatus(d.post_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('内容状态切换成功: ' + d.post_id, 'articles'); }).catch(function(err) { SendLog.log_error('内容状态切换失败: ' + d.post_id, 'articles'); }); }
+            if (obj.event === 'delete') { SendLog.log_info('删除内容: ' + d.post_id, 'articles'); lostoryOption.confirmDialog('确认删除该内容？', function() { adminApi.article.delete(d.post_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('内容删除成功: ' + d.post_id, 'articles'); }).catch(function(err) { SendLog.log_error('内容删除失败: ' + d.post_id, 'articles'); }); }); }
         });
         document.getElementById('batchDelete').onclick = function() {
             var checkStatus = table.checkStatus('articleTable');
-            if (checkStatus.data.length === 0) { layer.msg('请先选择内容'); return; }
+            if (checkStatus.data.length === 0) { L.msg('请先选择内容'); return; }
             var ids = [];
             checkStatus.data.forEach(function(d) { ids.push(d.post_id); });
             SendLog.log_info('批量删除内容: ' + ids.join(','), 'articles');
-            lostoryOption.confirmDialog('确认批量删除选中内容？', function() { adminApi.article.batchDelete(ids).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('批量删除内容成功', 'articles'); }).catch(function(err) { SendLog.log_error('批量删除内容失败', 'articles'); }); });
+            lostoryOption.confirmDialog('确认批量删除选中内容？', function() { adminApi.article.batchDelete(ids).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('批量删除内容成功', 'articles'); }).catch(function(err) { SendLog.log_error('批量删除内容失败', 'articles'); }); });
         };
     });
     </script>

@@ -17,8 +17,7 @@
         <div class="layui-header">
             <div class="layui-logo"><img src="/static/imgs/bo_luo_tb.png" style="height:24px;vertical-align:middle;margin-right:8px;">后台管理系统</div>
             <ul class="layui-nav layui-layout-right">
-                <li class="layui-nav-item"><a href="javascript:;" onclick="document.getElementById('mainFrame').src='/admin/profile';">管理员</a></li>
-                <li class="layui-nav-item"><a href="/admin/login">退出</a></li>
+                <li class="layui-nav-item layui-hide-xs"><a href="javascript:;"><img src="/static/imgs/bo_luo_tb.png" class="layui-nav-img" id="adminAvatar"><span id="adminName">管理员</span></a><dl class="layui-nav-child"><dd><a href="javascript:;" id="editProfileLink">编辑资料</a></dd><dd><a href="javascript:;" id="logoutLink">退出</a></dd></dl></li>
             </ul>
         </div>
         <div class="layui-side layui-bg-black">
@@ -44,9 +43,11 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['element'], function() {
-        var element = layui.element;
+        var element = layui.element, layer = layui.layer;
         var adminId = lostoryOption.getAdminId();
         if (!adminId) { SendLog.log_warning('未登录跳转到管理后台', 'index'); window.location.href = '/admin/login'; return; }
+        var adminName = lostoryOption.getAdminName();
+        if (adminName) { document.getElementById('adminName').textContent = adminName; }
         SendLog.log_info('管理员进入后台: ' + adminId, 'index');
         element.on('nav(leftNav)', function(elem) {
             var url = elem.attr('data-url');
@@ -60,9 +61,18 @@
         });
         var currentPage = lostoryOption.getCurrentPage();
         document.getElementById('mainFrame').src = currentPage;
+        document.querySelectorAll('.layui-nav-tree .layui-nav-item').forEach(function(el) { el.classList.remove('layui-this'); });
         document.querySelectorAll('.layui-nav-tree .layui-nav-item').forEach(function(el) {
             if (el.querySelector('a').getAttribute('data-url') === currentPage) { el.classList.add('layui-this'); }
         });
+        document.getElementById('editProfileLink').onclick = function() {
+            SendLog.log_info('打开编辑资料弹窗', 'index');
+            lostoryOption.openDialog('编辑资料', '/admin/dialogs/profile_edit.html', ['500px', '300px']);
+        };
+        document.getElementById('logoutLink').onclick = function() {
+            SendLog.log_info('管理员退出登录', 'index');
+            lostoryOption.confirmDialog('确认退出登录？', function() { lostoryOption.clearAdminInfo(); window.location.href = '/admin/login'; });
+        };
     });
     </script>
 </body>

@@ -34,7 +34,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['table', 'form'], function() {
-        var table = layui.table, form = layui.form, layer = layui.layer;
+        var table = layui.table, form = layui.form, L = lostoryOption.getLayer();
         if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'messages'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
@@ -44,16 +44,16 @@
             elem: '#messageTable', url: '/api/admin/system_messages/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
             where: { admin_id: adminId },
             request: { pageName: 'page', limitName: 'page_size' },
-            parseData: function(res) { return { code: res.code, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
             cols: [[
-                {type: 'checkbox'}, {field: 'system_message_id', title: 'ID', width: 80},
-                {field: 'title', title: '标题', width: 200},
-                {field: 'type', title: '类型', width: 80, templet: function(d) { return d.type === 'announcement' ? '公告' : '系统消息'; }},
-                {field: 'target_type', title: '目标', width: 80, templet: function(d) { return d.target_type === 'all' ? '全部用户' : '指定用户'; }},
-                {field: 'target_count', title: '目标数', width: 70}, {field: 'read_count', title: '已读', width: 70},
-                {field: 'status', title: '状态', width: 80, templet: function(d) { return d.status === 'sent' ? '<span style="color:#5FB878;">已发送</span>' : '<span style="color:#FFB800;">草稿</span>'; }},
-                {field: 'send_time', title: '发送时间', width: 160}, {field: 'created_at', title: '创建时间', width: 160},
-                {title: '操作', width: 200, toolbar: '#toolbarTpl'}
+                {type: 'checkbox', fixed: 'left'}, {field: 'system_message_id', title: 'ID', width: '7%'},
+                {field: 'title', title: '标题', width: '18%'},
+                {field: 'type', title: '类型', width: '8%', templet: function(d) { return d.type === 'announcement' ? '公告' : '系统消息'; }},
+                {field: 'target_type', title: '目标', width: '8%', templet: function(d) { return d.target_type === 'all' ? '全部用户' : '指定用户'; }},
+                {field: 'target_count', title: '目标数', width: '6%'}, {field: 'read_count', title: '已读', width: '6%'},
+                {field: 'status', title: '状态', width: '7%', templet: function(d) { return d.status === 'sent' ? '<span style="color:#5FB878;">已发送</span>' : '<span style="color:#FFB800;">草稿</span>'; }},
+                {field: 'send_time', title: '发送时间', width: '14%'}, {field: 'created_at', title: '创建时间', width: '14%'},
+                {title: '操作', width: '240', toolbar: '#toolbarTpl', fixed: 'right'}
             ]]
         });
         document.getElementById('searchBtn').onclick = function() {
@@ -67,16 +67,16 @@
         table.on('toolbar(messageTable)', function(obj) {
             var ids = [];
             var checkStatus = table.checkStatus('messageTable');
-            if (checkStatus.data.length === 0) { layer.msg('请先选择消息'); return; }
+            if (checkStatus.data.length === 0) { L.msg('请先选择消息'); return; }
             checkStatus.data.forEach(function(d) { ids.push(d.system_message_id); });
-            if (obj.event === 'batchDelete') { SendLog.log_info('批量删除消息: ' + ids.join(','), 'messages'); lostoryOption.confirmDialog('确认删除选中消息？', function() { adminApi.message.batchDelete(ids).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('批量删除消息成功', 'messages'); }).catch(function(err) { SendLog.log_error('批量删除消息失败', 'messages'); }); }); }
+            if (obj.event === 'batchDelete') { SendLog.log_info('批量删除消息: ' + ids.join(','), 'messages'); lostoryOption.confirmDialog('确认删除选中消息？', function() { adminApi.message.batchDelete(ids).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('批量删除消息成功', 'messages'); }).catch(function(err) { SendLog.log_error('批量删除消息失败', 'messages'); }); }); }
         });
         table.on('tool(messageTable)', function(obj) {
             var d = obj.data;
             if (obj.event === 'detail') { SendLog.log_info('查看消息详情: ' + d.system_message_id, 'messages'); lostoryOption.openDialog('消息详情', '/admin/dialogs/message_detail.html?system_message_id=' + d.system_message_id, ['500px', '450px']); }
             if (obj.event === 'edit') { SendLog.log_info('编辑消息: ' + d.system_message_id, 'messages'); lostoryOption.openDialog('编辑消息', '/admin/dialogs/message_edit.html?system_message_id=' + d.system_message_id + '&title=' + encodeURIComponent(d.title), ['500px', '250px']); }
-            if (obj.event === 'send') { SendLog.log_info('发送消息: ' + d.system_message_id, 'messages'); lostoryOption.confirmDialog('确认发送该消息？', function() { adminApi.message.send(d.system_message_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('消息发送成功: ' + d.system_message_id, 'messages'); }).catch(function(err) { SendLog.log_error('消息发送失败: ' + d.system_message_id, 'messages'); }); }); }
-            if (obj.event === 'delete') { SendLog.log_info('删除消息: ' + d.system_message_id, 'messages'); lostoryOption.confirmDialog('确认删除该消息？', function() { adminApi.message.delete(d.system_message_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('消息删除成功: ' + d.system_message_id, 'messages'); }).catch(function(err) { SendLog.log_error('消息删除失败: ' + d.system_message_id, 'messages'); }); }); }
+            if (obj.event === 'send') { SendLog.log_info('发送消息: ' + d.system_message_id, 'messages'); lostoryOption.confirmDialog('确认发送该消息？', function() { adminApi.message.send(d.system_message_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('消息发送成功: ' + d.system_message_id, 'messages'); }).catch(function(err) { SendLog.log_error('消息发送失败: ' + d.system_message_id, 'messages'); }); }); }
+            if (obj.event === 'delete') { SendLog.log_info('删除消息: ' + d.system_message_id, 'messages'); lostoryOption.confirmDialog('确认删除该消息？', function() { adminApi.message.delete(d.system_message_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('消息删除成功: ' + d.system_message_id, 'messages'); }).catch(function(err) { SendLog.log_error('消息删除失败: ' + d.system_message_id, 'messages'); }); }); }
         });
         document.getElementById('batchDelete').onclick = function() { table.triggerToolbar('messageTable', 'batchDelete'); };
     });

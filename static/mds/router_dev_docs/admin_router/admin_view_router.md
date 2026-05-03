@@ -47,7 +47,26 @@ GET /admin
 
 ---
 
-### 3. 用户管理页（管理端）
+### 3. 管理后台仪表盘（管理端）
+- **路径**: `/admin/dashboard`
+- **方法**: `GET`
+- **函数名**: `admin_dashboard_page`
+- **描述**: 返回管理后台仪表盘页面HTML，包含数据概览、快捷操作、最近动态等
+
+#### 请求参数
+无
+
+#### 请求示例
+```
+GET /admin/dashboard
+```
+
+#### 响应格式
+- **类型**: HTML
+
+---
+
+### 4. 用户管理页（管理端）
 - **路径**: `/admin/users`
 - **方法**: `GET`
 - **函数名**: `admin_users_page`
@@ -66,7 +85,7 @@ GET /admin/users
 
 ---
 
-### 4. 文章管理页（文章列表）（管理端）
+### 5. 文章管理页（文章列表）（管理端）
 - **路径**: `/admin/articles`
 - **方法**: `GET`
 - **函数名**: `admin_articles_page`
@@ -85,7 +104,7 @@ GET /admin/articles
 
 ---
 
-### 5. 文章管理页（文章详情）（管理端）
+### 6. 文章管理页（文章详情）（管理端）
 - **路径**: `/admin/article/<post_id>`
 - **方法**: `GET`
 - **函数名**: `admin_article_detail_page`
@@ -114,7 +133,7 @@ GET /admin/article/1
 
 ---
 
-### 6. 标签管理页（管理端）
+### 7. 标签管理页（管理端）
 - **路径**: `/admin/tags`
 - **方法**: `GET`
 - **函数名**: `admin_tags_page`
@@ -133,7 +152,7 @@ GET /admin/tags
 
 ---
 
-### 7. 评论管理页（管理端）
+### 8. 评论管理页（管理端）
 - **路径**: `/admin/comments`
 - **方法**: `GET`
 - **函数名**: `admin_comments_page`
@@ -152,7 +171,7 @@ GET /admin/comments
 
 ---
 
-### 8. 消息管理页（管理端）
+### 9. 消息管理页（管理端）
 - **路径**: `/admin/messages`
 - **方法**: `GET`
 - **函数名**: `admin_messages_page`
@@ -171,7 +190,7 @@ GET /admin/messages
 
 ---
 
-### 9. 系统设置页（管理端）
+### 10. 系统设置页（管理端）
 - **路径**: `/admin/settings`
 - **方法**: `GET`
 - **函数名**: `admin_settings_page`
@@ -190,7 +209,7 @@ GET /admin/settings
 
 ---
 
-### 10. 数据统计页（管理端）
+### 11. 数据统计页（管理端）
 - **路径**: `/admin/stats`
 - **方法**: `GET`
 - **函数名**: `admin_stats_page`
@@ -209,7 +228,7 @@ GET /admin/stats
 
 ---
 
-### 11. 文件管理页（管理端）
+### 12. 文件管理页（管理端）
 - **路径**: `/admin/files`
 - **方法**: `GET`
 - **函数名**: `admin_files_page`
@@ -228,7 +247,7 @@ GET /admin/files
 
 ---
 
-### 12. 管理员个人中心页（管理端）
+### 13. 管理员个人中心页（管理端）
 - **路径**: `/admin/profile`
 - **方法**: `GET`
 - **函数名**: `admin_profile_page`
@@ -240,6 +259,30 @@ GET /admin/files
 #### 请求示例
 ```
 GET /admin/profile
+```
+
+#### 响应格式
+- **类型**: HTML
+
+---
+
+### 14. 对话框页面（管理端）
+- **路径**: `/admin/dialogs/<path:path>`
+- **方法**: `GET`
+- **函数名**: `admin_dialogs_page`
+- **描述**: 返回管理后台各对话框（弹出层）HTML页面
+
+#### 路径参数
+| 参数名 | 类型 | 说明 |
+|--------|------|------|
+| path | string | 对话框模板路径，如user_edit.html、article_create.html等 |
+
+#### 请求参数
+无
+
+#### 请求示例
+```
+GET /admin/dialogs/user_edit.html
 ```
 
 #### 响应格式

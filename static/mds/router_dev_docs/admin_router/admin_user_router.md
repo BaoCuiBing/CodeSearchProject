@@ -151,7 +151,59 @@ GET /api/admin/user/1?admin_id=1
 
 ---
 
-### 3. 封禁/解封用户（管理端）
+### 3. 创建用户（管理端）
+- **路径**: `/api/admin/user`
+- **方法**: `POST`
+- **函数名**: `create_user`
+- **OpenAPI摘要**: 创建用户
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| username | string | yes | 用户名 | Body (JSON) |
+| usernumber | string | yes | 账号 | Body (JSON) |
+| password | string | yes | 密码 | Body (JSON) |
+| email | string | no | 邮箱 | Body (JSON) |
+| role | string | no | 角色：user/admin，默认user | Body (JSON) |
+| avatar | string | no | 头像URL | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "username": "新用户",
+    "usernumber": "user002",
+    "password": "123456",
+    "email": "user@example.com",
+    "role": "user",
+    "avatar": "/static/uploads/avatar.jpg"
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "创建成功",
+    "data": {
+        "user_id": 2,
+        "username": "新用户"
+    }
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 400,
+    "msg": "账号已存在"
+}
+```
+
+---
+
+### 4. 封禁/解封用户（管理端）
 - **路径**: `/api/admin/user/ban`
 - **方法**: `POST`
 - **函数名**: `toggle_user_ban`
@@ -201,7 +253,7 @@ GET /api/admin/user/1?admin_id=1
 
 ---
 
-### 4. 删除用户（管理端）
+### 5. 删除用户（管理端）
 - **路径**: `/api/admin/user/<user_id>`
 - **方法**: `DELETE`
 - **函数名**: `delete_user`
@@ -233,7 +285,7 @@ DELETE /api/admin/user/1?admin_id=1&reason=用户请求注销账号
 
 ---
 
-### 5. 编辑用户信息（管理端）
+### 6. 编辑用户信息（管理端）
 - **路径**: `/api/admin/user`
 - **方法**: `PUT`
 - **函数名**: `edit_user_info`
@@ -273,7 +325,7 @@ DELETE /api/admin/user/1?admin_id=1&reason=用户请求注销账号
 
 ---
 
-### 6. 重置用户密码（管理端）
+### 7. 重置用户密码（管理端）
 - **路径**: `/api/admin/user/reset-password`
 - **方法**: `POST`
 - **函数名**: `reset_user_password`
@@ -307,7 +359,7 @@ DELETE /api/admin/user/1?admin_id=1&reason=用户请求注销账号
 
 ---
 
-### 7. 批量操作用户（管理端）
+### 8. 批量操作用户（管理端）
 - **路径**: `/api/admin/user/batch-action`
 - **方法**: `POST`
 - **函数名**: `batch_action_users`
@@ -341,7 +393,48 @@ DELETE /api/admin/user/1?admin_id=1&reason=用户请求注销账号
 
 ---
 
-### 8. 导出用户数据（管理端）
+### 9. 批量删除用户（管理端）
+- **路径**: `/api/admin/user/batch-delete`
+- **方法**: `POST`
+- **函数名**: `batch_delete_users`
+- **OpenAPI摘要**: 批量删除用户
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| ids | array | yes | 用户ID列表，如[1,2,3] | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "ids": [5, 6, 7]
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "批量删除成功",
+    "data": {
+        "deleted_count": 3
+    }
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 400,
+    "msg": "请选择要删除的用户"
+}
+```
+
+---
+
+### 10. 导出用户数据（管理端）
 - **路径**: `/api/admin/user/export`
 - **方法**: `POST`
 - **函数名**: `export_users`
@@ -387,7 +480,7 @@ DELETE /api/admin/user/1?admin_id=1&reason=用户请求注销账号
 
 ---
 
-### 9. 获取用户统计概览（管理端）
+### 11. 获取用户统计概览（管理端）
 - **路径**: `/api/admin/user/stats/overview`
 - **方法**: `GET`
 - **函数名**: `get_user_stats_overview`
@@ -432,5 +525,50 @@ GET /api/admin/user/stats/overview?admin_id=1&period=month
 {
     "code": 403,
     "msg": "权限不足"
+}
+```
+
+---
+
+### 12. 发送系统消息给用户（管理端）
+- **路径**: `/api/admin/user/<user_id>/notify`
+- **方法**: `POST`
+- **函数名**: `send_system_notification_to_user`
+- **OpenAPI摘要**: 发送系统消息给用户
+
+#### 路径参数
+| 参数名 | 类型 | 说明 |
+|--------|------|------|
+| user_id | int | 用户ID |
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| title | string | yes | 消息标题 | Body (JSON) |
+| content | string | yes | 消息内容 | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "title": "系统通知",
+    "content": "您的文章已被推荐到首页"
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "通知已发送"
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 404,
+    "msg": "用户不存在"
 }
 ```

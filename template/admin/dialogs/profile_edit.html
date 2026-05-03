@@ -11,15 +11,16 @@
         <form class="layui-form" lay-filter="profileEditForm">
             <div class="layui-form-item"><label class="layui-form-label">用户名</label><div class="layui-input-block"><input type="text" name="username" class="layui-input" readonly></div></div>
             <div class="layui-form-item"><label class="layui-form-label">邮箱</label><div class="layui-input-block"><input type="text" name="email" class="layui-input"></div></div>
-            <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" lay-submit lay-filter="saveProfile">保存</button></div></div>
+            <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" lay-submit lay-filter="saveProfile">保存</button><button class="layui-btn layui-btn-primary" type="button" id="changePwdBtn">修改密码</button></div></div>
         </form>
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+        var form = layui.form, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -29,9 +30,15 @@
         }).catch(function(err) { SendLog.log_error('个人信息编辑数据请求异常: ' + err.message, 'profile_edit'); });
         form.on('submit(saveProfile)', function(data) {
             SendLog.log_info('保存个人信息: ' + data.field.email, 'profile_edit');
-            adminApi.user.edit({ user_id: adminId, email: data.field.email }).then(function(r) { layer.msg(r.msg); SendLog.log_info('个人信息保存成功', 'profile_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('个人信息保存失败', 'profile_edit'); });
+            adminApi.user.edit({ user_id: adminId, email: data.field.email }).then(function(r) { L.msg(r.msg); SendLog.log_info('个人信息保存成功', 'profile_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('个人信息保存失败', 'profile_edit'); });
             return false;
         });
+        document.getElementById('changePwdBtn').onclick = function() {
+            SendLog.log_info('打开修改密码弹窗', 'profile_edit');
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+            parent.lostoryOption.openDialog('修改密码', '/admin/dialogs/profile_change_pwd.html', ['500px', '300px']);
+        };
     });
     </script>
 </body>

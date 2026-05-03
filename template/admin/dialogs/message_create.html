@@ -21,7 +21,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+        var form = layui.form, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -29,7 +29,7 @@
         form.render('select');
         form.on('submit(saveMsg)', function(data) {
             SendLog.log_info('创建消息: ' + data.field.title, 'message_create');
-            adminApi.message.create(data.field).then(function(r) { layer.msg(r.msg); SendLog.log_info('消息创建成功: ' + data.field.title, 'message_create'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('消息创建失败', 'message_create'); });
+            adminApi.message.create(data.field).then(function(r) { L.msg(r.msg); SendLog.log_info('消息创建成功: ' + data.field.title, 'message_create'); parent.layui.table.reload('messageTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('消息创建失败', 'message_create'); });
             return false;
         });
     });

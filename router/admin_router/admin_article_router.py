@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from sanic import Blueprint, response
 from sanic_ext import openapi
 from sqlalchemy import func
-from models.model import User, Post, Category, Tag, PostTag, Comment
+from models.model import User, Post, Category, Tag, PostTag, Comment, Favorite, Like
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
@@ -104,6 +104,36 @@ async def get_content_detail(request, post_id):
     logger.info(f"管理员{admin_id}查询文章详情成功:title={post.title}")
     return response.json({"code": 200, "msg": "获取成功", "data": {"post_id": post.id, "type": post.type, "title": post.title, "content": post.content, "summary": post.summary, "cover_image": cover_image, "author": {"user_id": author.id, "username": author.username, "avatar": author.avatar, "email": author.email} if author else None, "category": {"category_id": category.id, "name": category.name} if category else None, "tags": [{"tag_id": t.id, "name": t.name} for t in tags], "status": post.status, "is_top": bool(post.is_top), "stats": {"view_count": post.view_count, "like_count": post.like_count, "comment_count": post.comment_count}, "created_at": str(post.created_at), "updated_at": str(post.updated_at)}})
 
+@admin_article_bp.post("/")
+@openapi.summary("创建文章")
+async def create_content(request):
+    db = request.ctx.db
+    data = request.json
+    admin_id = data.get("admin_id")
+    admin = check_admin(db, admin_id)
+    if not admin:
+        logger.warning("创建文章失败:admin_id无效")
+        return response.json({"code": 400, "msg": "admin_id不能为空"})
+    title = data.get("title")
+    content = data.get("content")
+    if not title or not content:
+        logger.warning("创建文章失败:标题或内容为空")
+        return response.json({"code": 400, "msg": "标题和内容不能为空"})
+    logger.info(f"管理员{admin_id}创建文章:title={title}")
+    post_type = data.get("post_type", "article")
+    summary = data.get("summary", "")
+    cover_image = data.get("cover_image")
+    if isinstance(cover_image, dict):
+        cover_image = json.dumps(cover_image)
+    category_id = data.get("category_id")
+    status = data.get("status", "published")
+    is_top = 1 if data.get("is_top") else 0
+    post = Post(user_id=admin.id, type=post_type, title=title, content=content, summary=summary, cover_image=cover_image, category_id=category_id, status=status, is_top=is_top)
+    db.add(post)
+    db.commit()
+    logger.info(f"管理员{admin_id}创建文章成功:post_id={post.id}")
+    return response.json({"code": 200, "msg": "创建成功", "data": {"post_id": post.id}})
+
 @admin_article_bp.put("/")
 @openapi.summary("编辑文章")
 async def edit_content(request):
@@ -130,11 +160,12 @@ async def edit_content(request):
         post.summary = data["summary"]
         logger.debug(f"更新字段:summary={data['summary']}")
     if "cover_image" in data:
-        post.cover_image = json.dumps(data["cover_image"])
+        post.cover_image = data["cover_image"] if isinstance(data["cover_image"], str) else json.dumps(data["cover_image"])
         logger.debug("更新字段:cover_image")
     if "category_id" in data:
-        post.category_id = data["category_id"]
-        logger.debug(f"更新字段:category_id={data['category_id']}")
+        cat_id = data["category_id"]
+        post.category_id = int(cat_id) if cat_id and cat_id != "" else None
+        logger.debug(f"更新字段:category_id={cat_id}")
     if "tags" in data:
         db.query(PostTag).filter(PostTag.post_id == post_id).delete()
         for tag_id in data["tags"]:
@@ -167,6 +198,8 @@ async def delete_content(request, post_id):
     logger.info(f"管理员{admin_id}删除文章:post_id={post_id},title={post.title}")
     db.query(PostTag).filter(PostTag.post_id == post_id).delete()
     db.query(Comment).filter(Comment.post_id == post_id).delete()
+    db.query(Favorite).filter(Favorite.post_id == post_id).delete()
+    db.query(Like).filter(Like.target_id == post_id, Like.target_type == "post").delete()
     db.delete(post)
     db.commit()
     logger.info(f"管理员{admin_id}删除文章成功:post_id={post_id}")
@@ -200,6 +233,9 @@ async def batch_action_content(request):
     elif action == "delete":
         for p in posts:
             db.query(PostTag).filter(PostTag.post_id == p.id).delete()
+            db.query(Comment).filter(Comment.post_id == p.id).delete()
+            db.query(Favorite).filter(Favorite.post_id == p.id).delete()
+            db.query(Like).filter(Like.target_id == p.id, Like.target_type == "post").delete()
             db.delete(p)
         logger.debug(f"批量操作:删除{len(posts)}篇文章")
     elif action == "top":
@@ -237,6 +273,27 @@ async def toggle_content_top(request):
     post.is_top = 1 if is_top else 0
     db.commit()
     logger.info(f"管理员{admin_id}设置文章置顶成功:post_id={post_id}")
+    return response.json({"code": 200, "msg": "操作成功"})
+
+@admin_article_bp.post("/toggle-status")
+@openapi.summary("切换文章显示/隐藏状态")
+async def toggle_content_status(request):
+    db = request.ctx.db
+    data = request.json
+    admin_id = data.get("admin_id")
+    admin = check_admin(db, admin_id)
+    if not admin:
+        logger.warning("切换文章状态失败:admin_id无效")
+        return response.json({"code": 400, "msg": "admin_id不能为空"})
+    post_id = data.get("post_id")
+    post = db.query(Post).filter(Post.id == post_id).first()
+    if not post:
+        logger.warning(f"切换文章状态失败:文章不存在,post_id={post_id}")
+        return response.json({"code": 404, "msg": "文章不存在"})
+    logger.info(f"管理员{admin_id}切换文章状态:post_id={post_id},current_status={post.status}")
+    post.status = "published" if post.status == "hidden" else "hidden"
+    db.commit()
+    logger.info(f"管理员{admin_id}切换文章状态成功:post_id={post_id},new_status={post.status}")
     return response.json({"code": 200, "msg": "操作成功"})
 
 @admin_article_bp.get("/stats/overview")

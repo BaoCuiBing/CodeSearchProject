@@ -111,6 +111,7 @@ async def create_user(request):
     password = data.get("password")
     email = data.get("email", "")
     role = data.get("role", "user")
+    avatar = data.get("avatar", "")
     if not username or not usernumber or not password:
         logger.warning("创建用户失败:必填字段为空")
         return response.json({"code": 400, "msg": "用户名、账号、密码不能为空"})
@@ -121,7 +122,7 @@ async def create_user(request):
     logger.info(f"管理员{admin_id}创建用户:username={username},usernumber={usernumber}")
     salt = generate_salt()
     hashed_password = hash_password(password, salt)
-    new_user = User(username=username, usernumber=usernumber, password=hashed_password, salt=salt, email=email, role=role)
+    new_user = User(username=username, usernumber=usernumber, password=hashed_password, salt=salt, email=email, role=role, avatar=avatar if avatar else None)
     db.add(new_user)
     db.commit()
     logger.info(f"管理员{admin_id}创建用户成功:user_id={new_user.id},username={username}")
@@ -166,6 +167,19 @@ async def toggle_user_ban(request):
         user.ban_reason = None
         user.ban_expire_time = None
         msg = "已解封该用户"
+    elif action == "toggle":
+        if user.status == "banned":
+            logger.info(f"管理员{admin_id}解封用户:user_id={user_id}")
+            user.status = "active"
+            user.ban_reason = None
+            user.ban_expire_time = None
+            msg = "已解封该用户"
+        else:
+            logger.info(f"管理员{admin_id}封禁用户:user_id={user_id}")
+            user.status = "banned"
+            user.ban_reason = "管理员操作"
+            user.ban_expire_time = None
+            msg = "已封禁该用户"
     else:
         logger.warning(f"封禁用户失败:无效操作,action={action}")
         return response.json({"code": 400, "msg": "无效操作"})
@@ -189,7 +203,26 @@ async def delete_user(request, user_id):
     if not user:
         logger.warning(f"删除用户失败:用户不存在,user_id={user_id}")
         return response.json({"code": 404, "msg": "用户不存在"})
+    if user.role == "admin":
+        admin_count = db.query(User).filter(User.role == "admin").count()
+        if admin_count <= 1:
+            logger.warning(f"删除用户失败:系统中只有一个管理员,user_id={user_id}")
+            return response.json({"code": 400, "msg": "系统中至少需要保留一个管理员账号"})
     logger.info(f"管理员{admin_id}删除用户:user_id={user_id},username={user.username}")
+    from models.model import Report, SearchHistory, Favorite, Like, Follow, Message, Notification, Post, Comment, SystemMessageTarget, SystemMessage, File
+    db.query(File).filter(File.user_id == user_id).delete()
+    db.query(Report).filter(Report.reporter_id == user_id).delete()
+    db.query(Report).filter(Report.handler_id == user_id).delete()
+    db.query(SearchHistory).filter(SearchHistory.user_id == user_id).delete()
+    db.query(Favorite).filter(Favorite.user_id == user_id).delete()
+    db.query(Like).filter(Like.user_id == user_id).delete()
+    db.query(Follow).filter((Follow.follower_id == user_id) | (Follow.following_id == user_id)).delete()
+    db.query(Message).filter((Message.from_user_id == user_id) | (Message.to_user_id == user_id)).delete()
+    db.query(Notification).filter(Notification.user_id == user_id).delete()
+    db.query(SystemMessageTarget).filter(SystemMessageTarget.user_id == user_id).delete()
+    db.query(SystemMessage).filter(SystemMessage.sender_id == user_id).delete()
+    db.query(Comment).filter(Comment.user_id == user_id).delete()
+    db.query(Post).filter(Post.user_id == user_id).delete()
     db.delete(user)
     db.commit()
     logger.info(f"管理员{admin_id}删除用户成功:user_id={user_id}")
@@ -229,6 +262,9 @@ async def edit_user_info(request):
     if "is_verified" in data:
         user.is_verified = 1 if data["is_verified"] else 0
         logger.debug(f"更新字段:is_verified={data['is_verified']}")
+    if "avatar" in data and data["avatar"]:
+        user.avatar = data["avatar"]
+        logger.debug(f"更新字段:avatar={data['avatar']}")
     db.commit()
     logger.info(f"管理员{admin_id}编辑用户成功:user_id={user_id}")
     return response.json({"code": 200, "msg": "编辑成功"})
@@ -292,6 +328,11 @@ async def batch_action_users(request):
             u.status = "active"
         logger.debug(f"批量操作:解封{len(users)}个用户")
     elif action == "delete":
+        admin_count = db.query(User).filter(User.role == "admin").count()
+        admin_ids_in_list = [u.id for u in users if u.role == "admin"]
+        if len(admin_ids_in_list) > 0 and (admin_count - len(admin_ids_in_list)) < 1:
+            logger.warning(f"批量删除用户失败:尝试删除最后一个管理员,ids={ids}")
+            return response.json({"code": 400, "msg": "系统中至少需要保留一个管理员账号"})
         for u in users:
             db.delete(u)
         logger.debug(f"批量操作:删除{len(users)}个用户")
@@ -301,6 +342,36 @@ async def batch_action_users(request):
     db.commit()
     logger.info(f"管理员{admin_id}批量操作用户成功:共{len(users)}条,操作:{action}")
     return response.json({"code": 200, "msg": "批量操作成功"})
+
+@admin_user_bp.post("/batch-delete")
+@openapi.summary("批量删除用户")
+async def batch_delete_users(request):
+    db = request.ctx.db
+    data = request.json
+    admin_id = data.get("admin_id")
+    if not admin_id:
+        logger.warning("批量删除用户失败:缺少admin_id参数")
+        return response.json({"code": 403, "msg": "权限不足"})
+    admin = db.query(User).filter(User.id == admin_id, User.role == "admin").first()
+    if not admin:
+        logger.warning("批量删除用户失败:admin_id不是管理员")
+        return response.json({"code": 403, "msg": "权限不足"})
+    ids = data.get("ids", [])
+    if not ids:
+        logger.warning("批量删除用户失败:未选择用户")
+        return response.json({"code": 400, "msg": "请选择要删除的用户"})
+    logger.info(f"管理员{admin_id}批量删除用户:ids={ids}")
+    users = db.query(User).filter(User.id.in_(ids)).all()
+    admin_count = db.query(User).filter(User.role == "admin").count()
+    admin_ids_in_list = [u.id for u in users if u.role == "admin"]
+    if len(admin_ids_in_list) > 0 and (admin_count - len(admin_ids_in_list)) < 1:
+        logger.warning(f"批量删除用户失败:尝试删除最后一个管理员,ids={ids}")
+        return response.json({"code": 400, "msg": "系统中至少需要保留一个管理员账号"})
+    for u in users:
+        db.delete(u)
+    db.commit()
+    logger.info(f"管理员{admin_id}批量删除用户成功:共{len(users)}条")
+    return response.json({"code": 200, "msg": "批量删除成功", "data": {"deleted_count": len(users)}})
 
 @admin_user_bp.post("/export")
 @openapi.summary("导出用户数据")

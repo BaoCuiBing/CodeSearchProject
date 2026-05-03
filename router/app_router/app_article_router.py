@@ -122,6 +122,7 @@ async def delete_article(request, post_id):
     if not user_id:
         logger.warning("删除文章失败:user_id为空")
         return response.json({"code": 400, "msg": "user_id不能为空"})
+    user_id = int(user_id)
     post = db.query(Post).filter(Post.id == post_id).first()
     if not post:
         logger.warning(f"删除文章失败:文章不存在,post_id={post_id}")

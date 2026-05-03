@@ -1,7 +1,7 @@
 # 管理后台消息管理接口文档
 
 ## 文件路径
-`router/admin_system_message_router.py`
+`router/admin_message_router.py`
 
 ## 蓝图配置
 - **蓝图名称**: `admin_system_message`
@@ -302,7 +302,52 @@ DELETE /api/admin/system_messages/1?admin_id=1
 
 ---
 
-### 7. 获取消息统计概览（管理端）
+### 7. 发送消息给指定用户（管理端）
+- **路径**: `/api/admin/system_messages/send-to-user`
+- **方法**: `POST`
+- **函数名**: `send_system_notification_to_user`
+- **OpenAPI摘要**: 发送消息给指定用户
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| user_id | int | yes | 目标用户ID | Body (JSON) |
+| title | string | yes | 消息标题 | Body (JSON) |
+| content | string | yes | 消息内容 | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "user_id": 5,
+    "title": "系统通知",
+    "content": "您的文章已被推荐到首页"
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "发送成功",
+    "data": {
+        "notification_id": 1,
+        "user_id": 5,
+        "created_at": "2024-01-15 10:30:00"
+    }
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 404,
+    "msg": "用户不存在"
+}
+```
+
+### 8. 获取消息统计概览（管理端）
 - **路径**: `/api/admin/system_messages/stats/overview`
 - **方法**: `GET`
 - **函数名**: `get_message_stats_overview`

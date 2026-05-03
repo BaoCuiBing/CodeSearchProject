@@ -20,7 +20,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+        var form = layui.form, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -30,7 +30,7 @@
         form.on('submit(banUser)', function(data) {
             SendLog.log_info('封禁用户: ' + data.field.user_id, 'user_ban');
             var d = data.field;
-            adminApi.user.ban(d.user_id, 'ban', d.reason, parseInt(d.days)).then(function(r) { layer.msg(r.msg); SendLog.log_info('用户封禁成功: ' + d.user_id, 'user_ban'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('用户封禁失败', 'user_ban'); });
+            adminApi.user.ban(d.user_id, 'ban', d.reason, parseInt(d.days)).then(function(r) { L.msg(r.msg); SendLog.log_info('用户封禁成功: ' + d.user_id, 'user_ban'); parent.layui.table.reload('userTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('用户封禁失败', 'user_ban'); });
             return false;
         });
     });

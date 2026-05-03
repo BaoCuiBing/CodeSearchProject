@@ -23,7 +23,7 @@
 | 分类管理 | /api/admin/category | router/admin_category_router.py | [admin_category_router.md](file:///workspace/dev_docs/admin_router/admin_category_router.md) |
 | 标签管理 | /api/admin/tag | router/admin_tag_router.py | [admin_tag_router.md](file:///workspace/dev_docs/admin_router/admin_tag_router.md) |
 | 举报管理 | /api/admin/report | router/admin_report_router.py | [admin_report_router.md](file:///workspace/dev_docs/admin_router/admin_report_router.md) |
-| 系统消息 | /api/admin/system_messages | router/admin_system_message_router.py | [admin_message_router.md](file:///workspace/dev_docs/admin_router/admin_message_router.md) |
+| 系统消息 | /api/admin/system_messages | router/admin_message_router.py | [admin_message_router.md](file:///workspace/dev_docs/admin_router/admin_message_router.md) |
 | 数据统计 | /api/admin/stats | router/admin_stats_router.py | [admin_stats_router.md](file:///workspace/dev_docs/admin_router/admin_stats_router.md) |
 | 系统设置 | /api/admin/system | router/admin_system_router.py | [admin_system_router.md](file:///workspace/dev_docs/admin_router/admin_system_router.md) |
 | 文件管理 | /api/admin/file | router/admin_file_router.py | [admin_file_router.md](file:///workspace/dev_docs/admin_router/admin_file_router.md) |

@@ -46,6 +46,23 @@ async def get_tag_list(request):
     logger.debug(f"数据处理完成:构建{len(tag_list)}条标签记录")
     return response.json({"code": 200, "msg": "获取成功", "data": {"list": tag_list, "total": total, "page": page, "page_size": page_size}})
 
+@admin_tag_bp.get("/<tag_id>")
+@openapi.summary("获取标签详情")
+async def get_tag_detail(request, tag_id):
+    db = request.ctx.db
+    admin_id = request.args.get("admin_id")
+    admin = check_admin(db, admin_id)
+    if not admin:
+        logger.warning("获取标签详情失败:admin_id无效")
+        return response.json({"code": 400, "msg": "admin_id不能为空"})
+    logger.info(f"管理员{admin_id}查询标签详情:tag_id={tag_id}")
+    tag = db.query(Tag).filter(Tag.id == tag_id).first()
+    if not tag:
+        logger.warning(f"获取标签详情失败:标签不存在,tag_id={tag_id}")
+        return response.json({"code": 404, "msg": "标签不存在"})
+    logger.info(f"管理员{admin_id}查询标签详情成功:name={tag.name}")
+    return response.json({"code": 200, "msg": "获取成功", "data": {"tag_id": tag.id, "name": tag.name, "post_count": tag.post_count, "created_at": str(tag.created_at), "updated_at": str(tag.updated_at)}})
+
 @admin_tag_bp.post("/")
 @openapi.summary("创建标签")
 async def create_tag(request):

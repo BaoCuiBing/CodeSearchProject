@@ -149,7 +149,62 @@ GET /api/admin/article/1?admin_id=1
 
 ---
 
-### 3. 编辑文章（管理端）
+### 3. 创建文章（管理端）
+- **路径**: `/api/admin/article`
+- **方法**: `POST`
+- **函数名**: `create_content`
+- **OpenAPI摘要**: 创建文章
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| title | string | yes | 标题 | Body (JSON) |
+| content | string | yes | 内容（Markdown） | Body (JSON) |
+| post_type | string | no | 类型：article/question，默认article | Body (JSON) |
+| summary | string | no | 摘要 | Body (JSON) |
+| cover_image | object | no | 封面图片（JSON格式:{"imgs":["url1","url2"]}） | Body (JSON) |
+| category_id | int | no | 分类ID | Body (JSON) |
+| status | string | no | 状态：published/draft，默认published | Body (JSON) |
+| is_top | bool | no | 是否置顶 | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "title": "Python入门教程",
+    "content": "# Python入门\n\nPython是一门优秀的编程语言...",
+    "post_type": "article",
+    "summary": "这是一篇关于Python基础知识的详细教程",
+    "cover_image": {"imgs":["/static/uploads/cover1.jpg"]},
+    "category_id": 1,
+    "status": "published",
+    "is_top": false
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "创建成功",
+    "data": {
+        "post_id": 1
+    }
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 400,
+    "msg": "标题和内容不能为空"
+}
+```
+
+---
+
+### 4. 编辑文章（管理端）
 - **路径**: `/api/admin/article`
 - **方法**: `PUT`
 - **函数名**: `edit_content`
@@ -195,7 +250,7 @@ GET /api/admin/article/1?admin_id=1
 
 ---
 
-### 4. 删除文章（管理端）
+### 5. 删除文章（管理端）
 - **路径**: `/api/admin/article/<post_id>`
 - **方法**: `DELETE`
 - **函数名**: `delete_content`
@@ -228,7 +283,7 @@ DELETE /api/admin/article/1?admin_id=1&reason=包含违规内容&notify_author=t
 
 ---
 
-### 5. 批量操作文章（管理端）
+### 6. 批量操作文章（管理端）
 - **路径**: `/api/admin/article/batch-action`
 - **方法**: `POST`
 - **函数名**: `batch_action_content`
@@ -262,7 +317,7 @@ DELETE /api/admin/article/1?admin_id=1&reason=包含违规内容&notify_author=t
 
 ---
 
-### 6. 设置置顶/取消置顶（管理端）
+### 7. 设置置顶/取消置顶（管理端）
 - **路径**: `/api/admin/article/top`
 - **方法**: `POST`
 - **函数名**: `toggle_content_top`
@@ -294,7 +349,45 @@ DELETE /api/admin/article/1?admin_id=1&reason=包含违规内容&notify_author=t
 
 ---
 
-### 7. 获取文章统计（管理端）
+### 8. 切换文章显示/隐藏状态（管理端）
+- **路径**: `/api/admin/article/toggle-status`
+- **方法**: `POST`
+- **函数名**: `toggle_content_status`
+- **OpenAPI摘要**: 切换文章显示/隐藏状态
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| post_id | int | yes | 文章ID | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "post_id": 1
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "操作成功"
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 404,
+    "msg": "文章不存在"
+}
+```
+
+---
+
+### 9. 获取文章统计（管理端）
 - **路径**: `/api/admin/article/stats/overview`
 - **方法**: `GET`
 - **函数名**: `get_content_stats_overview`
@@ -349,7 +442,7 @@ GET /api/admin/article/stats/overview?admin_id=1&period=month
 
 ---
 
-### 8. 导出文章数据（管理端）
+### 10. 导出文章数据（管理端）
 - **路径**: `/api/admin/article/export`
 - **方法**: `POST`
 - **函数名**: `export_contents`

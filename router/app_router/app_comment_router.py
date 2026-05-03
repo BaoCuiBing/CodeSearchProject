@@ -88,6 +88,7 @@ async def delete_comment(request, comment_id):
     if not user_id:
         logger.warning("删除评论失败:user_id为空")
         return response.json({"code": 400, "msg": "user_id不能为空"})
+    user_id = int(user_id)
     comment = db.query(Comment).filter(Comment.id == comment_id).first()
     if not comment:
         logger.warning(f"删除评论失败:评论不存在,comment_id={comment_id}")

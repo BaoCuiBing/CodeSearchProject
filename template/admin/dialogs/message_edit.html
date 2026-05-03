@@ -19,7 +19,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+        var form = layui.form, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -30,7 +30,7 @@
         form.val('msgEditForm', { system_message_id: msgId || '', title: title });
         form.on('submit(saveMsg)', function(data) {
             SendLog.log_info('编辑消息: ' + data.field.system_message_id, 'message_edit');
-            adminApi.message.edit(data.field).then(function(r) { layer.msg(r.msg); SendLog.log_info('消息编辑成功: ' + data.field.system_message_id, 'message_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('消息编辑失败', 'message_edit'); });
+            adminApi.message.edit(data.field).then(function(r) { L.msg(r.msg); SendLog.log_info('消息编辑成功: ' + data.field.system_message_id, 'message_edit'); parent.layui.table.reload('messageTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('消息编辑失败', 'message_edit'); });
             return false;
         });
     });

@@ -19,7 +19,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+        var form = layui.form, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -31,8 +31,8 @@
         form.on('submit(saveTag)', function(data) {
             var d = data.field;
             SendLog.log_info('保存标签: ' + (d.tag_id || '新建'), 'tag_edit');
-            if (d.tag_id) { adminApi.tag.edit(d).then(function(r) { layer.msg(r.msg); SendLog.log_info('标签编辑成功: ' + d.tag_id, 'tag_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('标签编辑失败', 'tag_edit'); }); }
-            else { adminApi.tag.create({ name: d.name }).then(function(r) { layer.msg(r.msg); SendLog.log_info('标签创建成功: ' + d.name, 'tag_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('标签创建失败', 'tag_edit'); }); }
+            if (d.tag_id) { adminApi.tag.edit(d).then(function(r) { L.msg(r.msg); SendLog.log_info('标签编辑成功: ' + d.tag_id, 'tag_edit'); parent.layui.table.reload('tagTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('标签编辑失败', 'tag_edit'); }); }
+            else { adminApi.tag.create({ name: d.name }).then(function(r) { L.msg(r.msg); SendLog.log_info('标签创建成功: ' + d.name, 'tag_edit'); parent.layui.table.reload('tagTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('标签创建失败', 'tag_edit'); }); }
             return false;
         });
     });

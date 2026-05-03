@@ -16,6 +16,7 @@
             <div class="layui-form-item"><label class="layui-form-label">分类</label><div class="layui-input-block"><select name="category_id" id="categorySelect"><option value="">请选择分类</option></select></div></div>
             <div class="layui-form-item"><label class="layui-form-label">状态</label><div class="layui-input-block"><select name="status"><option value="published">已发布</option><option value="draft">草稿</option><option value="hidden">隐藏</option></select></div></div>
             <div class="layui-form-item"><label class="layui-form-label">置顶</label><div class="layui-input-block"><input type="checkbox" name="is_top" lay-skin="switch" lay-text="是|否"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">封面图</label><div class="layui-input-block"><button type="button" class="layui-btn layui-btn-sm" id="uploadCoverBtn"><i class="layui-icon layui-icon-upload"></i>多图片上传</button><div class="layui-upload-list" id="coverPreview" style="margin-top:10px;"></div><input type="hidden" name="cover_image" id="coverImage"></div></div>
             <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" lay-submit lay-filter="saveArticle">保存</button></div></div>
         </form>
     </div>
@@ -23,8 +24,8 @@
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
-    layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+    layui.use(['form', 'upload'], function() {
+        var form = layui.form, upload = layui.upload, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -32,6 +33,19 @@
         var postId = urlParams.get('post_id');
         document.getElementById('postId').value = postId || '';
         SendLog.log_info('加载编辑文章页面: ' + postId, 'article_edit');
+        var coverUrls = [];
+        upload.render({
+            elem: '#uploadCoverBtn',
+            url: '/api/upload/file',
+            multiple: true,
+            accept: 'images',
+            exts: 'jpg|png|gif|jpeg|webp',
+            data: { user_id: adminId },
+            before: function(obj) { obj.preview(function(index, file, result) { var preview = document.getElementById('coverPreview'); var div = document.createElement('div'); div.className = 'layui-upload-img'; div.style.cssText = 'display:inline-block;margin:5px;position:relative;'; div.innerHTML = '<img src="' + result + '" style="width:100px;height:100px;object-fit:cover;"><span class="layui-icon layui-icon-close" style="position:absolute;top:0;right:0;cursor:pointer;color:red;" data-index="' + index + '"></span>'; preview.appendChild(div); }); },
+            done: function(res) { if (res.code === 200) { coverUrls.push(res.data.file_url); document.getElementById('coverImage').value = JSON.stringify({ imgs: coverUrls }); } else { L.msg(res.msg || '上传失败'); } },
+            error: function() { L.msg('上传接口异常'); }
+        });
+        document.getElementById('coverPreview').addEventListener('click', function(e) { if (e.target.classList.contains('layui-icon-close')) { var idx = parseInt(e.target.getAttribute('data-index')); e.target.parentElement.remove(); coverUrls.splice(idx, 1); document.getElementById('coverImage').value = JSON.stringify({ imgs: coverUrls }); } });
         adminApi.category.getList({ page_size: 100 }).then(function(res) {
             if (res.code === 200) {
                 var sel = document.getElementById('categorySelect');
@@ -42,6 +56,9 @@
                         if (r.code === 200) {
                             var d = r.data;
                             form.val('articleEditForm', { post_id: d.post_id, title: d.title, summary: d.summary || '', content: d.content, category_id: d.category ? d.category.category_id : '', status: d.status, is_top: d.is_top });
+                            if (d.cover_image) {
+                                try { var coverData = typeof d.cover_image === 'string' ? JSON.parse(d.cover_image) : d.cover_image; coverUrls = coverData.imgs || []; document.getElementById('coverImage').value = typeof d.cover_image === 'string' ? d.cover_image : JSON.stringify(d.cover_image); var preview = document.getElementById('coverPreview'); coverUrls.forEach(function(url, i) { var div = document.createElement('div'); div.className = 'layui-upload-img'; div.style.cssText = 'display:inline-block;margin:5px;position:relative;'; div.innerHTML = '<img src="' + url + '" style="width:100px;height:100px;object-fit:cover;"><span class="layui-icon layui-icon-close" style="position:absolute;top:0;right:0;cursor:pointer;color:red;" data-index="' + i + '"></span>'; preview.appendChild(div); }); } catch(e) {}
+                            }
                             SendLog.log_info('文章数据加载成功: ' + postId, 'article_edit');
                         }
                     });
@@ -52,7 +69,7 @@
             var d = data.field;
             d.is_top = d.is_top ? true : false;
             SendLog.log_info('保存文章: ' + data.field.post_id, 'article_edit');
-            adminApi.article.edit(d).then(function(r) { layer.msg(r.msg); SendLog.log_info('文章保存成功: ' + data.field.post_id, 'article_edit'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('文章保存失败', 'article_edit'); });
+            adminApi.article.edit(d).then(function(r) { L.msg(r.msg); SendLog.log_info('文章保存成功: ' + data.field.post_id, 'article_edit'); parent.layui.table.reload('articleTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('文章保存失败', 'article_edit'); });
             return false;
         });
     });

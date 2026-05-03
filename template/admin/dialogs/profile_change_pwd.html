@@ -20,15 +20,15 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+        var form = layui.form, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
         form.on('submit(doChangePwd)', function(data) {
             var d = data.field;
-            if (d.new_password !== d.confirm_password) { SendLog.log_warning('两次密码不一致', 'profile_change_pwd'); layer.msg('两次密码不一致'); return false; }
+            if (d.new_password !== d.confirm_password) { SendLog.log_warning('两次密码不一致', 'profile_change_pwd'); L.msg('两次密码不一致'); return false; }
             SendLog.log_info('修改密码', 'profile_change_pwd');
-            adminApi.auth.changePassword(d.old_password, d.new_password, d.confirm_password).then(function(r) { layer.msg(r.msg); SendLog.log_info('密码修改成功', 'profile_change_pwd'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('密码修改失败', 'profile_change_pwd'); });
+            adminApi.auth.changePassword(d.old_password, d.new_password, d.confirm_password).then(function(r) { L.msg(r.msg); SendLog.log_info('密码修改成功', 'profile_change_pwd'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('密码修改失败', 'profile_change_pwd'); });
             return false;
         });
     });

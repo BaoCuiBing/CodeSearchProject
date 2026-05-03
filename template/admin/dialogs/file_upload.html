@@ -24,7 +24,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['upload'], function() {
-        var upload = layui.upload, layer = layui.layer;
+        var upload = layui.upload, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -44,7 +44,7 @@
             done: function(res, index) {
                 var tr = document.getElementById('upload-' + index);
                 if (tr) { tr.querySelector('td:last-child').innerText = '上传成功'; }
-                layer.msg(res.msg);
+                L.msg(res.msg);
                 SendLog.log_info('文件上传成功', 'file_upload');
             },
             error: function(index) {
@@ -52,7 +52,7 @@
                 if (tr) { tr.querySelector('td:last-child').innerText = '上传失败'; }
                 SendLog.log_error('文件上传失败', 'file_upload');
             },
-            allDone: function() { var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }
+            allDone: function() { parent.layui.table.reload('fileTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }
         });
     });
     </script>

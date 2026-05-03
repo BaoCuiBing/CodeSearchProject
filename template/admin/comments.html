@@ -30,7 +30,7 @@
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
     layui.use(['table', 'form'], function() {
-        var table = layui.table, form = layui.form, layer = layui.layer;
+        var table = layui.table, form = layui.form, L = lostoryOption.getLayer();
         if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'comments'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
@@ -40,15 +40,15 @@
             elem: '#commentTable', url: '/api/admin/comment/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
             where: { admin_id: adminId },
             request: { pageName: 'page', limitName: 'page_size' },
-            parseData: function(res) { return { code: res.code, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
             cols: [[
-                {type: 'checkbox'}, {field: 'comment_id', title: 'ID', width: 80},
-                {field: 'content', title: '内容', width: 300},
-                {field: 'author_name', title: '作者', width: 120},
-                {field: 'target_type', title: '目标类型', width: 90, templet: function(d) { return d.target_type === 'article' ? '文章' : d.target_type === 'question' ? '问题' : d.target_type; }},
-                {field: 'status', title: '状态', width: 80, templet: function(d) { return d.status === 'hidden' ? '<span style="color:#FF5722;">已隐藏</span>' : '<span style="color:#5FB878;">正常</span>'; }},
-                {field: 'created_at', title: '发布时间', width: 160},
-                {title: '操作', width: 220, toolbar: '#toolbarTpl'}
+                {type: 'checkbox', fixed: 'left'}, {field: 'comment_id', title: 'ID', width: '8%'},
+                {field: 'content', title: '内容', width: '28%'},
+                {field: 'author_name', title: '作者', width: '12%'},
+                {field: 'target_type', title: '目标类型', width: '10%', templet: function(d) { return d.target_type === 'article' ? '文章' : d.target_type === 'question' ? '问题' : d.target_type; }},
+                {field: 'status', title: '状态', width: '8%', templet: function(d) { return d.status === 'hidden' ? '<span style="color:#FF5722;">已隐藏</span>' : '<span style="color:#5FB878;">正常</span>'; }},
+                {field: 'created_at', title: '发布时间', width: '14%'},
+                {title: '操作', width: '230', toolbar: '#toolbarTpl', fixed: 'right'}
             ]]
         });
         document.getElementById('searchBtn').onclick = function() {
@@ -59,16 +59,16 @@
             var d = obj.data;
             if (obj.event === 'detail') { SendLog.log_info('查看评论详情: ' + d.comment_id, 'comments'); lostoryOption.openDialog('评论详情', '/admin/dialogs/comment_detail.html?comment_id=' + d.comment_id, ['500px', '400px']); }
             if (obj.event === 'reply') { SendLog.log_info('回复评论: ' + d.comment_id, 'comments'); lostoryOption.openDialog('回复评论', '/admin/dialogs/comment_reply.html?comment_id=' + d.comment_id, ['500px', '300px']); }
-            if (obj.event === 'toggle') { SendLog.log_info('切换评论状态: ' + d.comment_id, 'comments'); adminApi.comment.toggleStatus(d.comment_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('评论状态切换成功: ' + d.comment_id, 'comments'); }).catch(function(err) { SendLog.log_error('评论状态切换失败: ' + d.comment_id, 'comments'); }); }
-            if (obj.event === 'delete') { SendLog.log_info('删除评论: ' + d.comment_id, 'comments'); lostoryOption.confirmDialog('确认删除该评论？', function() { adminApi.comment.delete(d.comment_id).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('评论删除成功: ' + d.comment_id, 'comments'); }).catch(function(err) { SendLog.log_error('评论删除失败: ' + d.comment_id, 'comments'); }); }); }
+            if (obj.event === 'toggle') { SendLog.log_info('切换评论状态: ' + d.comment_id, 'comments'); adminApi.comment.toggleStatus(d.comment_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('评论状态切换成功: ' + d.comment_id, 'comments'); }).catch(function(err) { SendLog.log_error('评论状态切换失败: ' + d.comment_id, 'comments'); }); }
+            if (obj.event === 'delete') { SendLog.log_info('删除评论: ' + d.comment_id, 'comments'); lostoryOption.confirmDialog('确认删除该评论？', function() { adminApi.comment.delete(d.comment_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('评论删除成功: ' + d.comment_id, 'comments'); }).catch(function(err) { SendLog.log_error('评论删除失败: ' + d.comment_id, 'comments'); }); }); }
         });
         document.getElementById('batchDelete').onclick = function() {
             var checkStatus = table.checkStatus('commentTable');
-            if (checkStatus.data.length === 0) { layer.msg('请先选择评论'); return; }
+            if (checkStatus.data.length === 0) { L.msg('请先选择评论'); return; }
             var ids = [];
             checkStatus.data.forEach(function(d) { ids.push(d.comment_id); });
             SendLog.log_info('批量删除评论: ' + ids.join(','), 'comments');
-            lostoryOption.confirmDialog('确认批量删除选中评论？', function() { adminApi.comment.batchDelete(ids).then(function(r) { layer.msg(r.msg); tableIns.reload(); SendLog.log_info('批量删除评论成功', 'comments'); }).catch(function(err) { SendLog.log_error('批量删除评论失败', 'comments'); }); });
+            lostoryOption.confirmDialog('确认批量删除选中评论？', function() { adminApi.comment.batchDelete(ids).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('批量删除评论成功', 'comments'); }).catch(function(err) { SendLog.log_error('批量删除评论失败', 'comments'); }); });
         };
     });
     </script>
