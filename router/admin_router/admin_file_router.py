@@ -5,6 +5,8 @@ from sanic import Blueprint, response
 from sanic_ext import openapi
 from models.model import User, File
 from models.db_init import get_db_session
+from utils.oss_option import oss_client
+import config
 
 logger = logging.getLogger(__name__)
 
@@ -55,10 +57,49 @@ async def delete_file(request, file_id):
         logger.warning(f"删除文件失败:文件不存在,file_id={file_id}")
         return response.json({"code": 404, "msg": "文件不存在"})
     logger.info(f"管理员{admin_id}删除文件:file_id={file_id},filename={file_record.filename}")
-    if os.path.exists(file_record.file_path):
-        os.remove(file_record.file_path)
-        logger.debug(f"删除物理文件:{file_record.file_path}")
+    if config.USE_OSS:
+        object_key = file_record.file_path if file_record.file_path.startswith("uploads/") else f"uploads/{os.path.basename(file_record.file_path)}"
+        try:
+            oss_client.delete_file(object_key)
+            logger.debug(f"删除OSS文件:{object_key}")
+        except Exception as e:
+            logger.error(f"删除OSS文件失败:{object_key},error={str(e)}")
+    else:
+        if os.path.exists(file_record.file_path):
+            os.remove(file_record.file_path)
+            logger.debug(f"删除物理文件:{file_record.file_path}")
     db.delete(file_record)
     db.commit()
     logger.info(f"管理员{admin_id}删除文件成功:file_id={file_id}")
     return response.json({"code": 200, "msg": "删除成功"})
+
+@admin_file_bp.post("/batch-delete")
+@openapi.summary("批量删除文件")
+async def batch_delete_files(request):
+    db = request.ctx.db
+    data = request.json
+    admin_id = data.get("admin_id")
+    admin = check_admin(db, admin_id)
+    if not admin:
+        logger.warning("批量删除文件失败:admin_id无效")
+        return response.json({"code": 400, "msg": "admin_id不能为空"})
+    ids = data.get("ids", [])
+    if not ids:
+        logger.warning("批量删除文件失败:未选择文件")
+        return response.json({"code": 400, "msg": "请选择要删除的文件"})
+    logger.info(f"管理员{admin_id}批量删除文件:ids={ids}")
+    file_records = db.query(File).filter(File.id.in_(ids)).all()
+    for f in file_records:
+        if config.USE_OSS:
+            object_key = f.file_path if f.file_path.startswith("uploads/") else f"uploads/{os.path.basename(f.file_path)}"
+            try:
+                oss_client.delete_file(object_key)
+            except Exception as e:
+                logger.error(f"批量删除OSS文件失败:{object_key},error={str(e)}")
+        else:
+            if os.path.exists(f.file_path):
+                os.remove(f.file_path)
+        db.delete(f)
+    db.commit()
+    logger.info(f"管理员{admin_id}批量删除文件成功:共{len(file_records)}个")
+    return response.json({"code": 200, "msg": "批量删除成功", "data": {"deleted_count": len(file_records)}})

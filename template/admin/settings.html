@@ -5,27 +5,59 @@
     <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
     <title>系统设置</title>
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+    <style>
+        .setting-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+        .setting-label { width: 120px; text-align: right; padding-right: 15px; color: #666; }
+        .setting-value { flex: 1; display: flex; align-items: center; }
+        .setting-value input { width: 200px; margin-right: 10px; }
+        .setting-btn { margin-right: 10px; }
+        .setting-desc { color: #999; font-size: 12px; }
+        .setting-desc .warn { color: #ff5722; }
+    </style>
 </head>
 <body>
-    <div style="padding:15px;">
-        <div class="layui-card">
-            <div class="layui-card-header">基本设置</div>
-            <div class="layui-card-body">
-                <form class="layui-form" lay-filter="settingsForm">
-                    <div class="layui-form-item"><label class="layui-form-label">站点名称</label><div class="layui-input-block"><input type="text" name="site_name" class="layui-input"></div></div>
-                    <div class="layui-form-item"><label class="layui-form-label">站点描述</label><div class="layui-input-block"><textarea name="site_description" class="layui-textarea"></textarea></div></div>
-                    <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" type="button" id="editBasicBtn">编辑</button></div></div>
-                </form>
+    <div style="padding:20px 30px;">
+        <form class="layui-form" lay-filter="settingsForm">
+        <div class="setting-item">
+            <div class="setting-label">站点名称</div>
+            <div class="setting-value">
+                <input type="text" id="site_name" class="layui-input" readonly>
+                <button type="button" class="layui-btn layui-btn-sm setting-btn" onclick="openSettingDialog('site_name', '站点名称')">设置</button>
+                <span class="setting-desc">设置网站显示名称</span>
             </div>
         </div>
+        <div class="setting-item">
+            <div class="setting-label">站点描述</div>
+            <div class="setting-value">
+                <input type="text" id="site_description" class="layui-input" readonly>
+                <button type="button" class="layui-btn layui-btn-sm setting-btn" onclick="openSettingDialog('site_description', '站点描述')">设置</button>
+                <span class="setting-desc">设置网站SEO描述信息</span>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div class="setting-label">首页轮播图</div>
+            <div class="setting-value">
+                <span class="setting-desc" id="carousel_imgs_display" style="margin-right:10px;"></span>
+                <input type="hidden" id="carousel_imgs_value">
+                <button class="layui-btn layui-btn-sm setting-btn" onclick="openCarouselDialog()">设置</button>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div class="setting-label">清明节模式</div>
+            <div class="setting-value">
+                <input type="checkbox" name="special_ancestor_worship" lay-skin="switch" lay-text="开启|关闭" lay-filter="specialAncestorWorship">
+                <span class="setting-desc" style="margin-left: 10px;">开启后网站显示清明节主题</span>
+            </div>
+        </div>
+        </form>
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
-    layui.use(['form'], function() {
-        var form = layui.form, layer = layui.layer;
+    layui.use(['layer', 'form'], function() {
+        var layer = layui.layer, form = layui.form;
         if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'settings'); return; }
         var adminId = lostoryOption.getAdminId();
         adminApi.setAdminId(adminId);
@@ -34,15 +66,60 @@
             if (res.code === 200) {
                 var data = {};
                 res.data.forEach(function(s) { data[s.key] = s.value; });
-                form.val('settingsForm', data);
+                document.getElementById('site_name').value = data.site_name || '';
+                document.getElementById('site_description').value = data.site_description || '';
+                document.getElementById('carousel_imgs_value').value = data.carousel_imgs || '';
+                updateCarouselDesc(data.carousel_imgs);
+                var switchVal = data.special_ancestor_worship === 'true';
+                form.val('settingsForm', {special_ancestor_worship: switchVal});
                 SendLog.log_info('系统设置加载成功', 'settings');
             } else { SendLog.log_warning('系统设置加载失败: ' + res.msg, 'settings'); }
         }).catch(function(err) { SendLog.log_error('系统设置请求异常: ' + err.message, 'settings'); });
-        document.getElementById('editBasicBtn').onclick = function() {
-            SendLog.log_info('打开基本设置弹窗', 'settings');
-            lostoryOption.openDialog('基本设置', '/admin/dialogs/settings_basic.html', ['600px', '350px']);
-        };
+        form.on('switch(specialAncestorWorship)', function(data) {
+                var val = data.elem.checked ? 'true' : 'false';
+            adminApi.system.updateSettings('special_ancestor_worship', val).then(function(res) {
+                if (res.code === 200) { SendLog.log_info('清明节模式设置成功', 'settings'); }
+                else { layer.msg('保存失败: ' + res.msg, {icon: 2}); form.val('settingsForm', {special_ancestor_worship: !data.elem.checked}); }
+            }).catch(function(err) { layer.msg('请求异常: ' + err.message, {icon: 2}); form.val('settingsForm', {special_ancestor_worship: !data.elem.checked}); });
+        });
     });
+    function updateCarouselDesc(value) {
+        try { var parsed = JSON.parse(value); document.getElementById('carousel_imgs_display').textContent = '已设置' + (parsed.imgs ? parsed.imgs.length : 0) + '个图片'; }
+        catch(e) { document.getElementById('carousel_imgs_display').textContent = '未设置'; }
+    }
+    function openSettingDialog(key, title) {
+        SendLog.log_info('打开' + title + '设置弹窗', 'settings');
+        var currentValue = document.getElementById(key).value;
+        var L = lostoryOption.getLayer();
+        L.open({
+            type: 1,
+            title: '设置' + title,
+            area: ['400px', '200px'],
+            shade: 0.6,
+            shadeClose: true,
+            content: '<div style="padding:20px;"><div class="layui-form-item"><label class="layui-form-label">' + title + '</label><div class="layui-input-block"><input type="text" id="dialog_input" class="layui-input" value="' + currentValue + '"></div></div><div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" id="dialog_save">保存</button></div></div></div>',
+            success: function(layero, index) {
+                layero[0].querySelector('#dialog_save').onclick = function() {
+                    var newValue = layero[0].querySelector('#dialog_input').value;
+                    adminApi.system.updateSettings(key, newValue).then(function(res) {
+                        if (res.code === 200) {
+                            document.getElementById(key).value = newValue;
+                            L.close(index);
+                            SendLog.log_info(title + '设置成功', 'settings');
+                        } else { L.msg('保存失败: ' + res.msg, {icon: 2}); }
+                    }).catch(function(err) { L.msg('请求异常: ' + err.message, {icon: 2}); });
+                };
+            }
+        });
+    }
+    function openCarouselDialog() {
+        SendLog.log_info('打开轮播图设置弹窗', 'settings');
+        lostoryOption.openDialog('首页轮播图设置', '/admin/dialogs/settings_carousel_imgs.html', ['800px', '600px']);
+    }
+    window.updateCarouselDesc = function(value) {
+        try { var parsed = JSON.parse(value); document.getElementById('carousel_imgs_display').textContent = '已设置' + (parsed.imgs ? parsed.imgs.length : 0) + '个图片'; }
+        catch(e) { document.getElementById('carousel_imgs_display').textContent = '未设置'; }
+    };
     </script>
 </body>
 </html>

@@ -98,3 +98,44 @@ DELETE /api/admin/file/1?admin_id=1
     "msg": "文件不存在"
 }
 ```
+
+---
+
+### 3. 批量删除文件（管理端）
+- **路径**: `/api/admin/file/batch-delete`
+- **方法**: `POST`
+- **函数名**: `batch_delete_files`
+- **OpenAPI摘要**: 批量删除文件
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| ids | array | yes | 文件ID列表，如[1,2,3] | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "ids": [1, 2, 3]
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "批量删除成功",
+    "data": {
+        "deleted_count": 3
+    }
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 400,
+    "msg": "请选择要删除的文件"
+}
+```

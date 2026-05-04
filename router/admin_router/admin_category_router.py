@@ -156,3 +156,26 @@ async def batch_action_categories(request):
     db.commit()
     logger.info(f"管理员{admin_id}批量操作分类成功:共{len(ids)}条,操作:{action}")
     return response.json({"code": 200, "msg": "批量操作成功", "data": {"processed_count": len(ids)}})
+
+@admin_category_bp.post("/batch-delete")
+@openapi.summary("批量删除分类")
+async def batch_delete_categories(request):
+    db = request.ctx.db
+    data = request.json
+    admin_id = data.get("admin_id")
+    admin = check_admin(db, admin_id)
+    if not admin:
+        logger.warning("批量删除分类失败:admin_id无效")
+        return response.json({"code": 400, "msg": "admin_id不能为空"})
+    ids = data.get("ids", [])
+    if not ids:
+        logger.warning("批量删除分类失败:未选择分类")
+        return response.json({"code": 400, "msg": "请选择要删除的分类"})
+    logger.info(f"管理员{admin_id}批量删除分类:ids={ids}")
+    for cid in ids:
+        category = db.query(Category).filter(Category.id == cid).first()
+        if category:
+            db.delete(category)
+    db.commit()
+    logger.info(f"管理员{admin_id}批量删除分类成功:共{len(ids)}个")
+    return response.json({"code": 200, "msg": "批量删除成功", "data": {"deleted_count": len(ids)}})

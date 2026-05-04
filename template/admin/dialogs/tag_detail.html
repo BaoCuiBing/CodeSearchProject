@@ -9,10 +9,20 @@
 <body>
     <div style="padding:15px;">
         <table class="layui-table">
-            <tr><td>ID</td><td id="d_tag_id"></td></tr>
-            <tr><td>标签名称</td><td id="d_name"></td></tr>
-            <tr><td>关联内容数</td><td id="d_post_count"></td></tr>
-            <tr><td>创建时间</td><td id="d_created_at"></td></tr>
+            <tbody>
+                <tr><td width="100">标签ID</td><td id="d_tag_id"></td></tr>
+                <tr><td>标签名称</td><td id="d_name"></td></tr>
+                <tr><td>别名</td><td id="d_slug"></td></tr>
+                <tr><td>描述</td><td id="d_description"></td></tr>
+                <tr><td>颜色</td><td id="d_color"></td></tr>
+                <tr><td>热门</td><td id="d_is_hot"></td></tr>
+                <tr><td>推荐</td><td id="d_is_recommend"></td></tr>
+                <tr><td>状态</td><td id="d_status"></td></tr>
+                <tr><td>排序</td><td id="d_sort_order"></td></tr>
+                <tr><td>关联内容</td><td id="d_post_count"></td></tr>
+                <tr><td>创建时间</td><td id="d_created_at"></td></tr>
+                <tr><td>更新时间</td><td id="d_updated_at"></td></tr>
+            </tbody>
         </table>
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
@@ -25,18 +35,25 @@
         adminApi.setAdminId(adminId);
         var urlParams = new URLSearchParams(window.location.search);
         var tagId = urlParams.get('tag_id');
-        if (!tagId) { return; }
         SendLog.log_info('加载标签详情: ' + tagId, 'tag_detail');
         adminApi.tag.getDetail(tagId).then(function(res) {
             if (res.code === 200) {
-                var t = res.data;
-                document.getElementById('d_tag_id').innerText = t.tag_id;
-                document.getElementById('d_name').innerText = t.name;
-                document.getElementById('d_post_count').innerText = t.post_count || 0;
-                document.getElementById('d_created_at').innerText = t.created_at || '-';
+                var d = res.data;
+                document.getElementById('d_tag_id').textContent = d.tag_id || '-';
+                document.getElementById('d_name').textContent = d.name || '-';
+                document.getElementById('d_slug').textContent = d.slug || '-';
+                document.getElementById('d_description').textContent = d.description || '-';
+                document.getElementById('d_color').innerHTML = d.color ? '<span style="display:inline-block;width:20px;height:20px;background-color:' + d.color + ';border:1px solid #eee;vertical-align:middle;"></span> ' + d.color : '-';
+                document.getElementById('d_is_hot').textContent = d.is_hot ? '是' : '否';
+                document.getElementById('d_is_recommend').textContent = d.is_recommend ? '是' : '否';
+                document.getElementById('d_status').textContent = d.status === 'active' ? '启用' : '禁用';
+                document.getElementById('d_sort_order').textContent = d.sort_order || 0;
+                document.getElementById('d_post_count').textContent = d.post_count || 0;
+                document.getElementById('d_created_at').textContent = d.created_at || '-';
+                document.getElementById('d_updated_at').textContent = d.updated_at || '-';
                 SendLog.log_info('标签详情加载成功: ' + tagId, 'tag_detail');
             }
-        }).catch(function(err) { SendLog.log_error('标签详情请求异常: ' + err.message, 'tag_detail'); });
+        });
     });
     </script>
 </body>

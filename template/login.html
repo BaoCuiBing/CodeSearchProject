@@ -5,17 +5,24 @@
     <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
     <title>管理后台登录</title>
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+    <style>
+        body { margin: 0; overflow: hidden; }
+        #vanta-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .login-container { position: relative; z-index: 1; margin-top: 100px; }
+    </style>
 </head>
 <body>
-    <div class="layui-container" style="margin-top:100px;">
+    <div id="vanta-bg"></div>
+    <div class="layui-container login-container">
         <div class="layui-row">
             <div class="layui-col-md4 layui-col-md-offset4">
                 <div class="layui-card">
                     <div class="layui-card-header" style="text-align:center;font-size:18px;">管理后台登录</div>
                     <div class="layui-card-body">
                         <form class="layui-form" lay-filter="loginForm">
-                            <div class="layui-form-item"><input type="text" name="usernumber" lay-verify="required" placeholder="账号" class="layui-input"></div>
-                            <div class="layui-form-item"><input type="password" name="password" lay-verify="required" placeholder="密码" class="layui-input"></div>
+                            <div class="layui-form-item"><input type="text" name="usernumber" lay-verify="required" placeholder="账号" class="layui-input" id="usernumber"></div>
+                            <div class="layui-form-item"><input type="password" name="password" lay-verify="required" placeholder="密码" class="layui-input" id="password"></div>
+                            <div class="layui-form-item"><input type="checkbox" name="showPwd" lay-skin="primary" title="显示密码" id="showPwd"><input type="checkbox" name="savePwd" lay-skin="primary" title="保存密码" id="savePwd"></div>
                             <div class="layui-form-item"><button class="layui-btn layui-btn-fluid" lay-submit lay-filter="login">登录</button></div>
                         </form>
                     </div>
@@ -23,17 +30,38 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/build/three.min.js"></script>
+    <script src="/static/webs/vanta/vanta.clouds.min.js"></script>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
+    VANTA.CLOUDS({ el: "#vanta-bg", mouseControls: true, touchControls: true, gyroControls: false, minHeight: 200.00, minWidth: 200.00, backgroundColor: 0xffffff, skyColor: 0x68b8d7, cloudColor: 0xadc1de, cloudShadowColor: 0x183550, sunColor: 0xff9919, sunGlareColor: 0xff6633, sunlightColor: 0xff9933, speed: 1.00 });
     layui.use(['form'], function() {
         var form = layui.form, layer = layui.layer;
         var adminId = localStorage.getItem('admin_id');
         if (adminId) { SendLog.log_info('自动跳转到管理后台', 'login'); window.location.href = '/admin/'; return; }
+        var savedUser = localStorage.getItem('login_usernumber');
+        var savedPwd = localStorage.getItem('login_password');
+        var savedChecked = localStorage.getItem('login_save_pwd') === 'true';
+        if (savedUser) { document.getElementById('usernumber').value = savedUser; }
+        if (savedPwd && savedChecked) { document.getElementById('password').value = savedPwd; document.getElementById('savePwd').checked = true; }
+        document.getElementById('showPwd').onchange = function() {
+            var pwdInput = document.getElementById('password');
+            pwdInput.type = this.checked ? 'text' : 'password';
+        };
         form.on('submit(login)', function(data) {
             SendLog.log_info('尝试登录: ' + data.field.usernumber, 'login');
+            if (document.getElementById('savePwd').checked) {
+                localStorage.setItem('login_usernumber', data.field.usernumber);
+                localStorage.setItem('login_password', data.field.password);
+                localStorage.setItem('login_save_pwd', 'true');
+            } else {
+                localStorage.removeItem('login_usernumber');
+                localStorage.removeItem('login_password');
+                localStorage.setItem('login_save_pwd', 'false');
+            }
             adminApi.auth.login(data.field.usernumber, data.field.password).then(function(res) {
                 if (res.code === 200) {
                     lostoryOption.setAdminId(res.data.admin_id);

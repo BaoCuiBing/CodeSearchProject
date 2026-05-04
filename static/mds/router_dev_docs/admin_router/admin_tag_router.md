@@ -45,12 +45,10 @@ GET /api/admin/tag/list?page=1&page_size=20&sort=name&order=asc&admin_id=1
                 "name": "Python",
                 "slug": "python",
                 "description": "Python编程语言相关文章",
-                "icon": "/static/uploads/tags/python.png",
                 "color": "#3776ab",
                 "category_id": 1,
                 "category_name": "编程语言",
                 "post_count": 500,
-                "question_count": 200,
                 "is_hot": true,
                 "is_recommend": true,
                 "status": "active",
@@ -76,6 +74,47 @@ GET /api/admin/tag/list?page=1&page_size=20&sort=name&order=asc&admin_id=1
 
 ---
 
+### 8. 批量删除标签（管理端）
+- **路径**: `/api/admin/tag/batch-delete`
+- **方法**: `POST`
+- **函数名**: `batch_delete_tags`
+- **OpenAPI摘要**: 批量删除标签
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| ids | array | yes | 标签ID列表，如[1,2,3] | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "ids": [3, 4, 5]
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "批量删除成功",
+    "data": {
+        "deleted_count": 3
+    }
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 400,
+    "msg": "请选择要删除的标签"
+}
+```
+
+---
+
 ### 2. 创建标签（管理端）
 - **路径**: `/api/admin/tag`
 - **方法**: `POST`
@@ -87,11 +126,13 @@ GET /api/admin/tag/list?page=1&page_size=20&sort=name&order=asc&admin_id=1
 |--------|------|------|------|------|
 | admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
 | name | string | yes | 标签名称（2-20字符） | Body (JSON) |
+| slug | string | no | 标签别名 | Body (JSON) |
 | description | string | no | 标签描述（最多100字） | Body (JSON) |
-| icon | string | no | 标签图标URL | Body (JSON) |
 | color | string | no | 标签颜色（十六进制） | Body (JSON) |
 | category_id | int | no | 所属分类ID | Body (JSON) |
+| is_hot | bool | no | 是否热门 | Body (JSON) |
 | is_recommend | bool | no | 是否推荐标签 | Body (JSON) |
+| status | string | no | 状态：active/disabled | Body (JSON) |
 | sort_order | int | no | 排序权重，默认0 | Body (JSON) |
 
 #### 请求示例
@@ -99,11 +140,13 @@ GET /api/admin/tag/list?page=1&page_size=20&sort=name&order=asc&admin_id=1
 {
     "admin_id": 1,
     "name": "TypeScript",
+    "slug": "typescript",
     "description": "TypeScript编程语言相关",
-    "icon": "/static/uploads/tags/typescript.png",
     "color": "#3178c6",
     "category_id": 1,
+    "is_hot": false,
     "is_recommend": true,
+    "status": "active",
     "sort_order": 5
 }
 ```
@@ -130,8 +173,8 @@ GET /api/admin/tag/list?page=1&page_size=20&sort=name&order=asc&admin_id=1
 | admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
 | tag_id | int | yes | 标签ID | Body (JSON) |
 | name | string | no | 标签名称 | Body (JSON) |
+| slug | string | no | 标签别名 | Body (JSON) |
 | description | string | no | 标签描述 | Body (JSON) |
-| icon | string | no | 标签图标URL | Body (JSON) |
 | color | string | no | 标签颜色 | Body (JSON) |
 | category_id | int | no | 所属分类ID | Body (JSON) |
 | is_recommend | bool | no | 是否推荐 | Body (JSON) |

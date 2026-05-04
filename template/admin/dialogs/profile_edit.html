@@ -25,7 +25,7 @@
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
         SendLog.log_info('加载个人信息编辑数据', 'profile_edit');
-        adminApi.auth.getMe().then(function(res) {
+        adminApi.user.getDetail(adminId).then(function(res) {
             if (res.code === 200) { form.val('profileEditForm', { username: res.data.username, email: res.data.email || '' }); SendLog.log_info('个人信息编辑数据加载成功', 'profile_edit'); }
         }).catch(function(err) { SendLog.log_error('个人信息编辑数据请求异常: ' + err.message, 'profile_edit'); });
         form.on('submit(saveProfile)', function(data) {

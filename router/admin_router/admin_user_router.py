@@ -60,7 +60,7 @@ async def get_user_list(request):
         following_count = db.query(Follow).filter(Follow.follower_id == u.id).count()
         like_count = db.query(Post).filter(Post.user_id == u.id).with_entities(func.sum(Post.like_count)).scalar() or 0
         view_count = db.query(Post).filter(Post.user_id == u.id).with_entities(func.sum(Post.view_count)).scalar() or 0
-        user_list.append({"user_id": u.id, "usernumber": u.usernumber, "username": u.username, "email": u.email, "avatar": u.avatar, "status": u.status, "role": u.role, "article_count": article_count, "question_count": question_count, "comment_count": comment_count, "follower_count": follower_count, "following_count": following_count, "like_count": like_count, "view_count": view_count, "last_login_time": str(u.last_login_time) if u.last_login_time else None, "created_at": str(u.created_at)})
+        user_list.append({"user_id": u.id, "usernumber": u.usernumber, "username": u.username, "email": u.email, "phone": u.phone, "avatar": u.avatar, "status": u.status, "role": u.role, "article_count": article_count, "question_count": question_count, "comment_count": comment_count, "follower_count": follower_count, "following_count": following_count, "like_count": like_count, "view_count": view_count, "last_login_time": str(u.last_login_time) if u.last_login_time else None, "created_at": str(u.created_at)})
     logger.debug(f"数据处理完成:构建{len(user_list)}条用户记录")
     return response.json({"code": 200, "msg": "获取成功", "data": {"list": user_list, "total": total, "page": page, "page_size": page_size}})
 
@@ -110,8 +110,13 @@ async def create_user(request):
     usernumber = data.get("usernumber")
     password = data.get("password")
     email = data.get("email", "")
+    phone = data.get("phone", "")
     role = data.get("role", "user")
     avatar = data.get("avatar", "")
+    bio = data.get("bio", "")
+    location = data.get("location", "")
+    website = data.get("website", "")
+    github = data.get("github", "")
     if not username or not usernumber or not password:
         logger.warning("创建用户失败:必填字段为空")
         return response.json({"code": 400, "msg": "用户名、账号、密码不能为空"})
@@ -122,7 +127,7 @@ async def create_user(request):
     logger.info(f"管理员{admin_id}创建用户:username={username},usernumber={usernumber}")
     salt = generate_salt()
     hashed_password = hash_password(password, salt)
-    new_user = User(username=username, usernumber=usernumber, password=hashed_password, salt=salt, email=email, role=role, avatar=avatar if avatar else None)
+    new_user = User(username=username, usernumber=usernumber, password=hashed_password, salt=salt, email=email if email else None, phone=phone if phone else None, role=role, avatar=avatar if avatar else None, bio=bio if bio else None, location=location if location else None, website=website if website else None, github=github if github else None)
     db.add(new_user)
     db.commit()
     logger.info(f"管理员{admin_id}创建用户成功:user_id={new_user.id},username={username}")
@@ -265,6 +270,18 @@ async def edit_user_info(request):
     if "avatar" in data and data["avatar"]:
         user.avatar = data["avatar"]
         logger.debug(f"更新字段:avatar={data['avatar']}")
+    if "phone" in data:
+        user.phone = data["phone"] if data["phone"] else None
+        logger.debug(f"更新字段:phone={data['phone']}")
+    if "location" in data:
+        user.location = data["location"] if data["location"] else None
+        logger.debug(f"更新字段:location={data['location']}")
+    if "website" in data:
+        user.website = data["website"] if data["website"] else None
+        logger.debug(f"更新字段:website={data['website']}")
+    if "github" in data:
+        user.github = data["github"] if data["github"] else None
+        logger.debug(f"更新字段:github={data['github']}")
     db.commit()
     logger.info(f"管理员{admin_id}编辑用户成功:user_id={user_id}")
     return response.json({"code": 200, "msg": "编辑成功"})

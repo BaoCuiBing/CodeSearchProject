@@ -22,6 +22,18 @@
         <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
     </script>
+    <script type="text/html" id="colorTpl">
+        <span style="display:inline-block;width:20px;height:20px;background-color:{{d.color||'#ccc'}};border:1px solid #eee;vertical-align:middle;"></span> {{d.color||'-'}}
+    </script>
+    <script type="text/html" id="statusTpl">
+        {{# if(d.status === 'active') { }}<span style="color:#5FB878;">启用</span>{{# } else { }}<span style="color:#FF5722;">禁用</span>{{# } }}
+    </script>
+    <script type="text/html" id="hotTpl">
+        {{# if(d.is_hot) { }}<span style="color:#FF5722;">是</span>{{# } else { }}否{{# } }}
+    </script>
+    <script type="text/html" id="recommendTpl">
+        {{# if(d.is_recommend) { }}<span style="color:#5FB878;">是</span>{{# } else { }}否{{# } }}
+    </script>
     <script src="/static/webs/layui/js/layui.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
@@ -40,10 +52,15 @@
             request: { pageName: 'page', limitName: 'page_size' },
             parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
             cols: [[
-                {type: 'checkbox', fixed: 'left'}, {field: 'tag_id', title: 'ID', width: '12%'},
-                {field: 'name', title: '标签名称', width: '22%'},
-                {field: 'post_count', title: '关联内容', width: '14%'},
-                {field: 'created_at', title: '创建时间', width: '22%'},
+                {type: 'checkbox', fixed: 'left'}, {field: 'tag_id', title: 'ID', width: '8%'},
+                {field: 'name', title: '标签名称', width: '15%'},
+                {field: 'slug', title: '别名', width: '12%'},
+                {field: 'color', title: '颜色', width: '12%', templet: '#colorTpl'},
+                {field: 'is_hot', title: '热门', width: '8%', templet: '#hotTpl'},
+                {field: 'is_recommend', title: '推荐', width: '8%', templet: '#recommendTpl'},
+                {field: 'status', title: '状态', width: '8%', templet: '#statusTpl'},
+                {field: 'post_count', title: '关联内容', width: '10%'},
+                {field: 'created_at', title: '创建时间', width: '12%'},
                 {title: '操作', width: '180', toolbar: '#toolbarTpl', fixed: 'right'}
             ]]
         });
@@ -53,12 +70,12 @@
         };
         document.getElementById('addTagBtn').onclick = function() {
             SendLog.log_info('打开新建标签弹窗', 'tags');
-            lostoryOption.openDialog('新建标签', '/admin/dialogs/tag_create.html', ['500px', '250px']);
+            lostoryOption.openDialog('新建标签', '/admin/dialogs/tag_create.html', ['800px', '600px']);
         };
         table.on('tool(tagTable)', function(obj) {
             var d = obj.data;
-            if (obj.event === 'detail') { SendLog.log_info('查看标签详情: ' + d.tag_id, 'tags'); lostoryOption.openDialog('标签详情', '/admin/dialogs/tag_detail.html?tag_id=' + d.tag_id, ['500px', '300px']); }
-            if (obj.event === 'edit') { SendLog.log_info('编辑标签: ' + d.tag_id, 'tags'); lostoryOption.openDialog('编辑标签', '/admin/dialogs/tag_edit.html?tag_id=' + d.tag_id + '&name=' + encodeURIComponent(d.name), ['500px', '250px']); }
+            if (obj.event === 'detail') { SendLog.log_info('查看标签详情: ' + d.tag_id, 'tags'); lostoryOption.openDialog('标签详情', '/admin/dialogs/tag_detail.html?tag_id=' + d.tag_id, ['600px', '500px']); }
+            if (obj.event === 'edit') { SendLog.log_info('编辑标签: ' + d.tag_id, 'tags'); lostoryOption.openDialog('编辑标签', '/admin/dialogs/tag_edit.html?tag_id=' + d.tag_id, ['800px', '600px']); }
             if (obj.event === 'delete') { SendLog.log_info('删除标签: ' + d.tag_id, 'tags'); lostoryOption.confirmDialog('确认删除该标签？', function() { adminApi.tag.delete(d.tag_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('标签删除成功: ' + d.tag_id, 'tags'); }).catch(function(err) { SendLog.log_error('标签删除失败: ' + d.tag_id, 'tags'); }); }); }
         });
     });

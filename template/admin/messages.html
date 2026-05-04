@@ -78,7 +78,22 @@
             if (obj.event === 'send') { SendLog.log_info('发送消息: ' + d.system_message_id, 'messages'); lostoryOption.confirmDialog('确认发送该消息？', function() { adminApi.message.send(d.system_message_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('消息发送成功: ' + d.system_message_id, 'messages'); }).catch(function(err) { SendLog.log_error('消息发送失败: ' + d.system_message_id, 'messages'); }); }); }
             if (obj.event === 'delete') { SendLog.log_info('删除消息: ' + d.system_message_id, 'messages'); lostoryOption.confirmDialog('确认删除该消息？', function() { adminApi.message.delete(d.system_message_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('消息删除成功: ' + d.system_message_id, 'messages'); }).catch(function(err) { SendLog.log_error('消息删除失败: ' + d.system_message_id, 'messages'); }); }); }
         });
-        document.getElementById('batchDelete').onclick = function() { table.triggerToolbar('messageTable', 'batchDelete'); };
+        document.getElementById('batchDelete').onclick = function() {
+            var checkStatus = table.checkStatus('messageTable');
+            if (checkStatus.data.length === 0) { L.msg('请先选择消息'); return; }
+            var ids = [];
+            checkStatus.data.forEach(function(d) { ids.push(d.system_message_id); });
+            SendLog.log_info('批量删除消息: ' + ids.join(','), 'messages');
+            lostoryOption.confirmDialog('确认删除选中消息？', function() {
+                adminApi.message.batchDelete(ids).then(function(r) {
+                    L.msg(r.msg);
+                    tableIns.reload();
+                    SendLog.log_info('批量删除消息成功', 'messages');
+                }).catch(function(err) {
+                    SendLog.log_error('批量删除消息失败', 'messages');
+                });
+            });
+        };
     });
     </script>
 </body>

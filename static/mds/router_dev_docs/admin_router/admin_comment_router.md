@@ -238,7 +238,50 @@ DELETE /api/admin/comment/1?admin_id=1&delete_replies=true&reason=包含不当�
 
 ---
 
-### 5. 批量操作评论（管理端）
+### 5. 回复评论（管理端）
+- **路径**: `/api/admin/comment/reply`
+- **方法**: `POST`
+- **函数名**: `reply_comment`
+- **OpenAPI摘要**: 管理员回复评论
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| comment_id | int | yes | 被回复的评论ID | Body (JSON) |
+| content | string | yes | 回复内容 | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "comment_id": 1,
+    "content": "感谢您的反馈，我们会尽快处理。"
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "回复成功",
+    "data": {
+        "reply_id": 10
+    }
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 400,
+    "msg": "评论ID和回复内容不能为空"
+}
+```
+
+---
+
+### 6. 批量操作评论（管理端）
 - **路径**: `/api/admin/comment/batch-action`
 - **方法**: `POST`
 - **函数名**: `batch_action_comments`
@@ -284,7 +327,7 @@ DELETE /api/admin/comment/1?admin_id=1&delete_replies=true&reason=包含不当�
 
 ---
 
-### 6. 获取评论统计概览（管理端）
+### 7. 获取评论统计概览（管理端）
 - **路径**: `/api/admin/comment/stats/overview`
 - **方法**: `GET`
 - **函数名**: `get_comment_stats_overview`
@@ -334,7 +377,7 @@ GET /api/admin/comment/stats/overview?admin_id=1&period=month
 
 ---
 
-### 7. 导出评论数据（管理端）
+### 8. 导出评论数据（管理端）
 - **路径**: `/api/admin/comment/export`
 - **方法**: `POST`
 - **函数名**: `export_comments`
@@ -375,5 +418,46 @@ GET /api/admin/comment/stats/overview?admin_id=1&period=month
 {
     "code": 400,
     "msg": "导出格式不支持"
+}
+```
+
+---
+
+### 9. 批量删除评论（管理端）
+- **路径**: `/api/admin/comment/batch-delete`
+- **方法**: `POST`
+- **函数名**: `batch_delete_comments`
+- **OpenAPI摘要**: 批量删除评论
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| ids | array | yes | 评论ID列表，如[1,2,3] | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "ids": [1, 2, 3]
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "批量删除成功",
+    "data": {
+        "deleted_count": 3
+    }
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 400,
+    "msg": "请选择要删除的评论"
 }
 ```

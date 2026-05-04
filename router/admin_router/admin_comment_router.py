@@ -144,6 +144,32 @@ async def toggle_comment_visibility(request):
     logger.info(f"管理员{admin_id}切换评论可见性成功:comment_id={comment_id}")
     return response.json({"code": 200, "msg": "操作成功", "data": {"comment_id": comment_id, "is_hidden": is_hidden}})
 
+@admin_comment_bp.post("/reply")
+@openapi.summary("回复评论")
+async def reply_comment(request):
+    db = request.ctx.db
+    data = request.json
+    admin_id = data.get("admin_id")
+    admin = check_admin(db, admin_id)
+    if not admin:
+        logger.warning("回复评论失败:admin_id无效")
+        return response.json({"code": 400, "msg": "admin_id不能为空"})
+    comment_id = data.get("comment_id")
+    content = data.get("content")
+    if not comment_id or not content:
+        logger.warning("回复评论失败:参数不完整")
+        return response.json({"code": 400, "msg": "评论ID和回复内容不能为空"})
+    parent_comment = db.query(Comment).filter(Comment.id == comment_id).first()
+    if not parent_comment:
+        logger.warning(f"回复评论失败:评论不存在,comment_id={comment_id}")
+        return response.json({"code": 404, "msg": "评论不存在"})
+    logger.info(f"管理员{admin_id}回复评论:comment_id={comment_id}")
+    new_reply = Comment(user_id=admin.id, post_id=parent_comment.post_id, parent_id=comment_id, content=content, status="normal")
+    db.add(new_reply)
+    db.commit()
+    logger.info(f"管理员{admin_id}回复评论成功:reply_id={new_reply.id}")
+    return response.json({"code": 200, "msg": "回复成功", "data": {"reply_id": new_reply.id}})
+
 @admin_comment_bp.post("/batch-action")
 @openapi.summary("批量操作评论")
 async def batch_action_comments(request):
@@ -179,6 +205,28 @@ async def batch_action_comments(request):
     db.commit()
     logger.info(f"管理员{admin_id}批量操作评论成功:共{len(comments)}条,操作:{action}")
     return response.json({"code": 200, "msg": "批量操作成功", "data": {"processed_count": len(ids), "action": action}})
+
+@admin_comment_bp.post("/batch-delete")
+@openapi.summary("批量删除评论")
+async def batch_delete_comments(request):
+    db = request.ctx.db
+    data = request.json
+    admin_id = data.get("admin_id")
+    admin = check_admin(db, admin_id)
+    if not admin:
+        logger.warning("批量删除评论失败:admin_id无效")
+        return response.json({"code": 400, "msg": "admin_id不能为空"})
+    ids = data.get("ids", [])
+    if not ids:
+        logger.warning("批量删除评论失败:未选择评论")
+        return response.json({"code": 400, "msg": "请选择要删除的评论"})
+    logger.info(f"管理员{admin_id}批量删除评论:ids={ids}")
+    comments = db.query(Comment).filter(Comment.id.in_(ids)).all()
+    for c in comments:
+        db.delete(c)
+    db.commit()
+    logger.info(f"管理员{admin_id}批量删除评论成功:共{len(comments)}条")
+    return response.json({"code": 200, "msg": "批量删除成功", "data": {"deleted_count": len(ids)}})
 
 @admin_comment_bp.get("/stats/overview")
 @openapi.summary("获取评论统计概览")

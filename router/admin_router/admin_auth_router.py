@@ -62,7 +62,6 @@ async def change_admin_password(request):
     db = request.ctx.db
     data = request.json
     admin_id = data.get("admin_id")
-    old_password = data.get("old_password")
     new_password = data.get("new_password")
     confirm_password = data.get("confirm_password")
     if not admin_id:
@@ -72,9 +71,6 @@ async def change_admin_password(request):
     if not admin:
         logger.warning(f"修改密码失败:admin_id={admin_id}不是管理员")
         return response.json({"code": 403, "msg": "权限不足"})
-    if not verify_password(old_password, admin.salt, admin.password):
-        logger.warning(f"修改密码失败:当前密码错误,admin_id={admin_id}")
-        return response.json({"code": 400, "msg": "当前密码错误"})
     if not new_password or len(new_password) < 8:
         logger.warning(f"修改密码失败:新密码长度不足,admin_id={admin_id}")
         return response.json({"code": 400, "msg": "新密码至少8位"})

@@ -31,7 +31,7 @@ var adminApi = {
     auth: {
         login: function(usernumber, password) { return adminApi._post('/api/admin/auth/login', { usernumber: usernumber, password: password }); },
         getMe: function() { return adminApi._get('/api/admin/auth/me', { admin_id: adminApi.getAdminId() }); },
-        changePassword: function(oldPwd, newPwd, confirmPwd) { return adminApi._put('/api/admin/auth/change-password', { admin_id: adminApi.getAdminId(), old_password: oldPwd, new_password: newPwd, confirm_password: confirmPwd }); }
+        changePassword: function(newPwd, confirmPwd) { return adminApi._put('/api/admin/auth/change-password', { admin_id: adminApi.getAdminId(), new_password: newPwd, confirm_password: confirmPwd }); }
     },
     user: {
         getList: function(params) { params = params || {}; params.admin_id = adminApi.getAdminId(); return adminApi._get('/api/admin/user/list', params); },
@@ -80,6 +80,7 @@ var adminApi = {
     comment: {
         getList: function(params) { params = params || {}; params.admin_id = adminApi.getAdminId(); return adminApi._get('/api/admin/comment/list', params); },
         getDetail: function(commentId) { return adminApi._get('/api/admin/comment/' + commentId, { admin_id: adminApi.getAdminId() }); },
+        reply: function(data) { data.admin_id = adminApi.getAdminId(); return adminApi._post('/api/admin/comment/reply', data); },
         delete: function(commentId, deleteReplies) { return adminApi._delete('/api/admin/comment/' + commentId, { admin_id: adminApi.getAdminId(), delete_replies: deleteReplies ? 'true' : 'false' }); },
         toggleVisibility: function(commentId, isHidden) { return adminApi._put('/api/admin/comment/visibility', { admin_id: adminApi.getAdminId(), comment_id: commentId, is_hidden: isHidden }); },
         batchAction: function(ids, action) { return adminApi._post('/api/admin/comment/batch-action', { admin_id: adminApi.getAdminId(), ids: ids, action: action }); },

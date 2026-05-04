@@ -44,8 +44,8 @@
             cols: [[
                 {type: 'checkbox', fixed: 'left'}, {field: 'comment_id', title: 'ID', width: '8%'},
                 {field: 'content', title: '内容', width: '28%'},
-                {field: 'author_name', title: '作者', width: '12%'},
-                {field: 'target_type', title: '目标类型', width: '10%', templet: function(d) { return d.target_type === 'article' ? '文章' : d.target_type === 'question' ? '问题' : d.target_type; }},
+                {field: 'author', title: '作者', width: '12%', templet: function(d) { return d.author ? d.author.username : '-'; }},
+                {field: 'post_id', title: '目标类型', width: '10%', templet: function(d) { return d.post_id ? '文章' : '-'; }},
                 {field: 'status', title: '状态', width: '8%', templet: function(d) { return d.status === 'hidden' ? '<span style="color:#FF5722;">已隐藏</span>' : '<span style="color:#5FB878;">正常</span>'; }},
                 {field: 'created_at', title: '发布时间', width: '14%'},
                 {title: '操作', width: '230', toolbar: '#toolbarTpl', fixed: 'right'}
@@ -59,7 +59,7 @@
             var d = obj.data;
             if (obj.event === 'detail') { SendLog.log_info('查看评论详情: ' + d.comment_id, 'comments'); lostoryOption.openDialog('评论详情', '/admin/dialogs/comment_detail.html?comment_id=' + d.comment_id, ['500px', '400px']); }
             if (obj.event === 'reply') { SendLog.log_info('回复评论: ' + d.comment_id, 'comments'); lostoryOption.openDialog('回复评论', '/admin/dialogs/comment_reply.html?comment_id=' + d.comment_id, ['500px', '300px']); }
-            if (obj.event === 'toggle') { SendLog.log_info('切换评论状态: ' + d.comment_id, 'comments'); adminApi.comment.toggleStatus(d.comment_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('评论状态切换成功: ' + d.comment_id, 'comments'); }).catch(function(err) { SendLog.log_error('评论状态切换失败: ' + d.comment_id, 'comments'); }); }
+            if (obj.event === 'toggle') { SendLog.log_info('切换评论状态: ' + d.comment_id, 'comments'); adminApi.comment.toggleVisibility(d.comment_id, d.status === 'hidden' ? false : true).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('评论状态切换成功: ' + d.comment_id, 'comments'); }).catch(function(err) { SendLog.log_error('评论状态切换失败: ' + d.comment_id, 'comments'); }); }
             if (obj.event === 'delete') { SendLog.log_info('删除评论: ' + d.comment_id, 'comments'); lostoryOption.confirmDialog('确认删除该评论？', function() { adminApi.comment.delete(d.comment_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('评论删除成功: ' + d.comment_id, 'comments'); }).catch(function(err) { SendLog.log_error('评论删除失败: ' + d.comment_id, 'comments'); }); }); }
         });
         document.getElementById('batchDelete').onclick = function() {

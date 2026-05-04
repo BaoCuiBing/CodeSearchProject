@@ -6,6 +6,7 @@ from sanic_ext import openapi
 import config
 from models.model import File
 from models.db_init import get_db_session
+from utils.oss_option import oss_client
 
 logger = logging.getLogger(__name__)
 
@@ -26,13 +27,26 @@ async def upload_file(request):
         logger.warning(f"文件上传失败:文件过大,{len(file_body)}字节")
         return response.json({"code": 400, "msg": f"文件大小超过{config.MAX_UPLOAD_SIZE}MB限制"})
     logger.info(f"文件上传:filename={file.name},size={len(file_body)}字节")
-    os.makedirs(UPLOAD_DIR, exist_ok=True)
     ext = os.path.splitext(file.name)[1]
     unique_name = f"{uuid.uuid4().hex}{ext}"
-    file_path = os.path.join(UPLOAD_DIR, unique_name)
-    with open(file_path, "wb") as f:
-        f.write(file_body)
-    file_url = f"/static/uploads/{unique_name}"
+    if config.USE_OSS:
+        object_key = f"uploads/{unique_name}"
+        local_tmp_path = os.path.join(UPLOAD_DIR, unique_name)
+        os.makedirs(UPLOAD_DIR, exist_ok=True)
+        with open(local_tmp_path, "wb") as f:
+            f.write(file_body)
+        oss_client.upload_file(object_key, local_tmp_path)
+        os.remove(local_tmp_path)
+        file_url = f"https://{config.OSS_BUCKET_NAME}.oss-{config.OSS_REGION}.aliyuncs.com/{object_key}"
+        file_path = object_key
+        logger.info(f"文件上传OSS成功:object_key={object_key}")
+    else:
+        os.makedirs(UPLOAD_DIR, exist_ok=True)
+        file_path = os.path.join(UPLOAD_DIR, unique_name)
+        with open(file_path, "wb") as f:
+            f.write(file_body)
+        file_url = f"/static/uploads/{unique_name}"
+        logger.info(f"文件上传本地成功:file_path={file_path}")
     user_id = request.form.get("user_id")
     user_id = int(user_id) if user_id else None
     file_record = File(user_id=user_id, filename=file.name, file_path=file_path, file_size=len(file_body), file_type=ext.lstrip("."), file_url=file_url)

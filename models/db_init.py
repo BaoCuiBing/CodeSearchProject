@@ -15,6 +15,18 @@ def init_database():
             admin_user = User(usernumber="admin", username="管理员", password=hashed_password, salt=salt, email="admin@example.com", role="admin")
             session.add(admin_user)
             session.commit()
+        settings = [
+            {"key": "site_name", "value": "代码搜索社区Pro", "description": "站点名称"},
+            {"key": "site_description", "value": "", "description": "站点描述"},
+            {"key": "carousel_imgs", "value": '{"imgs": []}', "description": "首页轮播图"},
+            {"key": "special_ancestor_worship", "value": "false", "description": "是否为清明节模式"}
+        ]
+        for s in settings:
+            exist = session.query(SystemSetting).filter(SystemSetting.key == s["key"]).first()
+            if not exist:
+                setting = SystemSetting(key=s["key"], value=s["value"], description=s["description"])
+                session.add(setting)
+        session.commit()
     finally:
         session.close()
     return db
@@ -34,8 +46,18 @@ def reset_database():
         hashed_password = hash_password("admin123", salt)
         admin_user = User(usernumber="admin", username="管理员", password=hashed_password, salt=salt, email="admin@example.com", role="admin")
         session.add(admin_user)
+        settings = [
+            {"key": "site_name", "value": "代码搜索社区Pro", "description": "站点名称"},
+            {"key": "site_description", "value": "", "description": "站点描述"},
+            {"key": "carousel_imgs", "value": '{"imgs": []}', "description": "首页轮播图"},
+            {"key": "special_ancestor_worship", "value": "false", "description": "是否为清明节模式"}
+        ]
+        for s in settings:
+            setting = SystemSetting(key=s["key"], value=s["value"], description=s["description"])
+            session.add(setting)
         session.commit()
         print("管理员账号创建完成: usernumber=admin, password=admin123")
+        print("系统设置初始化完成")
     finally:
         session.close()
     return db

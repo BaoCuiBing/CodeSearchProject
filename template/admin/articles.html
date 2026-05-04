@@ -47,7 +47,7 @@
                 {type: 'checkbox', fixed: 'left'}, {field: 'post_id', title: 'ID', width: '8%'},
                 {field: 'title', title: '标题', width: '25%'},
                 {field: 'post_type', title: '类型', width: '8%', templet: function(d) { return d.post_type === 'question' ? '问题' : '文章'; }},
-                {field: 'author_name', title: '作者', width: '12%'},
+                {field: 'author', title: '作者', width: '12%', templet: function(d) { return d.author ? d.author.username : '-'; }},
                 {field: 'status', title: '状态', width: '9%', templet: function(d) { return d.status === 'published' ? '<span style="color:#5FB878;">已发布</span>' : d.status === 'draft' ? '<span style="color:#FFB800;">草稿</span>' : '<span style="color:#FF5722;">已隐藏</span>'; }},
                 {field: 'view_count', title: '浏览', width: '8%'},
                 {field: 'created_at', title: '创建时间', width: '15%'},
@@ -60,12 +60,12 @@
         };
         document.getElementById('addArticleBtn').onclick = function() {
             SendLog.log_info('打开新建内容弹窗', 'articles');
-            lostoryOption.openDialog('新建内容', '/admin/dialogs/article_create.html', ['600px', '450px']);
+            lostoryOption.openDialog('新建内容', '/admin/dialogs/article_create.html', ['1000px', '800px']);
         };
         table.on('tool(articleTable)', function(obj) {
             var d = obj.data;
             if (obj.event === 'detail') { SendLog.log_info('查看内容详情: ' + d.post_id, 'articles'); lostoryOption.openDialog('内容详情', '/admin/dialogs/article_detail.html?post_id=' + d.post_id, ['600px', '500px']); }
-            if (obj.event === 'edit') { SendLog.log_info('编辑内容: ' + d.post_id, 'articles'); lostoryOption.openDialog('编辑内容', '/admin/dialogs/article_edit.html?post_id=' + d.post_id, ['600px', '400px']); }
+            if (obj.event === 'edit') { SendLog.log_info('编辑内容: ' + d.post_id, 'articles'); lostoryOption.openDialog('编辑内容', '/admin/dialogs/article_edit.html?post_id=' + d.post_id, ['1000px', '800px']); }
             if (obj.event === 'toggle') { SendLog.log_info('切换内容状态: ' + d.post_id, 'articles'); adminApi.article.toggleStatus(d.post_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('内容状态切换成功: ' + d.post_id, 'articles'); }).catch(function(err) { SendLog.log_error('内容状态切换失败: ' + d.post_id, 'articles'); }); }
             if (obj.event === 'delete') { SendLog.log_info('删除内容: ' + d.post_id, 'articles'); lostoryOption.confirmDialog('确认删除该内容？', function() { adminApi.article.delete(d.post_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('内容删除成功: ' + d.post_id, 'articles'); }).catch(function(err) { SendLog.log_error('内容删除失败: ' + d.post_id, 'articles'); }); }); }
         });

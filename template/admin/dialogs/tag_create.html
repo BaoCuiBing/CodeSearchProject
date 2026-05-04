@@ -10,6 +10,13 @@
     <div style="padding:15px;">
         <form class="layui-form" lay-filter="tagCreateForm">
             <div class="layui-form-item"><label class="layui-form-label">标签名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">别名</label><div class="layui-input-block"><input type="text" name="slug" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">描述</label><div class="layui-input-block"><textarea name="description" class="layui-textarea"></textarea></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">颜色</label><div class="layui-input-block"><div id="colorPicker" class="layui-input-inline" style="width:100px;"></div><input type="hidden" name="color" id="colorValue" value="#12b7f5"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">热门</label><div class="layui-input-block"><input type="checkbox" name="is_hot" lay-skin="switch" lay-text="是|否"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">推荐</label><div class="layui-input-block"><input type="checkbox" name="is_recommend" lay-skin="switch" lay-text="是|否"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">状态</label><div class="layui-input-block"><select name="status"><option value="active">启用</option><option value="disabled">禁用</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">排序</label><div class="layui-input-block"><input type="number" name="sort_order" value="0" class="layui-input"></div></div>
             <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" lay-submit lay-filter="createTag">创建</button></div></div>
         </form>
     </div>
@@ -17,14 +24,20 @@
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
-    layui.use(['form'], function() {
-        var form = layui.form, L = parent.layer;
+    layui.use(['form', 'colorpicker'], function() {
+        var form = layui.form, colorpicker = layui.colorpicker, L = parent.layer;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
+        SendLog.log_info('加载新建标签页面', 'tag_create');
+        colorpicker.render({ elem: '#colorPicker', color: '#12b7f5', format: 'hex', predefine: ['#12b7f5', '#FF5722', '#5FB878', '#FFB800', '#01AAED'], done: function(color) { document.getElementById('colorValue').value = color; } });
         form.on('submit(createTag)', function(data) {
+            var d = data.field;
+            d.is_hot = d.is_hot ? 1 : 0;
+            d.is_recommend = d.is_recommend ? 1 : 0;
+            d.sort_order = parseInt(d.sort_order) || 0;
             SendLog.log_info('创建标签: ' + data.field.name, 'tag_create');
-            adminApi.tag.create(data.field).then(function(r) { L.msg(r.msg); SendLog.log_info('标签创建成功: ' + data.field.name, 'tag_create'); parent.layui.table.reload('tagTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('标签创建失败', 'tag_create'); });
+            adminApi.tag.create(d).then(function(r) { L.msg(r.msg); SendLog.log_info('标签创建成功: ' + data.field.name, 'tag_create'); parent.layui.table.reload('tagTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('标签创建失败', 'tag_create'); });
             return false;
         });
     });

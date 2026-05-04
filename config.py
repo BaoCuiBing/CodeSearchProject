@@ -18,3 +18,11 @@ LOG_DIR = os.path.join(PROJECT_DIR, "static", "logs")  # 日志目录
 LOG_FILE = os.path.join(LOG_DIR, "sanic.log")  # 日志文件
 LOG_LEVEL = logging.INFO  # 日志级别（及以上级别会被记录）
 WEB_LOG_FILE = os.path.join(LOG_DIR, "web_log.log")  # 前端日志文件
+
+OSS_BUCKET_NAME = "code-search-app"  # OSS桶名
+OSS_REGION = "cn-beijing"  # OSS区域
+OSS_ACCESS_KEY_ID = ""
+OSS_ACCESS_KEY_SECRET = ""
+
+UPLOAD_DIR = os.path.join(PROJECT_DIR, "static", "uploads")  # 上传目录（本地存储）
+USE_OSS = True  # 是否使用OSS存储文件

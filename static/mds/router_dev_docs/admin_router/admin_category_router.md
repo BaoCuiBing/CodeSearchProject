@@ -248,3 +248,44 @@ DELETE /api/admin/category/3?admin_id=1&move_to_id=2
     "msg": "请选择要操作的分类"
 }
 ```
+
+---
+
+### 6. 批量删除分类（管理端）
+- **路径**: `/api/admin/category/batch-delete`
+- **方法**: `POST`
+- **函数名**: `batch_delete_categories`
+- **OpenAPI摘要**: 批量删除分类
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
+| ids | array | yes | 分类ID列表，如[1,2,3] | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "ids": [3, 4]
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "批量删除成功",
+    "data": {
+        "deleted_count": 2
+    }
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 400,
+    "msg": "请选择要删除的分类"
+}
+```
