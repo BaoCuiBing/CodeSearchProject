@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
+    <title>编辑分类</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+</head>
+<body>
+    <div style="padding:15px;">
+        <form class="layui-form" lay-filter="categoryEditForm">
+            <input type="hidden" name="category_id" id="categoryId">
+            <div class="layui-form-item"><label class="layui-form-label">分类名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" placeholder="请输入分类名称" class="layui-input"></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">分类描述</label><div class="layui-input-block"><textarea name="description" placeholder="请输入分类描述" class="layui-textarea"></textarea></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">排序</label><div class="layui-input-block"><input type="number" name="sort" class="layui-input"></div></div>
+            <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" lay-submit lay-filter="editCategory">保存</button></div></div>
+        </form>
+    </div>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
+    <script>
+    layui.use(['form'], function() {
+        var form = layui.form, L = parent.layer;
+        var adminId = localStorage.getItem('admin_id');
+        if (!adminId) { parent.window.location.href = '/admin/login'; return; }
+        adminApi.setAdminId(adminId);
+        var urlParams = new URLSearchParams(window.location.search);
+        var categoryId = urlParams.get('category_id');
+        var name = urlParams.get('name');
+        var description = urlParams.get('description');
+        var sort = urlParams.get('sort');
+        document.getElementById('categoryId').value = categoryId || '';
+        SendLog.log_info('加载编辑分类页面: ' + categoryId, 'category_edit');
+        if (categoryId) {
+            form.val('categoryEditForm', { category_id: categoryId, name: decodeURIComponent(name || ''), description: decodeURIComponent(description || ''), sort: sort || 0 });
+        }
+        form.on('submit(editCategory)', function(data) {
+            var d = data.field;
+            d.category_id = parseInt(d.category_id);
+            d.sort = parseInt(d.sort) || 0;
+            SendLog.log_info('保存分类: ' + d.category_id, 'category_edit');
+            adminApi.category.edit(d).then(function(r) {
+                L.msg(r.msg);
+                SendLog.log_info('分类编辑成功: ' + d.category_id, 'category_edit');
+                parent.layui.table.reload('categoryTable');
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            }).catch(function(err) {
+                L.msg('保存失败');
+                SendLog.log_error('分类编辑失败', 'category_edit');
+            });
+            return false;
+        });
+    });
+    </script>
+</body>
+</html>

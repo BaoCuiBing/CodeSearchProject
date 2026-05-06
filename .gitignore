@@ -3,3 +3,5 @@
 __pycache__/
 static/logs/
 static/uploads/
+static/mds/pots_mds/
+App/node_modules/

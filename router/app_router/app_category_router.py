@@ -19,7 +19,7 @@ async def get_categories(request):
         cat_list = []
         for c in categories:
             post_count = db.query(Post).filter(Post.category_id == c.id, Post.status == "published").count()
-            cat_list.append({"category_id": c.id, "name": c.name, "icon": c.icon, "sort": c.sort, "post_count": post_count})
+            cat_list.append({"category_id": c.id, "name": c.name, "description": c.description, "sort": c.sort, "post_count": post_count})
         logger.info(f"获取分类列表成功:count={len(cat_list)}")
         return response.json({"code": 200, "msg": "获取成功", "data": cat_list})
     except Exception as e:

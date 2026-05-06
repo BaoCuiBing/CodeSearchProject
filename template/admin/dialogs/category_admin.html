@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
+    <title>分类管理</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+</head>
+<body>
+    <div class="layui-card" style="margin:15px;">
+        <div class="layui-card-header">
+            <div class="layui-form layui-row layui-col-space10">
+                <div class="layui-col-md3"><input type="text" id="searchKeyword" placeholder="分类名称" class="layui-input"></div>
+                <div class="layui-col-md1"><button class="layui-btn" id="searchBtn">搜索</button></div>
+                <div class="layui-col-md8" style="text-align:right;"><button class="layui-btn layui-btn-normal" id="addCategoryBtn">添加分类</button></div>
+            </div>
+        </div>
+        <div class="layui-card-body"><table id="categoryTable" lay-filter="categoryTable"></table></div>
+    </div>
+    <script type="text/html" id="toolbarTpl">
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+    </script>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
+    <script>
+    layui.use(['table', 'form'], function() {
+        var table = layui.table, form = layui.form, L = parent.layer;
+        var adminId = localStorage.getItem('admin_id');
+        if (!adminId) { parent.window.location.href = '/admin/login'; return; }
+        adminApi.setAdminId(adminId);
+        SendLog.log_info('加载分类管理页面', 'category_admin');
+        form.render('select');
+        var tableIns = table.render({
+            elem: '#categoryTable', url: '/api/admin/category/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
+            where: { admin_id: adminId },
+            request: { pageName: 'page', limitName: 'page_size' },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            cols: [[
+                {field: 'category_id', title: 'ID', width: '10%'},
+                {field: 'name', title: '分类名称', width: '20%'},
+                {field: 'description', title: '描述', width: '30%'},
+                {field: 'sort', title: '排序', width: '10%'},
+                {field: 'post_count', title: '文章数', width: '10%'},
+                {field: 'created_at', title: '创建时间', width: '15%'},
+                {title: '操作', width: '150', toolbar: '#toolbarTpl', fixed: 'right'}
+            ]]
+        });
+        document.getElementById('searchBtn').onclick = function() {
+            SendLog.log_info('搜索分类: ' + document.getElementById('searchKeyword').value, 'category_admin');
+            tableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('searchKeyword').value, page: 1 } });
+        };
+        document.getElementById('addCategoryBtn').onclick = function() {
+            SendLog.log_info('打开添加分类弹窗', 'category_admin');
+            parent.lostoryOption.openDialog('添加分类', '/admin/dialogs/category_create.html', ['600px', '400px']);
+        };
+        table.on('tool(categoryTable)', function(obj) {
+            var d = obj.data;
+            if (obj.event === 'edit') {
+                SendLog.log_info('编辑分类: ' + d.category_id, 'category_admin');
+                var params = 'category_id=' + d.category_id + '&name=' + encodeURIComponent(d.name) + '&description=' + encodeURIComponent(d.description || '') + '&sort=' + d.sort;
+                parent.lostoryOption.openDialog('编辑分类', '/admin/dialogs/category_edit.html?' + params, ['600px', '400px']);
+            }
+            if (obj.event === 'delete') {
+                SendLog.log_info('删除分类: ' + d.category_id, 'category_admin');
+                parent.lostoryOption.confirmDialog('确认删除该分类？如有文章需先迁移', function() {
+                    adminApi.category.delete(d.category_id, 0).then(function(r) {
+                        L.msg(r.msg);
+                        tableIns.reload();
+                        SendLog.log_info('分类删除成功: ' + d.category_id, 'category_admin');
+                    }).catch(function(err) {
+                        L.msg(err.msg || '删除失败，该分类下有文章');
+                        SendLog.log_error('分类删除失败: ' + d.category_id, 'category_admin');
+                    });
+                });
+            }
+        });
+    });
+    </script>
+</body>
+</html>

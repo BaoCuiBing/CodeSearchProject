@@ -15,7 +15,8 @@
                 <div class="layui-col-md1"><select id="searchStatus"><option value="all">全部状态</option><option value="published">已发布</option><option value="draft">草稿</option><option value="hidden">已隐藏</option></select></div>
                 <div class="layui-col-md1"><button class="layui-btn" id="searchBtn">搜索</button></div>
                 <div class="layui-col-md1"><button class="layui-btn layui-btn-normal" id="addArticleBtn">新建内容</button></div>
-                <div class="layui-col-md6" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDelete">批量删除</button></div>
+                <div class="layui-col-md1"><button class="layui-btn layui-btn-warm" id="categoryManageBtn">分类管理</button></div>
+                <div class="layui-col-md5" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDelete">批量删除</button></div>
             </div>
         </div>
         <div class="layui-card-body"><table id="articleTable" lay-filter="articleTable"></table></div>
@@ -61,6 +62,10 @@
         document.getElementById('addArticleBtn').onclick = function() {
             SendLog.log_info('打开新建内容弹窗', 'articles');
             lostoryOption.openDialog('新建内容', '/admin/dialogs/article_create.html', ['1000px', '800px']);
+        };
+        document.getElementById('categoryManageBtn').onclick = function() {
+            SendLog.log_info('打开分类管理弹窗', 'articles');
+            lostoryOption.openDialog('分类管理', '/admin/dialogs/category_admin.html', ['900px', '600px']);
         };
         table.on('tool(articleTable)', function(obj) {
             var d = obj.data;

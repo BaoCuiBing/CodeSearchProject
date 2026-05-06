@@ -49,7 +49,7 @@ GET /api/admin/category/list?admin_id=1&page=1&page_size=20&sort=sort&order=asc
             {
                 "category_id": 1,
                 "name": "编程语言",
-                "icon": "/static/uploads/categories/code.png",
+                "description": "编程语言相关分类",
                 "sort": 1,
                 "post_count": 500,
                 "created_at": "2023-01-01 00:00:00",
@@ -76,7 +76,7 @@ GET /api/admin/category/list?admin_id=1&page=1&page_size=20&sort=sort&order=asc
 |--------|------|------|------|------|
 | admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
 | name | string | yes | 分类名称（2-20字符） | Body (JSON) |
-| icon | string | no | 分类图标URL | Body (JSON) |
+| description | string | no | 分类描述 | Body (JSON) |
 | sort | int | no | 排序权重，默认0 | Body (JSON) |
 
 #### 请求示例
@@ -84,7 +84,7 @@ GET /api/admin/category/list?admin_id=1&page=1&page_size=20&sort=sort&order=asc
 {
     "admin_id": 1,
     "name": "前端开发",
-    "icon": "/static/uploads/categories/frontend.png",
+    "description": "前端开发相关分类",
     "sort": 2
 }
 ```
@@ -97,7 +97,7 @@ GET /api/admin/category/list?admin_id=1&page=1&page_size=20&sort=sort&order=asc
     "data": {
         "category_id": 5,
         "name": "前端开发",
-        "icon": "/static/uploads/categories/frontend.png",
+        "description": "前端开发相关分类",
         "sort": 2,
         "created_at": "2024-01-15 10:00:00"
     }
@@ -126,7 +126,7 @@ GET /api/admin/category/list?admin_id=1&page=1&page_size=20&sort=sort&order=asc
 | admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
 | category_id | int | yes | 分类ID | Body (JSON) |
 | name | string | no | 分类名称 | Body (JSON) |
-| icon | string | no | 分类图标URL | Body (JSON) |
+| description | string | no | 分类描述 | Body (JSON) |
 | sort | int | no | 排序权重 | Body (JSON) |
 
 #### 请求示例
@@ -135,7 +135,7 @@ GET /api/admin/category/list?admin_id=1&page=1&page_size=20&sort=sort&order=asc
     "admin_id": 1,
     "category_id": 1,
     "name": "前端开发（更新）",
-    "icon": "/static/uploads/categories/frontend2.png",
+    "description": "前端开发相关分类（更新）",
     "sort": 1
 }
 ```
@@ -148,6 +148,7 @@ GET /api/admin/category/list?admin_id=1&page=1&page_size=20&sort=sort&order=asc
     "data": {
         "category_id": 1,
         "name": "前端开发（更新）",
+        "description": "前端开发相关分类（更新）",
         "sort": 1,
         "updated_at": "2024-01-15 11:00:00"
     }

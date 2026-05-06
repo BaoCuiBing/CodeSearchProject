@@ -42,7 +42,7 @@ async def get_category_list(request):
     category_list = []
     for c in categories:
         post_count = db.query(Post).filter(Post.category_id == c.id).count()
-        category_list.append({"category_id": c.id, "name": c.name, "icon": c.icon, "sort": c.sort, "post_count": post_count, "created_at": str(c.created_at), "updated_at": str(c.updated_at)})
+        category_list.append({"category_id": c.id, "name": c.name, "description": c.description, "sort": c.sort, "post_count": post_count, "created_at": str(c.created_at), "updated_at": str(c.updated_at)})
     logger.info(f"管理员{admin_id}查询分类列表成功:共{total}条,返回{len(category_list)}条")
     logger.debug(f"数据处理完成:构建{len(category_list)}条分类记录")
     return response.json({"code": 200, "msg": "获取成功", "data": {"list": category_list, "total": total, "page": page, "page_size": page_size}})
@@ -66,11 +66,11 @@ async def create_category(request):
         logger.warning(f"创建分类失败:分类名称已存在,name={name}")
         return response.json({"code": 400, "msg": "分类名称已存在"})
     logger.info(f"管理员{admin_id}创建分类:name={name}")
-    category = Category(name=name, icon=data.get("icon"), sort=data.get("sort", 0))
+    category = Category(name=name, description=data.get("description"), sort=data.get("sort", 0))
     db.add(category)
     db.commit()
     logger.info(f"管理员{admin_id}创建分类成功:category_id={category.id}")
-    return response.json({"code": 200, "msg": "创建成功", "data": {"category_id": category.id, "name": category.name, "icon": category.icon, "sort": category.sort, "created_at": str(category.created_at)}})
+    return response.json({"code": 200, "msg": "创建成功", "data": {"category_id": category.id, "name": category.name, "description": category.description, "sort": category.sort, "created_at": str(category.created_at)}})
 
 @admin_category_bp.put("/")
 @openapi.summary("编辑分类")
@@ -91,15 +91,15 @@ async def edit_category(request):
     if "name" in data:
         category.name = data["name"]
         logger.debug(f"更新字段:name={data['name']}")
-    if "icon" in data:
-        category.icon = data["icon"]
-        logger.debug(f"更新字段:icon={data['icon']}")
+    if "description" in data:
+        category.description = data["description"]
+        logger.debug(f"更新字段:description={data['description']}")
     if "sort" in data:
         category.sort = data["sort"]
         logger.debug(f"更新字段:sort={data['sort']}")
     db.commit()
     logger.info(f"管理员{admin_id}编辑分类成功:category_id={category_id}")
-    return response.json({"code": 200, "msg": "更新成功", "data": {"category_id": category.id, "name": category.name, "sort": category.sort, "updated_at": str(category.updated_at)}})
+    return response.json({"code": 200, "msg": "更新成功", "data": {"category_id": category.id, "name": category.name, "description": category.description, "sort": category.sort, "updated_at": str(category.updated_at)}})
 
 @admin_category_bp.delete("/<category_id>")
 @openapi.summary("删除分类")
