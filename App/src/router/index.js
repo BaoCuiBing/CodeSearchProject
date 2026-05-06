@@ -1,13 +1,37 @@
 import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: () => import('../views/Home.vue')
-  }
+    { path: '/', redirect: '/shouye' },
+    { path: '/shouye', name: 'ShouYe', component: () => import('../views/Main.vue') },
+    { path: '/faxian', name: 'FaXian', component: () => import('../views/FaXian.vue') },
+    { path: '/message', name: 'Message', component: () => import('../views/Message.vue') },
+    { path: '/myself', name: 'MySelf', component: () => import('../views/MySelf.vue') },
+    { path: '/article', name: 'ArticleDetail', component: () => import('../views/ShouYePages/ArticleDetail.vue') },
+    { path: '/tags', name: 'TagList', component: () => import('../views/FaXianPages/TagList.vue') },
+    { path: '/tag', name: 'TagArticles', component: () => import('../views/FaXianPages/TagArticles.vue') },
+    { path: '/category', name: 'CategoryArticles', component: () => import('../views/FaXianPages/CategoryArticles.vue') },
+    { path: '/category-detail', name: 'CategoryDetail', component: () => import('../views/FaXianPages/CategoryDetail.vue') },
+    { path: '/rankings', name: 'Rankings', component: () => import('../views/FaXianPages/Rankings.vue') },
+    { path: '/search', name: 'Search', component: () => import('../views/ShouYePages/Search.vue') },
+    { path: '/search-result', name: 'SearchResult', component: () => import('../views/ShouYePages/SearchResult.vue') },
+    { path: '/chat', name: 'ChatDetail', component: () => import('../views/MessagePages/ChatDetail.vue') },
+    { path: '/system-notice', name: 'SystemNotice', component: () => import('../views/MessagePages/SystemNotice.vue') },
+    { path: '/profile', name: 'UserProfile', component: () => import('../views/MySelfPages/UserProfile.vue') },
+    { path: '/settings', name: 'Settings', component: () => import('../views/MySelfPages/Settings.vue') },
+    { path: '/settings-page', name: 'SettingsPage', component: () => import('../views/MySelfPages/SettingsPage.vue') },
+    { path: '/security', name: 'Security', component: () => import('../views/MySelfPages/Security.vue') },
+    { path: '/about', name: 'About', component: () => import('../views/MySelfPages/About.vue') },
+    { path: '/following', name: 'Following', component: () => import('../views/MySelfPages/Following.vue') },
+    { path: '/followers', name: 'Followers', component: () => import('../views/MySelfPages/Followers.vue') },
+    { path: '/follow-list', name: 'FollowList', component: () => import('../views/MySelfPages/FollowList.vue') },
+    { path: '/my-articles', name: 'MyArticles', component: () => import('../views/MySelfPages/MyArticles.vue') },
+    { path: '/my-questions', name: 'MyQuestions', component: () => import('../views/MySelfPages/MyQuestions.vue') },
+    { path: '/favorites', name: 'Favorites', component: () => import('../views/MySelfPages/Favorites.vue') },
+    { path: '/my-favorites', name: 'MyFavorites', component: () => import('../views/MySelfPages/MyFavorites.vue') },
+    { path: '/history', name: 'History', component: () => import('../views/MySelfPages/History.vue') },
+    { path: '/question', name: 'QuestionDetail', component: () => import('../views/ShouYePages/ArticleDetail.vue') },
+    { path: '/privacy', name: 'Privacy', component: () => import('../views/MySelfPages/About.vue') },
+    { path: '/notification-settings', name: 'NotificationSettings', component: () => import('../views/MySelfPages/Settings.vue') },
+    { path: '/login', name: 'Login', redirect: '/shouye' }
 ]
-const router = createRouter({
-  history: createWebHistory(),
-  routes
-})
+const router = createRouter({ history: createWebHistory(), routes })
 export default router

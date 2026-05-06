@@ -24,11 +24,13 @@
 CodeSearchProject/
 ├── App/                    # Vue3移动端应用
 │   ├── src/
+│   │   ├── assets/         # 静态资源（API封装等）
 │   │   ├── router/         # 路由配置
 │   │   ├── views/          # 页面组件
 │   │   ├── components/     # 公共组件
 │   │   ├── main.js         # 入口文件
-│   │   └── App.vue         # 根组件
+│   │   ├── App.vue         # 根组件
+│   │   └── style.css       # 全局样式
 │   ├── package.json
 │   └── vite.config.js
 ├── router/                 # Sanic路由模块
