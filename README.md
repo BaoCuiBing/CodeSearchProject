@@ -27,24 +27,26 @@ CodeSearchProject/
 │   │   ├── assets/         # 静态资源（API封装等）
 │   │   ├── router/         # 路由配置
 │   │   ├── views/          # 页面组件
-│   │   ├── components/     # 公共组件
+│   │   ├── components/     # 公共组件（RankingItem/UserListItem/PostCard/PageNavBar）
 │   │   ├── main.js         # 入口文件
 │   │   ├── App.vue         # 根组件
 │   │   └── style.css       # 全局样式
 │   ├── package.json
 │   └── vite.config.js
 ├── router/                 # Sanic路由模块
-│   ├── admin_router/       # 管理后台API
-│   └── app_router/         # 移动端API
+│   ├── admin_router/       # 管理后台API（17个路由文件）
+│   ├── app_router/         # 移动端API（12个路由文件）
+│   ├── upload_router.py    # 文件上传路由
+│   └── log_router.py       # 前端日志路由
 ├── models/                 # SQLAlchemy数据模型
 ├── template/               # HTML模板
-│   ├── admin/              # 管理后台页面
+│   ├── admin/              # 管理后台页面（含dialogs子目录）
 │   └── index.html          # 首页
 ├── static/                 # 静态资源
-│   ├── webs/               # 前端库（Layui/ECharts等）
+│   ├── webs/               # 前端库（Layui/ECharts/EasyMDE/Vanta等）
 │   ├── mds/                # 项目文档
 │   └── uploads/            # 上传文件
-├── utils/                  # 工具类
+├── utils/                  # 工具类（oss_option/password_analysis）
 ├── test/                   # 测试模块
 ├── config.py               # 配置文件
 └── app.py                  # 应用入口
@@ -58,12 +60,14 @@ CodeSearchProject/
 | Post | 文章表 |
 | Category | 分类表 |
 | Tag | 标签表 |
+| PostTag | 文章标签关联表 |
 | Comment | 评论表 |
 | Favorite | 收藏表 |
 | Like | 点赞表 |
 | Follow | 关注表 |
 | Message | 私信表 |
 | SystemMessage | 系统消息表 |
+| SystemMessageTarget | 系统消息目标表 |
 | Report | 举报表 |
 | File | 文件表 |
 | SearchHistory | 搜索历史表 |

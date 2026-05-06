@@ -1,6 +1,6 @@
 <template>
     <div class="chat-detail-page">
-        <van-nav-bar :title="chatUser.username" left-arrow @click-left="goBack" fixed placeholder />
+        <PageNavBar :title="chatUser.username" />
         <div class="chat-messages">
             <div v-for="msg in messages" :key="msg.id" class="chat-bubble" :class="{ self: msg.from_user_id === selfUserId }">
                 <van-image round width="36px" height="36px" :src="msg.from_user_id === selfUserId ? selfAvatar : chatUser.avatar" />
@@ -16,8 +16,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter()
+import { useRoute } from 'vue-router'
+import PageNavBar from '@/components/PageNavBar.vue'
 const route = useRoute()
 const chatUser = ref({ user_id: route.query.user_id || 1, username: route.query.username || '用户A', avatar: route.query.avatar || 'https://img.yzcdn.cn/vant/cat.jpeg' })
 const selfAvatar = ref('https://img.yzcdn.cn/vant/cat.jpeg')
@@ -29,7 +29,6 @@ const messages = ref([
     { id: 3, from_user_id: 10, to_user_id: 1, content: '需要我帮忙看看吗？', is_read: 1, created_at: '2025-05-05 14:35:00' },
     { id: 4, from_user_id: 1, to_user_id: 10, content: '太好了，谢谢！', is_read: 1, created_at: '2025-05-05 14:36:00' }
 ])
-const goBack = () => router.back()
 const sendMessage = () => {
     if (inputMessage.value.trim()) {
         messages.value.push({ id: Date.now(), from_user_id: selfUserId.value, to_user_id: chatUser.value.user_id, content: inputMessage.value, is_read: 0, created_at: new Date().toLocaleString() })

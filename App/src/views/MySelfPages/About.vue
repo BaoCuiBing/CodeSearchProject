@@ -1,6 +1,6 @@
 <template>
     <div class="about-page">
-        <van-nav-bar title="关于我们" left-arrow @click-left="goBack" fixed placeholder />
+        <PageNavBar title="关于我们" />
         <div class="about-content">
             <van-image width="80px" height="80px" src="https://img.yzcdn.cn/vant/cat.jpeg" />
             <h3>CodeSearchProject</h3>
@@ -11,9 +11,7 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-const router = useRouter()
-const goBack = () => router.back()
+import PageNavBar from '@/components/PageNavBar.vue'
 </script>
 
 <style scoped>

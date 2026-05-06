@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
+    <title>用户行为管理</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+    <style>
+        .layui-tab-title .layui-this { color: #fff !important; background-color: #5FB878 !important; border-radius: 2px 2px 0 0; }
+        .layui-tab-title .layui-this:after { border: none !important; }
+    </style>
+</head>
+<body>
+    <div class="layui-card" style="margin:15px;">
+        <div class="layui-card-body">
+            <div class="layui-tab" lay-filter="behaviorTab">
+                <ul class="layui-tab-title">
+                    <li class="layui-this" lay-id="behaviorTab0">举报受理</li>
+                    <li lay-id="behaviorTab1">评论管理</li>
+                    <li lay-id="behaviorTab2">收藏管理</li>
+                    <li lay-id="behaviorTab3">点赞管理</li>
+                    <li lay-id="behaviorTab4">关注管理</li>
+                    <li lay-id="behaviorTab5">私信管理</li>
+                    <li lay-id="behaviorTab6">搜索记录</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="layui-form layui-row layui-col-space10" style="margin-bottom:10px;">
+                            <div class="layui-col-md2"><select id="reportTargetType"><option value="">全部类型</option><option value="post">文章</option><option value="comment">评论</option><option value="user">用户</option></select></div>
+                            <div class="layui-col-md2"><select id="reportStatus"><option value="">全部状态</option><option value="pending">待处理</option><option value="handled">已处理</option><option value="rejected">已驳回</option></select></div>
+                            <div class="layui-col-md1"><button class="layui-btn" id="reportSearchBtn">搜索</button></div>
+                            <div class="layui-col-md7" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="reportBatchHandle">批量处理</button></div>
+                        </div>
+                        <table id="reportTable" lay-filter="reportTable"></table>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form layui-row layui-col-space10" style="margin-bottom:10px;">
+                            <div class="layui-col-md2"><input type="text" id="commentKeyword" placeholder="评论内容关键词" class="layui-input"></div>
+                            <div class="layui-col-md1"><select id="commentStatus"><option value="all">全部状态</option><option value="normal">正常</option><option value="hidden">已隐藏</option></select></div>
+                            <div class="layui-col-md1"><button class="layui-btn" id="commentSearchBtn">搜索</button></div>
+                            <div class="layui-col-md8" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="commentBatchDelete">批量删除</button></div>
+                        </div>
+                        <table id="commentTable" lay-filter="commentTable"></table>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form layui-row layui-col-space10" style="margin-bottom:10px;">
+                            <div class="layui-col-md2"><input type="text" id="favKeyword" placeholder="用户名/文章标题" class="layui-input"></div>
+                            <div class="layui-col-md1"><button class="layui-btn" id="favSearchBtn">搜索</button></div>
+                            <div class="layui-col-md9" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="favBatchDelete">批量删除</button></div>
+                        </div>
+                        <table id="favoriteTable" lay-filter="favoriteTable"></table>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form layui-row layui-col-space10" style="margin-bottom:10px;">
+                            <div class="layui-col-md2"><select id="likeTargetType"><option value="">全部类型</option><option value="post">文章</option><option value="comment">评论</option></select></div>
+                            <div class="layui-col-md2"><input type="text" id="likeKeyword" placeholder="用户名" class="layui-input"></div>
+                            <div class="layui-col-md1"><button class="layui-btn" id="likeSearchBtn">搜索</button></div>
+                            <div class="layui-col-md7" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="likeBatchDelete">批量删除</button></div>
+                        </div>
+                        <table id="likeTable" lay-filter="likeTable"></table>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form layui-row layui-col-space10" style="margin-bottom:10px;">
+                            <div class="layui-col-md2"><input type="text" id="followKeyword" placeholder="关注者/被关注者" class="layui-input"></div>
+                            <div class="layui-col-md1"><button class="layui-btn" id="followSearchBtn">搜索</button></div>
+                            <div class="layui-col-md9" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="followBatchDelete">批量删除</button></div>
+                        </div>
+                        <table id="followTable" lay-filter="followTable"></table>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form layui-row layui-col-space10" style="margin-bottom:10px;">
+                            <div class="layui-col-md2"><input type="text" id="msgKeyword" placeholder="发送者/接收者" class="layui-input"></div>
+                            <div class="layui-col-md1"><button class="layui-btn" id="msgSearchBtn">搜索</button></div>
+                            <div class="layui-col-md9" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="msgBatchDelete">批量删除</button></div>
+                        </div>
+                        <table id="privateMessageTable" lay-filter="privateMessageTable"></table>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="layui-form layui-row layui-col-space10" style="margin-bottom:10px;">
+                            <div class="layui-col-md2"><input type="text" id="searchKeyword" placeholder="搜索关键词" class="layui-input"></div>
+                            <div class="layui-col-md1"><button class="layui-btn" id="searchHistorySearchBtn">搜索</button></div>
+                            <div class="layui-col-md9" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="searchHistoryBatchDelete">批量删除</button></div>
+                        </div>
+                        <table id="searchHistoryTable" lay-filter="searchHistoryTable"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/html" id="reportToolbarTpl">
+        <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="handle">处理</a>
+    </script>
+    <script type="text/html" id="commentToolbarTpl">
+        <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+        <a class="layui-btn layui-btn-xs layui-btn-normal" lay-event="reply">回复</a>
+        <a class="layui-btn layui-btn-xs layui-btn-warm" lay-event="toggle">{{# if(d.status === 'hidden') { }}显示{{# } else { }}隐藏{{# } }}</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+    </script>
+    <script type="text/html" id="favToolbarTpl">
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+    </script>
+    <script type="text/html" id="likeToolbarTpl">
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+    </script>
+    <script type="text/html" id="followToolbarTpl">
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+    </script>
+    <script type="text/html" id="msgToolbarTpl">
+        <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+    </script>
+    <script type="text/html" id="searchHistoryToolbarTpl">
+        <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="delete">删除</a>
+    </script>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/lostory_option.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
+    <script>
+    layui.use(['table', 'form', 'element'], function() {
+        var table = layui.table, form = layui.form, element = layui.element, L = lostoryOption.getLayer();
+        if (!lostoryOption.checkAuth()) { SendLog.log_warning('权限检查失败', 'user_behavior'); return; }
+        var adminId = lostoryOption.getAdminId();
+        adminApi.setAdminId(adminId);
+        SendLog.log_info('加载用户行为管理', 'user_behavior');
+        form.render('select');
+        var reportTableIns = table.render({
+            elem: '#reportTable', url: '/api/admin/report/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
+            where: { admin_id: adminId },
+            request: { pageName: 'page', limitName: 'page_size' },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            cols: [[
+                {type: 'checkbox', fixed: 'left'}, {field: 'report_id', title: 'ID', width: '7%'},
+                {field: 'reporter', title: '举报人', width: '12%', templet: function(d) { return d.reporter ? d.reporter.username : '-'; }},
+                {field: 'target_type', title: '目标类型', width: '9%', templet: function(d) { return d.target_type === 'post' ? '文章' : (d.target_type === 'comment' ? '评论' : '用户'); }},
+                {field: 'target_title', title: '目标标题', width: '19%', templet: function(d) { return d.target_title || '-'; }},
+                {field: 'reason', title: '举报原因', width: '19%'},
+                {field: 'status', title: '状态', width: '9%', templet: function(d) { return d.status === 'pending' ? '<span style="color:#FFB800;">待处理</span>' : (d.status === 'handled' ? '<span style="color:#5FB878;">已处理</span>' : '<span style="color:#FF5722;">已驳回</span>'); }},
+                {field: 'handler', title: '处理人', width: '9%', templet: function(d) { return d.handler ? d.handler.username : '-'; }},
+                {field: 'created_at', title: '举报时间', width: '16%'},
+                {title: '操作', width: '150', toolbar: '#reportToolbarTpl', fixed: 'right'}
+            ]]
+        });
+        document.getElementById('reportSearchBtn').onclick = function() {
+            SendLog.log_info('搜索举报', 'user_behavior');
+            reportTableIns.reload({ where: { admin_id: adminId, target_type: document.getElementById('reportTargetType').value, status: document.getElementById('reportStatus').value, page: 1 } });
+        };
+        table.on('tool(reportTable)', function(obj) {
+            var d = obj.data;
+            if (obj.event === 'detail') { SendLog.log_info('查看举报详情: ' + d.report_id, 'user_behavior'); lostoryOption.openDialog('举报详情', '/admin/dialogs/report_detail.html?report_id=' + d.report_id, ['600px', '450px']); }
+            if (obj.event === 'handle') { SendLog.log_info('处理举报: ' + d.report_id, 'user_behavior'); lostoryOption.openDialog('处理举报', '/admin/dialogs/report_handle.html?report_id=' + d.report_id, ['500px', '350px']); }
+        });
+        document.getElementById('reportBatchHandle').onclick = function() {
+            var checkStatus = table.checkStatus('reportTable');
+            if (checkStatus.data.length === 0) { L.msg('请先选择举报'); return; }
+            var ids = [];
+            checkStatus.data.forEach(function(d) { ids.push(d.report_id); });
+            SendLog.log_info('批量处理举报: ' + ids.join(','), 'user_behavior');
+            lostoryOption.openDialog('批量处理举报', '/admin/dialogs/report_batch_handle.html?ids=' + ids.join(','), ['500px', '350px']);
+        };
+        var commentTableIns = table.render({
+            elem: '#commentTable', url: '/api/admin/comment/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
+            where: { admin_id: adminId },
+            request: { pageName: 'page', limitName: 'page_size' },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            cols: [[
+                {type: 'checkbox', fixed: 'left'}, {field: 'comment_id', title: 'ID', width: '10%'},
+                {field: 'content', title: '内容', width: '35%'},
+                {field: 'author', title: '作者', width: '15%', templet: function(d) { return d.author ? d.author.username : '-'; }},
+                {field: 'post_id', title: '目标类型', width: '12%', templet: function(d) { return d.post_id ? '文章' : '-'; }},
+                {field: 'status', title: '状态', width: '10%', templet: function(d) { return d.status === 'hidden' ? '<span style="color:#FF5722;">已隐藏</span>' : '<span style="color:#5FB878;">正常</span>'; }},
+                {field: 'created_at', title: '发布时间', width: '18%'},
+                {title: '操作', width: '230', toolbar: '#commentToolbarTpl', fixed: 'right'}
+            ]]
+        });
+        document.getElementById('commentSearchBtn').onclick = function() {
+            SendLog.log_info('搜索评论: ' + document.getElementById('commentKeyword').value, 'user_behavior');
+            commentTableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('commentKeyword').value, status: document.getElementById('commentStatus').value, page: 1 } });
+        };
+        table.on('tool(commentTable)', function(obj) {
+            var d = obj.data;
+            if (obj.event === 'detail') { SendLog.log_info('查看评论详情: ' + d.comment_id, 'user_behavior'); lostoryOption.openDialog('评论详情', '/admin/dialogs/comment_detail.html?comment_id=' + d.comment_id, ['500px', '400px']); }
+            if (obj.event === 'reply') { SendLog.log_info('回复评论: ' + d.comment_id, 'user_behavior'); lostoryOption.openDialog('回复评论', '/admin/dialogs/comment_reply.html?comment_id=' + d.comment_id, ['500px', '300px']); }
+            if (obj.event === 'toggle') { SendLog.log_info('切换评论状态: ' + d.comment_id, 'user_behavior'); adminApi.comment.toggleVisibility(d.comment_id, d.status === 'hidden' ? false : true).then(function(r) { L.msg(r.msg); commentTableIns.reload(); SendLog.log_info('评论状态切换成功: ' + d.comment_id, 'user_behavior'); }).catch(function(err) { SendLog.log_error('评论状态切换失败: ' + d.comment_id, 'user_behavior'); }); }
+            if (obj.event === 'delete') { SendLog.log_info('删除评论: ' + d.comment_id, 'user_behavior'); lostoryOption.confirmDialog('确认删除该评论？', function() { adminApi.comment.delete(d.comment_id).then(function(r) { L.msg(r.msg); commentTableIns.reload(); SendLog.log_info('评论删除成功: ' + d.comment_id, 'user_behavior'); }).catch(function(err) { SendLog.log_error('评论删除失败: ' + d.comment_id, 'user_behavior'); }); }); }
+        });
+        document.getElementById('commentBatchDelete').onclick = function() {
+            var checkStatus = table.checkStatus('commentTable');
+            if (checkStatus.data.length === 0) { L.msg('请先选择评论'); return; }
+            var ids = [];
+            checkStatus.data.forEach(function(d) { ids.push(d.comment_id); });
+            SendLog.log_info('批量删除评论: ' + ids.join(','), 'user_behavior');
+            lostoryOption.confirmDialog('确认批量删除选中评论？', function() { adminApi.comment.batchDelete(ids).then(function(r) { L.msg(r.msg); commentTableIns.reload(); SendLog.log_info('批量删除评论成功', 'user_behavior'); }).catch(function(err) { SendLog.log_error('批量删除评论失败', 'user_behavior'); }); });
+        };
+        var favTableIns = table.render({
+            elem: '#favoriteTable', url: '/api/admin/favorite/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
+            where: { admin_id: adminId },
+            request: { pageName: 'page', limitName: 'page_size' },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            cols: [[
+                {type: 'checkbox', fixed: 'left'}, {field: 'favorite_id', title: 'ID', width: '10%'},
+                {field: 'user', title: '收藏用户', width: '16%', templet: function(d) { return d.user ? d.user.username : '-'; }},
+                {field: 'post', title: '收藏文章', width: '36%', templet: function(d) { return d.post ? d.post.title : '-'; }},
+                {field: 'post', title: '文章作者', width: '16%', templet: function(d) { return d.post && d.post.user ? d.post.user.username : '-'; }},
+                {field: 'created_at', title: '收藏时间', width: '22%'},
+                {title: '操作', width: '100', toolbar: '#favToolbarTpl', fixed: 'right'}
+            ]]
+        });
+        document.getElementById('favSearchBtn').onclick = function() {
+            SendLog.log_info('搜索收藏: ' + document.getElementById('favKeyword').value, 'user_behavior');
+            favTableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('favKeyword').value, page: 1 } });
+        };
+        table.on('tool(favoriteTable)', function(obj) {
+            if (obj.event === 'delete') { SendLog.log_info('删除收藏: ' + obj.data.favorite_id, 'user_behavior'); lostoryOption.confirmDialog('确认删除该收藏？', function() { adminApi.favorite.delete(obj.data.favorite_id).then(function(r) { L.msg(r.msg); favTableIns.reload(); }).catch(function(err) { SendLog.log_error('删除收藏失败', 'user_behavior'); }); }); }
+        });
+        document.getElementById('favBatchDelete').onclick = function() {
+            var checkStatus = table.checkStatus('favoriteTable');
+            if (checkStatus.data.length === 0) { L.msg('请先选择收藏'); return; }
+            var ids = [];
+            checkStatus.data.forEach(function(d) { ids.push(d.favorite_id); });
+            SendLog.log_info('批量删除收藏: ' + ids.join(','), 'user_behavior');
+            lostoryOption.confirmDialog('确认批量删除选中收藏？', function() { adminApi.favorite.batchDelete(ids).then(function(r) { L.msg(r.msg); favTableIns.reload(); }).catch(function(err) { SendLog.log_error('批量删除收藏失败', 'user_behavior'); }); });
+        };
+        var likeTableIns = table.render({
+            elem: '#likeTable', url: '/api/admin/like/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
+            where: { admin_id: adminId },
+            request: { pageName: 'page', limitName: 'page_size' },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            cols: [[
+                {type: 'checkbox', fixed: 'left'}, {field: 'like_id', title: 'ID', width: '11%'},
+                {field: 'user', title: '点赞用户', width: '17%', templet: function(d) { return d.user ? d.user.username : '-'; }},
+                {field: 'target_type', title: '目标类型', width: '11%', templet: function(d) { return d.target_type === 'post' ? '文章' : '评论'; }},
+                {field: 'target_title', title: '目标标题', width: '39%'},
+                {field: 'created_at', title: '点赞时间', width: '22%'},
+                {title: '操作', width: '100', toolbar: '#likeToolbarTpl', fixed: 'right'}
+            ]]
+        });
+        document.getElementById('likeSearchBtn').onclick = function() {
+            SendLog.log_info('搜索点赞', 'user_behavior');
+            likeTableIns.reload({ where: { admin_id: adminId, target_type: document.getElementById('likeTargetType').value, keyword: document.getElementById('likeKeyword').value, page: 1 } });
+        };
+        table.on('tool(likeTable)', function(obj) {
+            if (obj.event === 'delete') { SendLog.log_info('删除点赞: ' + obj.data.like_id, 'user_behavior'); lostoryOption.confirmDialog('确认删除该点赞？', function() { adminApi.like.delete(obj.data.like_id).then(function(r) { L.msg(r.msg); likeTableIns.reload(); }).catch(function(err) { SendLog.log_error('删除点赞失败', 'user_behavior'); }); }); }
+        });
+        document.getElementById('likeBatchDelete').onclick = function() {
+            var checkStatus = table.checkStatus('likeTable');
+            if (checkStatus.data.length === 0) { L.msg('请先选择点赞'); return; }
+            var ids = [];
+            checkStatus.data.forEach(function(d) { ids.push(d.like_id); });
+            SendLog.log_info('批量删除点赞: ' + ids.join(','), 'user_behavior');
+            lostoryOption.confirmDialog('确认批量删除选中点赞？', function() { adminApi.like.batchDelete(ids).then(function(r) { L.msg(r.msg); likeTableIns.reload(); }).catch(function(err) { SendLog.log_error('批量删除点赞失败', 'user_behavior'); }); });
+        };
+        var followTableIns = table.render({
+            elem: '#followTable', url: '/api/admin/follow/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
+            where: { admin_id: adminId },
+            request: { pageName: 'page', limitName: 'page_size' },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            cols: [[
+                {type: 'checkbox', fixed: 'left'}, {field: 'follow_id', title: 'ID', width: '15%'},
+                {field: 'follower', title: '关注者', width: '27%', templet: function(d) { return d.follower ? d.follower.username : '-'; }},
+                {field: 'following', title: '被关注者', width: '27%', templet: function(d) { return d.following ? d.following.username : '-'; }},
+                {field: 'created_at', title: '关注时间', width: '31%'},
+                {title: '操作', width: '100', toolbar: '#followToolbarTpl', fixed: 'right'}
+            ]]
+        });
+        document.getElementById('followSearchBtn').onclick = function() {
+            SendLog.log_info('搜索关注: ' + document.getElementById('followKeyword').value, 'user_behavior');
+            followTableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('followKeyword').value, page: 1 } });
+        };
+        table.on('tool(followTable)', function(obj) {
+            if (obj.event === 'delete') { SendLog.log_info('删除关注: ' + obj.data.follow_id, 'user_behavior'); lostoryOption.confirmDialog('确认删除该关注？', function() { adminApi.follow.delete(obj.data.follow_id).then(function(r) { L.msg(r.msg); followTableIns.reload(); }).catch(function(err) { SendLog.log_error('删除关注失败', 'user_behavior'); }); }); }
+        });
+        document.getElementById('followBatchDelete').onclick = function() {
+            var checkStatus = table.checkStatus('followTable');
+            if (checkStatus.data.length === 0) { L.msg('请先选择关注'); return; }
+            var ids = [];
+            checkStatus.data.forEach(function(d) { ids.push(d.follow_id); });
+            SendLog.log_info('批量删除关注: ' + ids.join(','), 'user_behavior');
+            lostoryOption.confirmDialog('确认批量删除选中关注？', function() { adminApi.follow.batchDelete(ids).then(function(r) { L.msg(r.msg); followTableIns.reload(); }).catch(function(err) { SendLog.log_error('批量删除关注失败', 'user_behavior'); }); });
+        };
+        var msgTableIns = table.render({
+            elem: '#privateMessageTable', url: '/api/admin/private_message/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
+            where: { admin_id: adminId },
+            request: { pageName: 'page', limitName: 'page_size' },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            cols: [[
+                {type: 'checkbox', fixed: 'left'}, {field: 'message_id', title: 'ID', width: '8%'},
+                {field: 'from_user', title: '发送者', width: '16%', templet: function(d) { return d.from_user ? d.from_user.username : '-'; }},
+                {field: 'to_user', title: '接收者', width: '16%', templet: function(d) { return d.to_user ? d.to_user.username : '-'; }},
+                {field: 'content', title: '消息内容', width: '32%'},
+                {field: 'is_read', title: '状态', width: '10%', templet: function(d) { return d.is_read ? '<span style="color:#5FB878;">已读</span>' : '<span style="color:#FFB800;">未读</span>'; }},
+                {field: 'created_at', title: '发送时间', width: '18%'},
+                {title: '操作', width: '150', toolbar: '#msgToolbarTpl', fixed: 'right'}
+            ]]
+        });
+        document.getElementById('msgSearchBtn').onclick = function() {
+            SendLog.log_info('搜索私信: ' + document.getElementById('msgKeyword').value, 'user_behavior');
+            msgTableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('msgKeyword').value, page: 1 } });
+        };
+        table.on('tool(privateMessageTable)', function(obj) {
+            var d = obj.data;
+            if (obj.event === 'detail') { SendLog.log_info('查看私信详情: ' + d.message_id, 'user_behavior'); lostoryOption.openDialog('私信详情', '/admin/dialogs/message_detail.html?message_id=' + d.message_id, ['500px', '350px']); }
+            if (obj.event === 'delete') { SendLog.log_info('删除私信: ' + d.message_id, 'user_behavior'); lostoryOption.confirmDialog('确认删除该私信？', function() { adminApi.privateMessage.delete(d.message_id).then(function(r) { L.msg(r.msg); msgTableIns.reload(); }).catch(function(err) { SendLog.log_error('删除私信失败', 'user_behavior'); }); }); }
+        });
+        document.getElementById('msgBatchDelete').onclick = function() {
+            var checkStatus = table.checkStatus('privateMessageTable');
+            if (checkStatus.data.length === 0) { L.msg('请先选择私信'); return; }
+            var ids = [];
+            checkStatus.data.forEach(function(d) { ids.push(d.message_id); });
+            SendLog.log_info('批量删除私信: ' + ids.join(','), 'user_behavior');
+            lostoryOption.confirmDialog('确认批量删除选中私信？', function() { adminApi.privateMessage.batchDelete(ids).then(function(r) { L.msg(r.msg); msgTableIns.reload(); }).catch(function(err) { SendLog.log_error('批量删除私信失败', 'user_behavior'); }); });
+        };
+        var searchHistoryTableIns = table.render({
+            elem: '#searchHistoryTable', url: '/api/admin/search-history/list', method: 'get', page: true, limit: 20, limits: [10, 20, 50, 100],
+            where: { admin_id: adminId },
+            request: { pageName: 'page', limitName: 'page_size' },
+            parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
+            cols: [[
+                {type: 'checkbox', fixed: 'left'}, {field: 'search_id', title: 'ID', width: '10%'},
+                {field: 'user', title: '用户', width: '16%', templet: function(d) { return d.user ? d.user.username : '-'; }},
+                {field: 'keyword', title: '搜索关键词', width: '40%'},
+                {field: 'created_at', title: '搜索时间', width: '24%'},
+                {title: '操作', width: '100', toolbar: '#searchHistoryToolbarTpl', fixed: 'right'}
+            ]]
+        });
+        document.getElementById('searchHistorySearchBtn').onclick = function() {
+            SendLog.log_info('搜索记录: ' + document.getElementById('searchKeyword').value, 'user_behavior');
+            searchHistoryTableIns.reload({ where: { admin_id: adminId, keyword: document.getElementById('searchKeyword').value, page: 1 } });
+        };
+        table.on('tool(searchHistoryTable)', function(obj) {
+            if (obj.event === 'delete') { SendLog.log_info('删除搜索记录: ' + obj.data.search_id, 'user_behavior'); lostoryOption.confirmDialog('确认删除该搜索记录？', function() { adminApi.searchHistory.delete(obj.data.search_id).then(function(r) { L.msg(r.msg); searchHistoryTableIns.reload(); }).catch(function(err) { SendLog.log_error('删除搜索记录失败', 'user_behavior'); }); }); }
+        });
+        document.getElementById('searchHistoryBatchDelete').onclick = function() {
+            var checkStatus = table.checkStatus('searchHistoryTable');
+            if (checkStatus.data.length === 0) { L.msg('请先选择搜索记录'); return; }
+            var ids = [];
+            checkStatus.data.forEach(function(d) { ids.push(d.search_id); });
+            SendLog.log_info('批量删除搜索记录: ' + ids.join(','), 'user_behavior');
+            lostoryOption.confirmDialog('确认批量删除选中搜索记录？', function() { adminApi.searchHistory.batchDelete(ids).then(function(r) { L.msg(r.msg); searchHistoryTableIns.reload(); }).catch(function(err) { SendLog.log_error('批量删除搜索记录失败', 'user_behavior'); }); });
+        };
+        element.on('tab(behaviorTab)', function(data) {
+            var tabIndex = data.index;
+            lostoryOption.setActiveTab('user_behavior', tabIndex);
+            if (tabIndex === 0) { reportTableIns.resize(); }
+            else if (tabIndex === 1) { commentTableIns.resize(); }
+            else if (tabIndex === 2) { favTableIns.resize(); }
+            else if (tabIndex === 3) { likeTableIns.resize(); }
+            else if (tabIndex === 4) { followTableIns.resize(); }
+            else if (tabIndex === 5) { msgTableIns.resize(); }
+            else if (tabIndex === 6) { searchHistoryTableIns.resize(); }
+        });
+        var savedTab = lostoryOption.getActiveTab('user_behavior');
+        if (savedTab > 0) { setTimeout(function() { element.tabChange('behaviorTab', 'behaviorTab' + savedTab); }, 100); }
+    });
+    </script>
+</body>
+</html>

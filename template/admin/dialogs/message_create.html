@@ -12,7 +12,8 @@
             <div class="layui-form-item"><label class="layui-form-label">标题</label><div class="layui-input-block"><input type="text" name="title" lay-verify="required" class="layui-input"></div></div>
             <div class="layui-form-item"><label class="layui-form-label">内容</label><div class="layui-input-block"><textarea name="content" lay-verify="required" class="layui-textarea"></textarea></div></div>
             <div class="layui-form-item"><label class="layui-form-label">类型</label><div class="layui-input-block"><select name="type"><option value="system">系统消息</option><option value="announcement">公告</option></select></div></div>
-            <div class="layui-form-item"><label class="layui-form-label">目标</label><div class="layui-input-block"><select name="target_type"><option value="all">全部用户</option><option value="user_list">指定用户</option></select></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">目标</label><div class="layui-input-block"><select name="target_type" lay-filter="targetType"><option value="all">全部用户</option><option value="user_list">指定用户</option></select></div></div>
+            <div class="layui-form-item" id="userSelectBox" style="display:none;"><label class="layui-form-label">选择用户</label><div class="layui-input-block"><select name="target_ids" lay-search lay-filter="targetUser" multiple><option value="">请选择用户</option></select></div></div>
             <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" lay-submit lay-filter="saveMsg">保存</button></div></div>
         </form>
     </div>
@@ -27,9 +28,33 @@
         adminApi.setAdminId(adminId);
         SendLog.log_info('打开新建消息弹窗', 'message_create');
         form.render('select');
+        form.on('select(targetType)', function(data) {
+            if (data.value === 'user_list') {
+                document.getElementById('userSelectBox').style.display = '';
+                adminApi.user.getList({ page: 1, page_size: 200 }).then(function(r) {
+                    if (r.code === 200 && r.data && r.data.list) {
+                        var selectEl = document.querySelector('select[name="target_ids"]');
+                        selectEl.innerHTML = '';
+                        r.data.list.forEach(function(u) { selectEl.innerHTML += '<option value="' + u.user_id + '">' + u.username + '（' + u.usernumber + '）</option>'; });
+                        form.render('select');
+                        SendLog.log_info('加载用户列表成功,共' + r.data.list.length + '人', 'message_create');
+                    }
+                }).catch(function(err) { SendLog.log_error('加载用户列表失败', 'message_create'); });
+            } else {
+                document.getElementById('userSelectBox').style.display = 'none';
+            }
+        });
         form.on('submit(saveMsg)', function(data) {
+            var postData = { title: data.field.title, content: data.field.content, type: data.field.type, target_type: data.field.target_type };
+            if (data.field.target_type === 'user_list') {
+                var selectedUsers = document.querySelector('select[name="target_ids"]').selectedOptions;
+                var ids = [];
+                for (var i = 0; i < selectedUsers.length; i++) { ids.push(parseInt(selectedUsers[i].value)); }
+                if (ids.length === 0) { L.msg('请选择至少一个用户'); return false; }
+                postData.target_ids = ids;
+            }
             SendLog.log_info('创建消息: ' + data.field.title, 'message_create');
-            adminApi.message.create(data.field).then(function(r) { L.msg(r.msg); SendLog.log_info('消息创建成功: ' + data.field.title, 'message_create'); parent.layui.table.reload('messageTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('消息创建失败', 'message_create'); });
+            adminApi.message.create(postData).then(function(r) { L.msg(r.msg); SendLog.log_info('消息创建成功: ' + data.field.title, 'message_create'); parent.layui.table.reload('messageTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('消息创建失败', 'message_create'); });
             return false;
         });
     });

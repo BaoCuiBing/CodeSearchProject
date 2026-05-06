@@ -1,6 +1,6 @@
 <template>
     <div class="user-profile-page">
-        <van-nav-bar title="个人资料" left-arrow @click-left="goBack" right-text="保存" @click-right="saveProfile" fixed placeholder />
+        <PageNavBar title="个人资料" right-text="保存" @click-right="saveProfile" />
         <div class="avatar-section">
             <van-image round width="80px" height="80px" :src="profile.avatar" />
             <span class="change-avatar" @click="changeAvatar">更换头像</span>
@@ -18,9 +18,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { showToast } from 'vant'
-const router = useRouter()
+import PageNavBar from '@/components/PageNavBar.vue'
 const profile = ref({
     user_id: 1,
     username: '程序员小明',
@@ -31,7 +30,6 @@ const profile = ref({
     website: 'https://xiaoming.dev',
     github: 'https://github.com/xiaoming'
 })
-const goBack = () => router.back()
 const saveProfile = () => { showToast('保存成功') }
 const changeAvatar = () => { showToast('选择头像') }
 </script>

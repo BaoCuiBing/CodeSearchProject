@@ -73,5 +73,16 @@ var lostoryOption = {
     },
     msg: function(text, icon) {
         this.getLayer().msg(text, { icon: icon || 1, time: 2000 });
+    },
+    setActiveTab: function(pageKey, tabIndex) {
+        var key = 'active_tab_' + pageKey;
+        this._setCache(key, tabIndex);
+        try { localStorage.setItem(key, tabIndex); } catch(e) {}
+    },
+    getActiveTab: function(pageKey) {
+        var key = 'active_tab_' + pageKey;
+        var val = this._getCache(key);
+        if (val === null) { try { val = localStorage.getItem(key); } catch(e) {} }
+        return val !== null ? parseInt(val) : 0;
     }
 };

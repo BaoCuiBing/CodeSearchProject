@@ -22,25 +22,16 @@
                 <van-tabs v-model:active="activeRankingTab">
                     <van-tab title="文章热榜">
                         <div class="ranking-list">
-                            <div v-for="(item, index) in articleRanking" :key="item.post_id" class="ranking-item" @click="goToDetail(item.post_id)">
-                                <span class="rank-num" :class="{ top: index < 3 }">{{ index + 1 }}</span>
-                                <div class="rank-content">
-                                    <h4>{{ item.title }}</h4>
-                                    <p>{{ item.author.username }} · 热度 {{ item.hot_score }}</p>
-                                </div>
-                            </div>
+                            <RankingItem v-for="(item, index) in articleRanking" :key="item.post_id" :index="index" :title="item.title" :subtitle="item.author.username + ' · 热度 ' + item.hot_score" @click="goToDetail(item.post_id)" />
                         </div>
                     </van-tab>
                     <van-tab title="用户活跃">
                         <div class="ranking-list">
-                            <div v-for="(item, index) in userRanking" :key="item.user_id" class="ranking-item user-rank">
-                                <span class="rank-num" :class="{ top: index < 3 }">{{ index + 1 }}</span>
-                                <van-image round width="40px" height="40px" :src="item.avatar" />
-                                <div class="rank-content">
-                                    <h4>{{ item.username }}</h4>
-                                    <p>文章 {{ item.article_count }} · 获赞 {{ item.like_count }}</p>
-                                </div>
-                            </div>
+                            <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.article_count + ' · 获赞 ' + item.like_count">
+                                <template #avatar>
+                                    <van-image round width="40px" height="40px" :src="item.avatar" />
+                                </template>
+                            </RankingItem>
                         </div>
                     </van-tab>
                 </van-tabs>
@@ -49,23 +40,19 @@
         <div class="recommend-section">
             <div class="section-title">推荐关注</div>
             <div class="user-list">
-                <div v-for="user in recommendUsers" :key="user.user_id" class="user-card">
-                    <van-image round width="48px" height="48px" :src="user.avatar" />
-                    <div class="user-info">
-                        <span class="user-name">{{ user.username }}</span>
-                        <span class="user-bio">{{ user.bio }}</span>
-                    </div>
-                    <van-button size="small" :type="user.is_followed ? 'default' : 'primary'" @click="followUser(user)">{{ user.is_followed ? '已关注' : '关注' }}</van-button>
-                </div>
+                <UserListItem v-for="user in recommendUsers" :key="user.user_id" :avatar="user.avatar" :username="user.username" :bio="user.bio" :is-followed="user.is_followed" @toggle="followUser(user)" />
             </div>
         </div>
         <div class="bottom-spacer"></div>
+        <van-floating-bubble :gap="{x: 30, y: 80}" icon="plus" @click="goToPostEdit" />
     </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import RankingItem from '@/components/RankingItem.vue'
+import UserListItem from '@/components/UserListItem.vue'
 const router = useRouter()
 const searchKeyword = ref('')
 const activeRankingTab = ref(0)
@@ -107,6 +94,7 @@ const goToCategory = (catId) => { router.push({ path: '/category', query: { id: 
 const goToRankings = () => { router.push('/rankings') }
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
 const followUser = (user) => { user.is_followed = !user.is_followed }
+const goToPostEdit = () => { router.push('/post-edit') }
 </script>
 
 <style scoped>
@@ -120,18 +108,7 @@ const followUser = (user) => { user.is_followed = !user.is_followed }
 .category-item span { font-size: 13px; color: #666; }
 .ranking-section { background: #fff; padding: 16px; margin-bottom: 8px; }
 .ranking-list { padding: 8px 0; }
-.ranking-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f5f5f5; }
-.ranking-item.user-rank { align-items: center; }
-.rank-num { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; color: #999; }
-.rank-num.top { color: #ff6b6b; }
-.rank-content { flex: 1; }
-.rank-content h4 { margin: 0 0 4px; font-size: 15px; color: #333; }
-.rank-content p { margin: 0; font-size: 13px; color: #999; }
 .recommend-section { background: #fff; padding: 16px; }
 .user-list { display: flex; flex-direction: column; gap: 16px; }
-.user-card { display: flex; align-items: center; gap: 12px; }
-.user-info { flex: 1; display: flex; flex-direction: column; }
-.user-name { font-size: 15px; color: #333; font-weight: 500; }
-.user-bio { font-size: 13px; color: #999; }
 .bottom-spacer { height: 80px; }
 </style>

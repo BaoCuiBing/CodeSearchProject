@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
+    <title>处理举报</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+</head>
+<body>
+    <div style="padding:15px;">
+        <form class="layui-form" lay-filter="handleForm">
+            <input type="hidden" id="report_id">
+            <div class="layui-form-item">
+                <label class="layui-form-label">处理操作</label>
+                <div class="layui-input-block">
+                    <select name="action" id="action" required lay-verify="required">
+                        <option value="">请选择处理操作</option>
+                        <option value="approve">通过举报</option>
+                        <option value="reject">拒绝举报</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">删除目标</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" id="delete_target" name="delete_target" title="删除被举报的内容" lay-skin="switch" lay-text="是|否">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">处理备注</label>
+                <div class="layui-input-block">
+                    <textarea name="handle_note" id="handle_note" placeholder="请输入处理备注" class="layui-textarea"></textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="submitBtn">提交处理</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
+    <script>
+    layui.use(['form', 'layer'], function() {
+        var form = layui.form;
+        var layer = layui.layer;
+        var adminId = localStorage.getItem('admin_id');
+        if (!adminId) { parent.window.location.href = '/admin/login'; return; }
+        adminApi.setAdminId(adminId);
+        var urlParams = new URLSearchParams(window.location.search);
+        var reportId = urlParams.get('report_id');
+        if (!reportId) { return; }
+        document.getElementById('report_id').value = reportId;
+        SendLog.log_info('加载举报处理页面: ' + reportId, 'report_handle');
+        document.getElementById('submitBtn').onclick = function() {
+            var action = document.getElementById('action').value;
+            if (!action) { layer.msg('请选择处理操作'); return; }
+            var handleNote = document.getElementById('handle_note').value;
+            var deleteTarget = document.getElementById('delete_target').checked;
+            var data = { report_id: parseInt(reportId), action: action, handle_note: handleNote, delete_target: deleteTarget };
+            SendLog.log_info('提交举报处理: ' + reportId + ', action=' + action, 'report_handle');
+            adminApi.report.handle(data).then(function(res) {
+                if (res.code === 200) {
+                    layer.msg('处理成功', { icon: 1 });
+                    SendLog.log_info('举报处理成功: ' + reportId, 'report_handle');
+                    setTimeout(function() { parent.layer.closeAll(); }, 1000);
+                } else {
+                    layer.msg(res.msg || '处理失败', { icon: 2 });
+                    SendLog.log_error('举报处理失败: ' + res.msg, 'report_handle');
+                }
+            }).catch(function(err) {
+                layer.msg('请求异常: ' + err.message, { icon: 2 });
+                SendLog.log_error('举报处理请求异常: ' + err.message, 'report_handle');
+            });
+        };
+    });
+    </script>
+</body>
+</html>

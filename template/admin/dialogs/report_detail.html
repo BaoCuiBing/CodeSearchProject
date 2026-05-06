@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
+    <title>举报详情</title>
+    <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
+</head>
+<body>
+    <div style="padding:15px;">
+        <table class="layui-table">
+            <tr><td>举报ID</td><td id="d_report_id"></td></tr>
+            <tr><td>举报用户</td><td id="d_reporter"></td></tr>
+            <tr><td>目标类型</td><td id="d_target_type"></td></tr>
+            <tr><td>目标标题</td><td id="d_target_title"></td></tr>
+            <tr><td>目标内容</td><td id="d_target_content"></td></tr>
+            <tr><td>举报原因</td><td id="d_reason"></td></tr>
+            <tr><td>状态</td><td id="d_status"></td></tr>
+            <tr><td>处理人</td><td id="d_handler"></td></tr>
+            <tr><td>处理备注</td><td id="d_handle_note"></td></tr>
+            <tr><td>举报时间</td><td id="d_created_at"></td></tr>
+        </table>
+    </div>
+    <script src="/static/webs/layui/js/layui.js"></script>
+    <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
+    <script src="/static/webs/admin_pages/js/send_log.js"></script>
+    <script>
+    layui.use(function() {
+        var adminId = localStorage.getItem('admin_id');
+        if (!adminId) { parent.window.location.href = '/admin/login'; return; }
+        adminApi.setAdminId(adminId);
+        var urlParams = new URLSearchParams(window.location.search);
+        var reportId = urlParams.get('report_id');
+        if (!reportId) { return; }
+        SendLog.log_info('加载举报详情: ' + reportId, 'report_detail');
+        adminApi.report.getDetail(reportId).then(function(res) {
+            if (res.code === 200) {
+                var r = res.data;
+                document.getElementById('d_report_id').innerText = r.report_id;
+                document.getElementById('d_reporter').innerText = r.reporter ? r.reporter.username : '-';
+                document.getElementById('d_target_type').innerText = r.target_type === 'post' ? '文章' : '评论';
+                document.getElementById('d_target_title').innerText = r.target_title || '-';
+                document.getElementById('d_target_content').innerText = r.target_content || '-';
+                document.getElementById('d_reason').innerText = r.reason;
+                document.getElementById('d_status').innerText = r.status === 'pending' ? '待处理' : r.status === 'handled' ? '已处理' : '已拒绝';
+                document.getElementById('d_handler').innerText = r.handler ? r.handler.username : '-';
+                document.getElementById('d_handle_note').innerText = r.handle_note || '-';
+                document.getElementById('d_created_at').innerText = r.created_at;
+                SendLog.log_info('举报详情加载成功: ' + reportId, 'report_detail');
+            }
+        }).catch(function(err) { SendLog.log_error('举报详情请求异常: ' + err.message, 'report_detail'); });
+    });
+    </script>
+</body>
+</html>

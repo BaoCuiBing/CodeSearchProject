@@ -229,7 +229,7 @@ async def get_system_message_detail(request, system_message_id):
     target_count = db.query(SystemMessageTarget).filter(SystemMessageTarget.message_id == message.id).count()
     read_count = db.query(SystemMessageTarget).filter(SystemMessageTarget.message_id == message.id, SystemMessageTarget.is_read == 1).count()
     logger.info(f"管理员{admin_id}查询消息详情成功:message_id={system_message_id},target={target_count},read={read_count}")
-    return response.json({"code": 200, "msg": "获取成功", "data": {"system_message_id": message.id, "type": message.type, "title": message.title, "content": message.content, "status": message.status, "stats": {"target_count": target_count, "read_count": read_count, "unread_count": target_count - read_count, "read_rate": round(read_count / target_count * 100, 2) if target_count > 0 else 0}, "read_users": [], "unread_users": [], "created_at": str(message.created_at), "send_time": str(message.send_time) if message.send_time else None}})
+    return response.json({"code": 200, "msg": "获取成功", "data": {"system_message_id": message.id, "type": message.type, "title": message.title, "content": message.content, "target_type": message.target_type, "priority": message.priority, "status": message.status, "stats": {"target_count": target_count, "read_count": read_count, "unread_count": target_count - read_count, "read_rate": round(read_count / target_count * 100, 2) if target_count > 0 else 0}, "read_users": [], "unread_users": [], "created_at": str(message.created_at), "send_time": str(message.send_time) if message.send_time else None}})
 
 @admin_message_bp.post("/send-to-user")
 @openapi.summary("发送消息给指定用户")

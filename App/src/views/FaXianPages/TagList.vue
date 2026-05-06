@@ -1,6 +1,6 @@
 <template>
     <div class="tag-list-page">
-        <van-nav-bar title="标签" left-arrow @click-left="goBack" fixed placeholder />
+        <PageNavBar title="标签" />
         <div class="tag-section">
             <div class="section-title">热门标签</div>
             <div class="tag-cloud">
@@ -22,6 +22,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import PageNavBar from '@/components/PageNavBar.vue'
 const router = useRouter()
 const hotTags = ref([
     { tag_id: 1, name: 'Python', color: '#1989fa' },
@@ -45,7 +46,6 @@ const allTags = ref([
     { tag_id: 9, name: 'Go', color: '#00add8', post_count: 54 },
     { tag_id: 10, name: 'Java', color: '#007396', post_count: 112 }
 ])
-const goBack = () => router.back()
 const goToTag = (tagId) => { router.push({ path: '/tag', query: { id: tagId } }) }
 </script>
 

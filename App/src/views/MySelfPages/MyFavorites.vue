@@ -1,39 +1,39 @@
 <template>
     <div class="my-favorites-page">
-        <van-nav-bar title="我的收藏" left-arrow @click-left="goBack" fixed placeholder />
+        <PageNavBar title="我的收藏" />
         <van-tabs v-model:active="activeTab">
             <van-tab title="全部">
                 <div class="fav-list">
-                    <div v-for="item in favorites" :key="item.post_id" class="fav-item" @click="goToDetail(item.post_id)">
-                        <h4>{{ item.title }}</h4>
-                        <p>{{ item.summary }}</p>
-                        <div class="fav-meta">
-                            <van-tag size="small" :type="item.type === 'article' ? 'primary' : 'success'">{{ item.type === 'article' ? '文章' : '问题' }}</van-tag>
-                            <span>{{ item.created_at }}</span>
-                        </div>
-                    </div>
+                    <PostCard v-for="item in favorites" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
+                        <template #footer>
+                            <div class="fav-meta">
+                                <van-tag size="small" :type="item.type === 'article' ? 'primary' : 'success'">{{ item.type === 'article' ? '文章' : '问题' }}</van-tag>
+                                <span>{{ item.created_at }}</span>
+                            </div>
+                        </template>
+                    </PostCard>
                 </div>
             </van-tab>
             <van-tab title="文章">
                 <div class="fav-list">
-                    <div v-for="item in articleFavorites" :key="item.post_id" class="fav-item" @click="goToDetail(item.post_id)">
-                        <h4>{{ item.title }}</h4>
-                        <p>{{ item.summary }}</p>
-                        <div class="fav-meta">
-                            <span>{{ item.created_at }}</span>
-                        </div>
-                    </div>
+                    <PostCard v-for="item in articleFavorites" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
+                        <template #footer>
+                            <div class="fav-meta">
+                                <span>{{ item.created_at }}</span>
+                            </div>
+                        </template>
+                    </PostCard>
                 </div>
             </van-tab>
             <van-tab title="问题">
                 <div class="fav-list">
-                    <div v-for="item in questionFavorites" :key="item.post_id" class="fav-item" @click="goToDetail(item.post_id)">
-                        <h4>{{ item.title }}</h4>
-                        <p>{{ item.summary }}</p>
-                        <div class="fav-meta">
-                            <span>{{ item.created_at }}</span>
-                        </div>
-                    </div>
+                    <PostCard v-for="item in questionFavorites" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
+                        <template #footer>
+                            <div class="fav-meta">
+                                <span>{{ item.created_at }}</span>
+                            </div>
+                        </template>
+                    </PostCard>
                 </div>
             </van-tab>
         </van-tabs>
@@ -43,6 +43,8 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
+import PageNavBar from '@/components/PageNavBar.vue'
+import PostCard from '@/components/PostCard.vue'
 const router = useRouter()
 const activeTab = ref(0)
 const favorites = ref([
@@ -52,15 +54,11 @@ const favorites = ref([
 ])
 const articleFavorites = computed(() => favorites.value.filter(f => f.type === 'article'))
 const questionFavorites = computed(() => favorites.value.filter(f => f.type === 'question'))
-const goBack = () => router.back()
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
 </script>
 
 <style scoped>
 .my-favorites-page { background: #f5f5f5; min-height: 100vh; }
 .fav-list { padding: 12px; }
-.fav-item { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
-.fav-item h4 { margin: 0 0 8px; font-size: 16px; color: #333; }
-.fav-item p { margin: 0 0 12px; font-size: 14px; color: #666; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.fav-meta { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #999; }
+.fav-meta { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #999; margin-top: 12px; }
 </style>

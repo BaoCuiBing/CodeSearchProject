@@ -24,9 +24,14 @@
 | 标签管理 | /api/admin/tag | router/admin_tag_router.py | [admin_tag_router.md](file:///workspace/dev_docs/admin_router/admin_tag_router.md) |
 | 举报管理 | /api/admin/report | router/admin_report_router.py | [admin_report_router.md](file:///workspace/dev_docs/admin_router/admin_report_router.md) |
 | 系统消息 | /api/admin/system_messages | router/admin_message_router.py | [admin_message_router.md](file:///workspace/dev_docs/admin_router/admin_message_router.md) |
+| 私信管理 | /api/admin/private_message | router/admin_private_message_router.py | [admin_private_message_router.md](file:///workspace/dev_docs/admin_router/admin_private_message_router.md) |
 | 数据统计 | /api/admin/stats | router/admin_stats_router.py | [admin_stats_router.md](file:///workspace/dev_docs/admin_router/admin_stats_router.md) |
 | 系统设置 | /api/admin/system | router/admin_system_router.py | [admin_system_router.md](file:///workspace/dev_docs/admin_router/admin_system_router.md) |
 | 文件管理 | /api/admin/file | router/admin_file_router.py | [admin_file_router.md](file:///workspace/dev_docs/admin_router/admin_file_router.md) |
+| 搜索记录 | /api/admin/search-history | router/admin_search_history_router.py | [admin_search_history_router.md](file:///workspace/dev_docs/admin_router/admin_search_history_router.md) |
+| 点赞管理 | /api/admin/like | router/admin_like_router.py | [admin_like_router.md](file:///workspace/dev_docs/admin_router/admin_like_router.md) |
+| 关注管理 | /api/admin/follow | router/admin_follow_router.py | [admin_follow_router.md](file:///workspace/dev_docs/admin_router/admin_follow_router.md) |
+| 收藏管理 | /api/admin/favorite | router/admin_favorite_router.py | [admin_favorite_router.md](file:///workspace/dev_docs/admin_router/admin_favorite_router.md) |
 
 ## 文档索引（页面）
 

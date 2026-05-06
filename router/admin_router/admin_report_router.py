@@ -3,7 +3,7 @@ import logging
 from sanic import Blueprint, response
 from sanic_ext import openapi
 from sqlalchemy import func
-from models.model import User, Report, Post, Comment
+from models.model import User, Report, Post, Comment, PostTag, Favorite, Like
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
@@ -118,11 +118,16 @@ async def handle_report(request):
             if report.target_type == "post":
                 post = db.query(Post).filter(Post.id == report.target_id).first()
                 if post:
+                    db.query(PostTag).filter(PostTag.post_id == report.target_id).delete()
+                    db.query(Comment).filter(Comment.post_id == report.target_id).delete()
+                    db.query(Favorite).filter(Favorite.post_id == report.target_id).delete()
+                    db.query(Like).filter(Like.target_id == report.target_id, Like.target_type == "post").delete()
                     db.delete(post)
                     logger.debug(f"删除目标文章:post_id={report.target_id}")
             elif report.target_type == "comment":
                 comment = db.query(Comment).filter(Comment.id == report.target_id).first()
                 if comment:
+                    db.query(Like).filter(Like.target_id == report.target_id, Like.target_type == "comment").delete()
                     db.delete(comment)
                     logger.debug(f"删除目标评论:comment_id={report.target_id}")
     elif action == "reject":

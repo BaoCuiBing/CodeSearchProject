@@ -1,6 +1,6 @@
 <template>
     <div class="article-detail-page">
-        <van-nav-bar title="文章详情" left-arrow @click-left="goBack" fixed placeholder />
+        <PageNavBar title="文章详情" />
         <div class="article-content">
             <h1 class="article-title">{{ article.title }}</h1>
             <div class="article-meta">
@@ -54,8 +54,8 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-const router = useRouter()
+import { useRoute } from 'vue-router'
+import PageNavBar from '@/components/PageNavBar.vue'
 const route = useRoute()
 const article = ref({
     post_id: route.query.id || 1,
@@ -82,7 +82,6 @@ const comments = ref([
     { comment_id: 2, user: { user_id: 11, username: '用户B', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' }, content: 'GIL 的问题确实让人头疼，多进程会不会更好一些？', like_count: 3, created_at: '2025-05-05 15:20:00' },
     { comment_id: 3, user: { user_id: 12, username: '用户C', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' }, content: '收藏了，后面慢慢看', like_count: 1, created_at: '2025-05-05 16:00:00' }
 ])
-const goBack = () => router.back()
 const toggleLike = () => { article.value.is_liked = !article.value.is_liked; article.value.like_count += article.value.is_liked ? 1 : -1 }
 const toggleFavorite = () => { article.value.is_favorited = !article.value.is_favorited; article.value.favorite_count += article.value.is_favorited ? 1 : -1 }
 const toggleFollow = () => { article.value.is_followed = !article.value.is_followed }

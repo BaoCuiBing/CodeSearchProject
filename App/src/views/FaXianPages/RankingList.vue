@@ -1,41 +1,32 @@
 <template>
     <div class="ranking-page">
-        <van-nav-bar title="排行榜" left-arrow @click-left="goBack" fixed placeholder />
+        <PageNavBar title="排行榜" />
         <van-tabs v-model:active="activeTab">
             <van-tab title="文章热榜">
                 <div class="ranking-list">
-                    <div v-for="(item, index) in articleRanking" :key="item.post_id" class="ranking-item" @click="goToDetail(item.post_id)">
-                        <div class="rank-badge" :class="{ top: index < 3 }">{{ index + 1 }}</div>
-                        <div class="rank-info">
-                            <h4>{{ item.title }}</h4>
-                            <p>{{ item.author.username }} · 浏览 {{ item.view_count }} · 点赞 {{ item.like_count }}</p>
-                        </div>
-                        <div class="hot-score">{{ item.hot_score }}</div>
-                    </div>
+                    <RankingItem v-for="(item, index) in articleRanking" :key="item.post_id" :index="index" :title="item.title" :subtitle="item.author.username + ' · 浏览 ' + item.view_count + ' · 点赞 ' + item.like_count" @click="goToDetail(item.post_id)">
+                        <template #extra>
+                            <div class="hot-score">{{ item.hot_score }}</div>
+                        </template>
+                    </RankingItem>
                 </div>
             </van-tab>
             <van-tab title="问题热榜">
                 <div class="ranking-list">
-                    <div v-for="(item, index) in questionRanking" :key="item.post_id" class="ranking-item" @click="goToDetail(item.post_id)">
-                        <div class="rank-badge" :class="{ top: index < 3 }">{{ index + 1 }}</div>
-                        <div class="rank-info">
-                            <h4>{{ item.title }}</h4>
-                            <p>{{ item.author.username }} · 浏览 {{ item.view_count }} · 回答 {{ item.comment_count }}</p>
-                        </div>
-                        <div class="hot-score">{{ item.hot_score }}</div>
-                    </div>
+                    <RankingItem v-for="(item, index) in questionRanking" :key="item.post_id" :index="index" :title="item.title" :subtitle="item.author.username + ' · 浏览 ' + item.view_count + ' · 回答 ' + item.comment_count" @click="goToDetail(item.post_id)">
+                        <template #extra>
+                            <div class="hot-score">{{ item.hot_score }}</div>
+                        </template>
+                    </RankingItem>
                 </div>
             </van-tab>
             <van-tab title="贡献者">
                 <div class="ranking-list">
-                    <div v-for="(item, index) in contributorRanking" :key="item.user_id" class="ranking-item user-item">
-                        <div class="rank-badge" :class="{ top: index < 3 }">{{ index + 1 }}</div>
-                        <van-image round width="40px" height="40px" :src="item.avatar" />
-                        <div class="rank-info">
-                            <h4>{{ item.username }}</h4>
-                            <p>文章 {{ item.article_count }} · 获赞 {{ item.like_count }}</p>
-                        </div>
-                    </div>
+                    <RankingItem v-for="(item, index) in contributorRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.article_count + ' · 获赞 ' + item.like_count">
+                        <template #avatar>
+                            <van-image round width="40px" height="40px" :src="item.avatar" />
+                        </template>
+                    </RankingItem>
                 </div>
             </van-tab>
         </van-tabs>
@@ -45,6 +36,8 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import PageNavBar from '@/components/PageNavBar.vue'
+import RankingItem from '@/components/RankingItem.vue'
 const router = useRouter()
 const activeTab = ref(0)
 const articleRanking = ref([
@@ -66,19 +59,11 @@ const contributorRanking = ref([
     { user_id: 4, username: '运维小李', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', article_count: 29, like_count: 1234 },
     { user_id: 5, username: 'AI大牛', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', article_count: 25, like_count: 987 }
 ])
-const goBack = () => router.back()
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
 </script>
 
 <style scoped>
 .ranking-page { background: #f5f5f5; min-height: 100vh; }
 .ranking-list { padding: 12px; }
-.ranking-item { display: flex; align-items: center; gap: 12px; background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
-.ranking-item.user-item { align-items: center; }
-.rank-badge { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; color: #999; background: #f5f5f5; border-radius: 50%; flex-shrink: 0; }
-.rank-badge.top { color: #fff; background: #ff6b6b; }
-.rank-info { flex: 1; }
-.rank-info h4 { margin: 0 0 4px; font-size: 15px; color: #333; }
-.rank-info p { margin: 0; font-size: 13px; color: #999; }
 .hot-score { font-size: 14px; color: #ff6b6b; font-weight: 600; }
 </style>

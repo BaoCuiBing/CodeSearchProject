@@ -247,7 +247,26 @@ GET /admin/files
 
 ---
 
-### 13. 管理员个人中心页（管理端）
+### 13. 用户行为管理页（管理端）
+- **路径**: `/admin/user-behavior`
+- **方法**: `GET`
+- **函数名**: `admin_user_behavior_page`
+- **描述**: 返回用户行为管理页面HTML，包含举报受理、评论管理、收藏管理、点赞管理、关注管理、私信管理（UI图33）
+
+#### 请求参数
+无
+
+#### 请求示例
+```
+GET /admin/user-behavior
+```
+
+#### 响应格式
+- **类型**: HTML
+
+---
+
+### 14. 管理员个人中心页（管理端）
 - **路径**: `/admin/profile`
 - **方法**: `GET`
 - **函数名**: `admin_profile_page`
@@ -266,7 +285,7 @@ GET /admin/profile
 
 ---
 
-### 14. 对话框页面（管理端）
+### 15. 对话框页面（管理端）
 - **路径**: `/admin/dialogs/<path:path>`
 - **方法**: `GET`
 - **函数名**: `admin_dialogs_page`

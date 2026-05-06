@@ -1,5 +1,5 @@
 from sqlalchemy import Column, BigInteger, String, DateTime, ForeignKey, SmallInteger, Integer, Text, Boolean, UniqueConstraint
-from sqlalchemy.dialects.mysql import TINYINT
+from sqlalchemy.dialects.mysql import TINYINT, LONGTEXT
 from sqlalchemy.sql import func
 from models.db_base import Base
 
@@ -75,7 +75,7 @@ class Post(Base):
     user_id = Column(BigInteger, ForeignKey("users.id"), nullable=False)  # 用户ID外键
     category_id = Column(BigInteger, ForeignKey("categories.id"), nullable=True)  # 分类ID外键
     title = Column(String(500), nullable=False)  # 标题
-    content = Column(Text, nullable=False)  # 内容
+    content = Column(LONGTEXT, nullable=False)  # 内容
     summary = Column(String(1000), nullable=True)  # 摘要
     cover_image = Column(Text, nullable=True)  # 封面图(JSON格式)
     type = Column(String(20), default="article", nullable=False)  # 类型：article-文章,question-问题

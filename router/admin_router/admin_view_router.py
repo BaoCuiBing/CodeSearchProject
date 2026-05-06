@@ -77,6 +77,11 @@ async def admin_files_page(request):
     logger.debug(f"访问文件管理页面,IP={request.ip}")
     return await render_template("admin/files.html")
 
+@admin_view_bp.get("/user-behavior")
+async def admin_user_behavior_page(request):
+    logger.debug(f"访问用户行为管理页面,IP={request.ip}")
+    return await render_template("admin/user_behavior.html")
+
 @admin_view_bp.get("/profile")
 async def admin_profile_page(request):
     logger.debug(f"访问个人资料页面,IP={request.ip}")

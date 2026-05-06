@@ -1,6 +1,6 @@
 <template>
     <div class="search-page">
-        <van-nav-bar title="搜索" left-arrow @click-left="goBack" fixed placeholder />
+        <PageNavBar title="搜索" />
         <van-search v-model="keyword" placeholder="搜索技术问题、代码..." @search="onSearch" />
         <div class="search-content">
             <div class="section-title">搜索历史</div>
@@ -18,11 +18,11 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import PageNavBar from '@/components/PageNavBar.vue'
 const router = useRouter()
 const keyword = ref('')
 const history = ref(['Python多线程', 'Vue3响应式', 'MySQL索引'])
 const hotSearches = ref(['Python', 'Vue3', 'React', 'Docker', 'MySQL', 'Redis'])
-const goBack = () => router.back()
 const onSearch = () => { if (keyword.value.trim()) { router.push({ path: '/search-result', query: { keyword: keyword.value } }) } }
 const searchKeyword = (kw) => { keyword.value = kw; onSearch() }
 const removeHistory = (kw) => { history.value = history.value.filter(h => h !== kw) }

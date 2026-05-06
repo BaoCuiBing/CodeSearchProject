@@ -29,65 +29,77 @@
             <van-tabs v-model:active="activeTab" sticky offset-top="0">
                 <van-tab title="推荐">
                     <div class="post-list">
-                        <div v-for="post in recommendPosts" :key="post.post_id" class="post-card" @click="goToDetail(post.post_id)">
-                            <div class="post-header">
-                                <van-image round width="32px" height="32px" :src="post.author.avatar" />
-                                <span class="author-name">{{ post.author.username }}</span>
-                                <span class="post-time">{{ post.created_at }}</span>
-                            </div>
-                            <h4 class="post-title">{{ post.title }}</h4>
-                            <p class="post-summary">{{ post.summary }}</p>
-                            <div class="post-tags">
-                                <van-tag v-for="tag in post.tags" :key="tag.tag_id" size="small" type="primary" plain>{{ tag.name }}</van-tag>
-                            </div>
-                            <div class="post-stats">
-                                <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
-                                <span><van-icon name="good-job-o" /> {{ post.like_count }}</span>
-                                <span><van-icon name="comment-o" /> {{ post.comment_count }}</span>
-                            </div>
-                        </div>
+                        <PostCard v-for="post in recommendPosts" :key="post.post_id" :title="post.title" :summary="post.summary" @click="goToDetail(post.post_id)">
+                            <template #header>
+                                <div class="post-header">
+                                    <van-image round width="32px" height="32px" :src="post.author.avatar" />
+                                    <span class="author-name">{{ post.author.username }}</span>
+                                    <span class="post-time">{{ post.created_at }}</span>
+                                </div>
+                            </template>
+                            <template #tags>
+                                <div class="post-tags">
+                                    <van-tag v-for="tag in post.tags" :key="tag.tag_id" size="small" type="primary" plain>{{ tag.name }}</van-tag>
+                                </div>
+                            </template>
+                            <template #footer>
+                                <div class="post-stats">
+                                    <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
+                                    <span><van-icon name="good-job-o" /> {{ post.like_count }}</span>
+                                    <span><van-icon name="comment-o" /> {{ post.comment_count }}</span>
+                                </div>
+                            </template>
+                        </PostCard>
                     </div>
                 </van-tab>
                 <van-tab title="文章">
                     <div class="post-list">
-                        <div v-for="post in articlePosts" :key="post.post_id" class="post-card" @click="goToDetail(post.post_id)">
-                            <div class="post-header">
-                                <van-image round width="32px" height="32px" :src="post.author.avatar" />
-                                <span class="author-name">{{ post.author.username }}</span>
-                                <span class="post-time">{{ post.created_at }}</span>
-                            </div>
-                            <h4 class="post-title">{{ post.title }}</h4>
-                            <p class="post-summary">{{ post.summary }}</p>
-                            <div class="post-tags">
-                                <van-tag v-for="tag in post.tags" :key="tag.tag_id" size="small" type="primary" plain>{{ tag.name }}</van-tag>
-                            </div>
-                            <div class="post-stats">
-                                <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
-                                <span><van-icon name="good-job-o" /> {{ post.like_count }}</span>
-                                <span><van-icon name="comment-o" /> {{ post.comment_count }}</span>
-                            </div>
-                        </div>
+                        <PostCard v-for="post in articlePosts" :key="post.post_id" :title="post.title" :summary="post.summary" @click="goToDetail(post.post_id)">
+                            <template #header>
+                                <div class="post-header">
+                                    <van-image round width="32px" height="32px" :src="post.author.avatar" />
+                                    <span class="author-name">{{ post.author.username }}</span>
+                                    <span class="post-time">{{ post.created_at }}</span>
+                                </div>
+                            </template>
+                            <template #tags>
+                                <div class="post-tags">
+                                    <van-tag v-for="tag in post.tags" :key="tag.tag_id" size="small" type="primary" plain>{{ tag.name }}</van-tag>
+                                </div>
+                            </template>
+                            <template #footer>
+                                <div class="post-stats">
+                                    <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
+                                    <span><van-icon name="good-job-o" /> {{ post.like_count }}</span>
+                                    <span><van-icon name="comment-o" /> {{ post.comment_count }}</span>
+                                </div>
+                            </template>
+                        </PostCard>
                     </div>
                 </van-tab>
                 <van-tab title="问题">
                     <div class="post-list">
-                        <div v-for="post in questionPosts" :key="post.post_id" class="post-card" @click="goToDetail(post.post_id)">
-                            <div class="post-header">
-                                <van-image round width="32px" height="32px" :src="post.author.avatar" />
-                                <span class="author-name">{{ post.author.username }}</span>
-                                <span class="post-time">{{ post.created_at }}</span>
-                            </div>
-                            <h4 class="post-title">{{ post.title }}</h4>
-                            <p class="post-summary">{{ post.summary }}</p>
-                            <div class="post-tags">
-                                <van-tag v-for="tag in post.tags" :key="tag.tag_id" size="small" type="primary" plain>{{ tag.name }}</van-tag>
-                            </div>
-                            <div class="post-stats">
-                                <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
-                                <span><van-icon name="good-job-o" /> {{ post.like_count }}</span>
-                                <span><van-icon name="comment-o" /> {{ post.comment_count }}</span>
-                            </div>
-                        </div>
+                        <PostCard v-for="post in questionPosts" :key="post.post_id" :title="post.title" :summary="post.summary" @click="goToDetail(post.post_id)">
+                            <template #header>
+                                <div class="post-header">
+                                    <van-image round width="32px" height="32px" :src="post.author.avatar" />
+                                    <span class="author-name">{{ post.author.username }}</span>
+                                    <span class="post-time">{{ post.created_at }}</span>
+                                </div>
+                            </template>
+                            <template #tags>
+                                <div class="post-tags">
+                                    <van-tag v-for="tag in post.tags" :key="tag.tag_id" size="small" type="primary" plain>{{ tag.name }}</van-tag>
+                                </div>
+                            </template>
+                            <template #footer>
+                                <div class="post-stats">
+                                    <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
+                                    <span><van-icon name="good-job-o" /> {{ post.like_count }}</span>
+                                    <span><van-icon name="comment-o" /> {{ post.comment_count }}</span>
+                                </div>
+                            </template>
+                        </PostCard>
                     </div>
                 </van-tab>
             </van-tabs>
@@ -99,6 +111,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import PostCard from '@/components/PostCard.vue'
 const router = useRouter()
 const searchKeyword = ref('')
 const activeTab = ref(0)
@@ -155,14 +168,11 @@ const goToDetail = (postId) => { router.push({ path: '/article', query: { id: po
 .hot-tag { padding: 4px 12px; }
 .content-tabs { background: #fff; }
 .post-list { padding: 12px; }
-.post-card { background: #fff; border-radius: 8px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
 .post-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
 .author-name { font-size: 14px; color: #333; font-weight: 500; }
 .post-time { font-size: 12px; color: #999; margin-left: auto; }
-.post-title { margin: 0 0 8px; font-size: 16px; color: #333; line-height: 1.4; }
-.post-summary { margin: 0 0 12px; font-size: 14px; color: #666; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .post-tags { display: flex; gap: 8px; margin-bottom: 12px; }
-.post-stats { display: flex; gap: 16px; font-size: 13px; color: #999; }
+.post-stats { display: flex; gap: 16px; font-size: 13px; color: #999; margin-top: 12px; }
 .post-stats span { display: flex; align-items: center; gap: 4px; }
 .bottom-spacer { height: 80px; }
 </style>

@@ -23,7 +23,7 @@
         <div style="margin-top:20px;"><h4>内容</h4><div id="d_content" style="padding:15px;border:1px solid #eee;min-height:200px;"></div></div>
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
-    <script src="/static/webs/easy_mde/easymde.min.js"></script>
+    <script src="/static/webs/easy_mde/marked.min.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
@@ -47,8 +47,7 @@
                 document.getElementById('d_like_count').innerText = d.like_count || 0;
                 document.getElementById('d_comment_count').innerText = d.comment_count || 0;
                 document.getElementById('d_created_at').innerText = d.created_at || '-';
-                var tempMDE = new EasyMDE({ element: document.createElement('textarea'), spellChecker: false, previewRender: function(text) { return this.parent.markdown(text); } });
-                document.getElementById('d_content').innerHTML = tempMDE.options.previewRender(d.content || '');
+                document.getElementById('d_content').innerHTML = marked.parse(d.content || '');
                 SendLog.log_info('文章详情加载成功: ' + postId, 'article_detail');
             }
         }).catch(function(err) { SendLog.log_error('文章详情请求异常: ' + err.message, 'article_detail'); });

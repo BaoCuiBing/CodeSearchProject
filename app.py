@@ -13,8 +13,13 @@ from router.admin_router.admin_auth_router import admin_auth_bp
 from router.admin_router.admin_article_router import admin_article_bp
 from router.admin_router.admin_category_router import admin_category_bp
 from router.admin_router.admin_comment_router import admin_comment_bp
+from router.admin_router.admin_favorite_router import admin_favorite_bp
+from router.admin_router.admin_like_router import admin_like_bp
+from router.admin_router.admin_follow_router import admin_follow_bp
+from router.admin_router.admin_private_message_router import admin_private_message_bp
 from router.admin_router.admin_message_router import admin_message_bp
 from router.admin_router.admin_report_router import admin_report_bp
+from router.admin_router.admin_search_history_router import admin_search_history_bp
 from router.admin_router.admin_stats_router import admin_stats_bp
 from router.admin_router.admin_system_router import admin_system_bp
 from router.admin_router.admin_tag_router import admin_tag_bp
@@ -51,8 +56,13 @@ app.blueprint(admin_auth_bp)  # 管理员认证路由
 app.blueprint(admin_article_bp)  # 内容管理路由
 app.blueprint(admin_category_bp)  # 分类管理路由
 app.blueprint(admin_comment_bp)  # 评论管理路由
+app.blueprint(admin_favorite_bp)  # 收藏管理路由
+app.blueprint(admin_like_bp)  # 点赞管理路由
+app.blueprint(admin_follow_bp)  # 关注管理路由
+app.blueprint(admin_private_message_bp)  # 私信管理路由
 app.blueprint(admin_message_bp)  # 消息管理路由
 app.blueprint(admin_report_bp)  # 举报管理路由
+app.blueprint(admin_search_history_bp)  # 搜索记录管理路由
 app.blueprint(admin_stats_bp)  # 数据统计路由
 app.blueprint(admin_system_bp)  # 系统设置路由
 app.blueprint(admin_tag_bp)  # 标签管理路由

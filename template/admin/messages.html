@@ -73,7 +73,7 @@
         });
         table.on('tool(messageTable)', function(obj) {
             var d = obj.data;
-            if (obj.event === 'detail') { SendLog.log_info('查看消息详情: ' + d.system_message_id, 'messages'); lostoryOption.openDialog('消息详情', '/admin/dialogs/message_detail.html?system_message_id=' + d.system_message_id, ['500px', '450px']); }
+            if (obj.event === 'detail') { SendLog.log_info('查看消息详情: ' + d.system_message_id, 'messages'); lostoryOption.openDialog('消息详情', '/admin/dialogs/system_message_detail.html?system_message_id=' + d.system_message_id, ['500px', '450px']); }
             if (obj.event === 'edit') { SendLog.log_info('编辑消息: ' + d.system_message_id, 'messages'); lostoryOption.openDialog('编辑消息', '/admin/dialogs/message_edit.html?system_message_id=' + d.system_message_id + '&title=' + encodeURIComponent(d.title), ['500px', '250px']); }
             if (obj.event === 'send') { SendLog.log_info('发送消息: ' + d.system_message_id, 'messages'); lostoryOption.confirmDialog('确认发送该消息？', function() { adminApi.message.send(d.system_message_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('消息发送成功: ' + d.system_message_id, 'messages'); }).catch(function(err) { SendLog.log_error('消息发送失败: ' + d.system_message_id, 'messages'); }); }); }
             if (obj.event === 'delete') { SendLog.log_info('删除消息: ' + d.system_message_id, 'messages'); lostoryOption.confirmDialog('确认删除该消息？', function() { adminApi.message.delete(d.system_message_id).then(function(r) { L.msg(r.msg); tableIns.reload(); SendLog.log_info('消息删除成功: ' + d.system_message_id, 'messages'); }).catch(function(err) { SendLog.log_error('消息删除失败: ' + d.system_message_id, 'messages'); }); }); }

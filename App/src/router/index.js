@@ -31,6 +31,7 @@ const routes = [
     { path: '/question', name: 'QuestionDetail', component: () => import('../views/ShouYePages/ArticleDetail.vue') },
     { path: '/privacy', name: 'Privacy', component: () => import('../views/MySelfPages/About.vue') },
     { path: '/notification-settings', name: 'NotificationSettings', component: () => import('../views/MySelfPages/Settings.vue') },
+    { path: '/post-edit', name: 'PostEdit', component: () => import('../views/FaXianPages/PostEdit.vue') },
     { path: '/login', name: 'Login', redirect: '/shouye' }
 ]
 const router = createRouter({ history: createWebHistory(), routes })

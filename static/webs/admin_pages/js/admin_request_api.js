@@ -132,5 +132,31 @@ var adminApi = {
             if (userId) { formData.append('user_id', userId); }
             return adminApi._post('/api/upload/file', formData, true);
         }
+    },
+    favorite: {
+        getList: function(params) { params = params || {}; params.admin_id = adminApi.getAdminId(); return adminApi._get('/api/admin/favorite/list', params); },
+        delete: function(favoriteId) { return adminApi._delete('/api/admin/favorite/' + favoriteId, { admin_id: adminApi.getAdminId() }); },
+        batchDelete: function(ids) { return adminApi._post('/api/admin/favorite/batch-delete', { admin_id: adminApi.getAdminId(), ids: ids }); }
+    },
+    like: {
+        getList: function(params) { params = params || {}; params.admin_id = adminApi.getAdminId(); return adminApi._get('/api/admin/like/list', params); },
+        delete: function(likeId) { return adminApi._delete('/api/admin/like/' + likeId, { admin_id: adminApi.getAdminId() }); },
+        batchDelete: function(ids) { return adminApi._post('/api/admin/like/batch-delete', { admin_id: adminApi.getAdminId(), ids: ids }); }
+    },
+    follow: {
+        getList: function(params) { params = params || {}; params.admin_id = adminApi.getAdminId(); return adminApi._get('/api/admin/follow/list', params); },
+        delete: function(followId) { return adminApi._delete('/api/admin/follow/' + followId, { admin_id: adminApi.getAdminId() }); },
+        batchDelete: function(ids) { return adminApi._post('/api/admin/follow/batch-delete', { admin_id: adminApi.getAdminId(), ids: ids }); }
+    },
+    privateMessage: {
+        getList: function(params) { params = params || {}; params.admin_id = adminApi.getAdminId(); return adminApi._get('/api/admin/private_message/list', params); },
+        getDetail: function(messageId) { return adminApi._get('/api/admin/private_message/' + messageId + '/detail', { admin_id: adminApi.getAdminId() }); },
+        delete: function(messageId) { return adminApi._delete('/api/admin/private_message/' + messageId, { admin_id: adminApi.getAdminId() }); },
+        batchDelete: function(ids) { return adminApi._post('/api/admin/private_message/batch-delete', { admin_id: adminApi.getAdminId(), ids: ids }); }
+    },
+    searchHistory: {
+        getList: function(params) { params = params || {}; params.admin_id = adminApi.getAdminId(); return adminApi._get('/api/admin/search-history/list', params); },
+        delete: function(searchId) { return adminApi._delete('/api/admin/search-history/' + searchId, { admin_id: adminApi.getAdminId() }); },
+        batchDelete: function(ids) { return adminApi._post('/api/admin/search-history/batch-delete', { admin_id: adminApi.getAdminId(), ids: ids }); }
     }
 };

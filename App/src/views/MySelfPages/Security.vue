@@ -1,6 +1,6 @@
 <template>
     <div class="security-page">
-        <van-nav-bar title="账号与安全" left-arrow @click-left="goBack" fixed placeholder />
+        <PageNavBar title="账号与安全" />
         <van-cell-group>
             <van-cell title="修改密码" is-link @click="changePassword" />
             <van-cell title="绑定邮箱" is-link @click="bindEmail" />
@@ -10,10 +10,8 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 import { showToast } from 'vant'
-const router = useRouter()
-const goBack = () => router.back()
+import PageNavBar from '@/components/PageNavBar.vue'
 const changePassword = () => { showToast('修改密码') }
 const bindEmail = () => { showToast('绑定邮箱') }
 const bindPhone = () => { showToast('绑定手机') }

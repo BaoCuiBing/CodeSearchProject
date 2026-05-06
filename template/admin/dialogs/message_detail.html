@@ -10,14 +10,11 @@
     <div style="padding:15px;">
         <table class="layui-table">
             <tr><td>ID</td><td id="d_msg_id"></td></tr>
-            <tr><td>标题</td><td id="d_title"></td></tr>
+            <tr><td>发送用户</td><td id="d_from_user"></td></tr>
+            <tr><td>接收用户</td><td id="d_to_user"></td></tr>
             <tr><td>内容</td><td id="d_content"></td></tr>
-            <tr><td>类型</td><td id="d_type"></td></tr>
-            <tr><td>状态</td><td id="d_status"></td></tr>
-            <tr><td>目标数</td><td id="d_target_count"></td></tr>
-            <tr><td>已读</td><td id="d_read_count"></td></tr>
-            <tr><td>已读率</td><td id="d_read_rate"></td></tr>
-            <tr><td>发送时间</td><td id="d_send_time"></td></tr>
+            <tr><td>已读状态</td><td id="d_is_read"></td></tr>
+            <tr><td>发送时间</td><td id="d_created_at"></td></tr>
         </table>
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
@@ -29,24 +26,21 @@
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
         var urlParams = new URLSearchParams(window.location.search);
-        var msgId = urlParams.get('system_message_id');
+        var msgId = urlParams.get('message_id');
         if (!msgId) { return; }
-        SendLog.log_info('加载消息详情: ' + msgId, 'message_detail');
-        adminApi.message.getDetail(msgId).then(function(res) {
+        SendLog.log_info('加载私信详情: ' + msgId, 'message_detail');
+        adminApi.privateMessage.getDetail(msgId).then(function(res) {
             if (res.code === 200) {
                 var m = res.data;
-                document.getElementById('d_msg_id').innerText = m.system_message_id;
-                document.getElementById('d_title').innerText = m.title;
+                document.getElementById('d_msg_id').innerText = m.message_id;
+                document.getElementById('d_from_user').innerText = m.from_user ? m.from_user.username : '-';
+                document.getElementById('d_to_user').innerText = m.to_user ? m.to_user.username : '-';
                 document.getElementById('d_content').innerText = m.content;
-                document.getElementById('d_type').innerText = m.type === 'announcement' ? '公告' : '系统消息';
-                document.getElementById('d_status').innerText = m.status;
-                document.getElementById('d_target_count').innerText = m.stats ? m.stats.target_count : 0;
-                document.getElementById('d_read_count').innerText = m.stats ? m.stats.read_count : 0;
-                document.getElementById('d_read_rate').innerText = m.stats ? m.stats.read_rate + '%' : '0%';
-                document.getElementById('d_send_time').innerText = m.send_time || '-';
-                SendLog.log_info('消息详情加载成功: ' + msgId, 'message_detail');
+                document.getElementById('d_is_read').innerText = m.is_read ? '已读' : '未读';
+                document.getElementById('d_created_at').innerText = m.created_at || '-';
+                SendLog.log_info('私信详情加载成功: ' + msgId, 'message_detail');
             }
-        }).catch(function(err) { SendLog.log_error('消息详情请求异常: ' + err.message, 'message_detail'); });
+        }).catch(function(err) { SendLog.log_error('私信详情请求异常: ' + err.message, 'message_detail'); });
     });
     </script>
 </body>
