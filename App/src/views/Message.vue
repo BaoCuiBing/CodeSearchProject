@@ -164,7 +164,7 @@ onMounted(async () => {
 .msg-icon.follow { background: #42b883; }
 .msg-icon.system { background: #ff976a; }
 .msg-content { flex: 1; }
-.msg-title { font-size: 14px; color: #333; line-height: 1.5; margin-bottom: 4px; }
+.msg-title { font-size: 14px; color: #333; line-height: 1.5; margin-bottom: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .msg-time { font-size: 12px; color: #999; }
 .bottom-spacer { height: 80px; }
 </style>

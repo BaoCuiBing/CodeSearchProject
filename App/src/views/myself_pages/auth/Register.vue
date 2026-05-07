@@ -1,8 +1,9 @@
 <template>
     <div class="register-page">
+        <PageNavBar title="注册" />
         <div class="register-header">
             <div class="logo">
-                <van-icon name="search" size="48" color="#1989fa" />
+                <img src="/imgs/bo_luo_tb.png" alt="logo" class="logo-img" />
             </div>
             <h2>欢迎注册</h2>
             <p class="subtitle">加入CodeSearch，发现优质代码</p>
@@ -29,6 +30,7 @@ import { useRouter } from 'vue-router'
 import { showToast } from 'vant'
 import { userApi } from '@/assets/app_request_api.js'
 import { setUser } from '@/assets/local_storage.js'
+import PageNavBar from '@/components/PageNavBar.vue'
 const router = useRouter()
 const usernumber = ref('')
 const username = ref('')
@@ -60,6 +62,7 @@ const goToLogin = () => { router.replace('/login') }
 .register-page { min-height: 100vh; background: #f5f5f5; padding: 40px 24px; }
 .register-header { text-align: center; margin-bottom: 40px; }
 .logo { margin-bottom: 16px; }
+.logo-img { width: 64px; height: 64px; }
 .register-header h2 { margin: 0 0 8px; font-size: 24px; color: #333; }
 .subtitle { margin: 0; font-size: 14px; color: #999; }
 .register-form { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; }

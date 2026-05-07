@@ -26,5 +26,5 @@ defineEmits(['toggle'])
 .user-list-item { display: flex; align-items: center; gap: 12px; background: #fff; border-radius: 8px; padding: 12px; margin-bottom: 8px; }
 .user-info { flex: 1; display: flex; flex-direction: column; }
 .user-name { font-size: 15px; color: #333; font-weight: 500; }
-.user-bio { font-size: 13px; color: #999; }
+.user-bio { font-size: 13px; color: #999; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
 </style>

@@ -26,21 +26,22 @@ CodeSearchProject/
 │   ├── src/
 │   │   ├── assets/         # 静态资源（API封装等）
 │   │   ├── router/         # 路由配置
-│   │   ├── views/          # 页面组件
-│   │   ├── components/     # 公共组件（RankingItem/UserListItem/PostCard/PageNavBar）
+│   │   ├── views/          # 页面组件（31个，文件夹下划线分隔，文件驼峰命名）
+│   │   ├── components/     # 公共组件（PageNavBar/PostCard/RankingItem/UserListItem）
 │   │   ├── main.js         # 入口文件
 │   │   ├── App.vue         # 根组件
 │   │   └── style.css       # 全局样式
+│   ├── public/imgs/        # 公共图片资源
 │   ├── package.json
 │   └── vite.config.js
 ├── router/                 # Sanic路由模块
 │   ├── admin_router/       # 管理后台API（17个路由文件）
-│   ├── app_router/         # 移动端API（12个路由文件）
+│   ├── app_router/         # 移动端API（13个路由文件）
 │   ├── upload_router.py    # 文件上传路由
 │   └── log_router.py       # 前端日志路由
 ├── models/                 # SQLAlchemy数据模型
 ├── template/               # HTML模板
-│   ├── admin/              # 管理后台页面（含dialogs子目录）
+│   ├── admin/              # 管理后台页面（含dialogs子目录28个弹窗）
 │   └── index.html          # 首页
 ├── static/                 # 静态资源
 │   ├── webs/               # 前端库（Layui/ECharts/EasyMDE/Vanta等）

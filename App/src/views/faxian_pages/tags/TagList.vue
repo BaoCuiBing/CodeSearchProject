@@ -48,4 +48,8 @@ onMounted(async () => {
 .tag-section { background: #fff; padding: 16px; margin-bottom: 8px; }
 .section-title { font-size: 16px; font-weight: 500; margin-bottom: 16px; }
 .tag-cloud { display: flex; flex-wrap: wrap; gap: 12px; }
+.cloud-tag { padding: 8px 16px; cursor: pointer; }
+.tag-list { display: flex; flex-direction: column; gap: 12px; }
+.tag-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; cursor: pointer; }
+.tag-count { font-size: 14px; color: #999; }
 </style>

@@ -6,7 +6,7 @@
                 <van-image round width="64px" height="64px" :src="user?.avatar || ''" />
                 <div class="user-meta">
                     <h3>{{ user?.username || '未登录' }}</h3>
-                    <p>{{ user?.bio || '这个人很懒，什么都没写' }}</p>
+                    <p class="user-bio">{{ user?.bio || '这个人很懒，什么都没写' }}</p>
                 </div>
                 <van-icon name="setting-o" size="24" color="#999" @click="goToSettings" />
             </div>
@@ -40,6 +40,9 @@
                 <van-cell title="关于我们" icon="info-o" is-link @click="goToAbout" />
             </van-cell-group>
         </div>
+        <div class="menu-section">
+            <van-button block type="danger" class="logout-btn" @click="handleLogout">退出登录</van-button>
+        </div>
         <div class="bottom-spacer"></div>
     </div>
 </template>
@@ -48,7 +51,7 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { profileApi } from '@/assets/app_request_api.js'
-import { getUserId, isLogin } from '@/assets/local_storage.js'
+import { getUserId, isLogin, logout as clearUser } from '@/assets/local_storage.js'
 const router = useRouter()
 const user = ref(null)
 const loadUserProfile = async () => {
@@ -66,6 +69,10 @@ const goToHistory = () => { router.push('/history') }
 const goToProfile = () => { router.push('/profile') }
 const goToSecurity = () => { router.push('/security') }
 const goToAbout = () => { router.push('/about') }
+const handleLogout = () => {
+    clearUser()
+    router.replace('/login')
+}
 onMounted(() => { loadUserProfile() })
 </script>
 
@@ -76,6 +83,7 @@ onMounted(() => { loadUserProfile() })
 .user-meta { flex: 1; }
 .user-meta h3 { margin: 0 0 8px; font-size: 20px; color: #333; }
 .user-meta p { margin: 0; font-size: 14px; color: #999; }
+.user-bio { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
 .user-stats { display: flex; justify-content: space-around; }
 .stat-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
 .stat-num { font-size: 20px; font-weight: 600; color: #333; }
@@ -83,5 +91,6 @@ onMounted(() => { loadUserProfile() })
 .menu-section { margin-bottom: 8px; }
 .menu-section .van-cell { padding-left: 16px; }
 .menu-section .van-cell__title { letter-spacing: 1px; }
+.logout-btn { margin: 0 16px; width: calc(100% - 32px); }
 .bottom-spacer { height: 80px; }
 </style>

@@ -1,8 +1,9 @@
 <template>
     <div class="login-page">
+        <PageNavBar title="登录" />
         <div class="login-header">
             <div class="logo">
-                <van-icon name="search" size="48" color="#1989fa" />
+                <img src="/imgs/bo_luo_tb.png" alt="logo" class="logo-img" />
             </div>
             <h2>CodeSearch</h2>
             <p class="subtitle">让代码搜索更简单</p>
@@ -18,14 +19,6 @@
                 </div>
             </div>
         </div>
-        <div class="other-login">
-            <van-divider>其他登录方式</van-divider>
-            <div class="login-icons">
-                <van-icon name="wechat" size="32" color="#07c160" />
-                <van-icon name="github" size="32" color="#333" />
-                <van-icon name="chrome" size="32" color="#4285f4" />
-            </div>
-        </div>
     </div>
 </template>
 
@@ -35,6 +28,7 @@ import { useRouter } from 'vue-router'
 import { showToast } from 'vant'
 import { userApi } from '@/assets/app_request_api.js'
 import { setUser } from '@/assets/local_storage.js'
+import PageNavBar from '@/components/PageNavBar.vue'
 const router = useRouter()
 const usernumber = ref('')
 const password = ref('')
@@ -62,6 +56,7 @@ const goToForget = () => { showToast('功能开发中') }
 .login-page { min-height: 100vh; background: #f5f5f5; padding: 40px 24px; }
 .login-header { text-align: center; margin-bottom: 40px; }
 .logo { margin-bottom: 16px; }
+.logo-img { width: 64px; height: 64px; }
 .login-header h2 { margin: 0 0 8px; font-size: 24px; color: #333; }
 .subtitle { margin: 0; font-size: 14px; color: #999; }
 .login-form { background: #fff; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
