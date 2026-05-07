@@ -5,3 +5,4 @@ static/logs/
 static/uploads/
 static/mds/pots_mds/
 App/node_modules/
+static/webs/layui_tinymce/

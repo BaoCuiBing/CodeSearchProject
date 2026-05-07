@@ -11,7 +11,7 @@
                             <div class="result-meta">
                                 <span>{{ item.author?.username || '' }}</span>
                                 <span><van-icon name="eye-o" /> {{ item.view_count }}</span>
-                                <span><van-icon name="good-job-o" /> {{ item.like_count }}</span>
+                                <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ item.like_count }}</span>
                             </div>
                         </template>
                     </PostCard>
@@ -25,7 +25,7 @@
                             <div class="result-meta">
                                 <span>{{ item.author?.username || '' }}</span>
                                 <span><van-icon name="eye-o" /> {{ item.view_count }}</span>
-                                <span><van-icon name="good-job-o" /> {{ item.like_count }}</span>
+                                <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ item.like_count }}</span>
                             </div>
                         </template>
                     </PostCard>
@@ -39,7 +39,7 @@
                             <div class="result-meta">
                                 <span>{{ item.author?.username || '' }}</span>
                                 <span><van-icon name="eye-o" /> {{ item.view_count }}</span>
-                                <span><van-icon name="good-job-o" /> {{ item.like_count }}</span>
+                                <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ item.like_count }}</span>
                             </div>
                         </template>
                     </PostCard>

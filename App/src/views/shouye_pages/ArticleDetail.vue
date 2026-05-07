@@ -19,11 +19,11 @@
             </div>
             <div class="article-actions">
                 <div class="action-item" @click="toggleLike">
-                    <van-icon name="good-job" :color="article.is_liked ? '#1989fa' : '#999'" size="24" />
+                    <van-icon name="good-job" :color="article.is_liked ? '#ff6b6b' : '#999'" size="24" />
                     <span>{{ article.like_count }}</span>
                 </div>
                 <div class="action-item" @click="toggleFavorite">
-                    <van-icon name="star" :color="article.is_favorited ? '#ff6b6b' : '#999'" size="24" />
+                    <van-icon name="star" :color="article.is_favorited ? '#ffd700' : '#999'" size="24" />
                     <span>{{ article.favorite_count }}</span>
                 </div>
                 <div class="action-item">

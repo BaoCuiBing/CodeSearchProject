@@ -24,7 +24,7 @@ var adminApi = {
     _put: function(url, data) { return this._request('PUT', url, data); },
     _delete: function(url, params) {
         var query = [];
-        if (params) { for (var k in params) { if (params.hasOwnProperty(k) && params[k] !== null && params[k] !== undefined && params[k] !== '') { query.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k])); } } }
+        if (params) { for (var k in params) { if (params.hasOwnProperty(k) && params[k] !== null && params[k] !== undefined && params[k] !== '' && params[k] !== 0) { query.push(encodeURIComponent(k) + '=' + encodeURIComponent(params[k])); } } }
         var fullUrl = url + (query.length > 0 ? '?' + query.join('&') : '');
         return this._request('DELETE', fullUrl);
     },
@@ -66,7 +66,8 @@ var adminApi = {
         create: function(data) { data.admin_id = adminApi.getAdminId(); return adminApi._post('/api/admin/category/', data); },
         edit: function(data) { data.admin_id = adminApi.getAdminId(); return adminApi._put('/api/admin/category/', data); },
         delete: function(categoryId, moveToId) { return adminApi._delete('/api/admin/category/' + categoryId, { admin_id: adminApi.getAdminId(), move_to_id: moveToId }); },
-        batchAction: function(ids, action) { return adminApi._post('/api/admin/category/batch-action', { admin_id: adminApi.getAdminId(), ids: ids, action: action }); }
+        batchAction: function(ids, action) { return adminApi._post('/api/admin/category/batch-action', { admin_id: adminApi.getAdminId(), ids: ids, action: action }); },
+        batchDelete: function(ids) { return adminApi._post('/api/admin/category/batch-delete', { admin_id: adminApi.getAdminId(), ids: ids }); }
     },
     tag: {
         getList: function(params) { params = params || {}; params.admin_id = adminApi.getAdminId(); return adminApi._get('/api/admin/tag/list', params); },

@@ -118,11 +118,19 @@ async def delete_category(request, category_id):
     logger.info(f"管理员{admin_id}删除分类:category_id={category_id},post_count={post_count}")
     if post_count > 0:
         move_to_id = request.args.get("move_to_id")
-        if not move_to_id:
-            logger.warning(f"删除分类失败:分类下有文章且未指定迁移目标,category_id={category_id}")
-            return response.json({"code": 400, "msg": "该分类下有文章，请先迁移"})
-        db.query(Post).filter(Post.category_id == category_id).update({"category_id": move_to_id})
-        logger.debug(f"文章迁移:category_id={category_id}->move_to_id={move_to_id}")
+        if move_to_id and move_to_id != "0":
+            db.query(Post).filter(Post.category_id == category_id).update({"category_id": move_to_id})
+            logger.debug(f"文章迁移:category_id={category_id}->move_to_id={move_to_id}")
+        else:
+            from models.model import PostTag, Comment, Favorite, Like
+            post_ids = [p.id for p in db.query(Post).filter(Post.category_id == category_id).all()]
+            for pid in post_ids:
+                db.query(PostTag).filter(PostTag.post_id == pid).delete()
+                db.query(Comment).filter(Comment.post_id == pid).delete()
+                db.query(Favorite).filter(Favorite.post_id == pid).delete()
+                db.query(Like).filter(Like.target_id == pid, Like.target_type == "post").delete()
+            db.query(Post).filter(Post.category_id == category_id).delete()
+            logger.debug(f"删除分类关联文章:category_id={category_id},删除{post_count}篇文章")
     db.delete(category)
     db.commit()
     logger.info(f"管理员{admin_id}删除分类成功:category_id={category_id}")
@@ -145,11 +153,19 @@ async def batch_action_categories(request):
         return response.json({"code": 400, "msg": "请选择要操作的分类"})
     logger.info(f"管理员{admin_id}批量操作分类:ids={ids},action={action}")
     if action == "delete":
+        from models.model import PostTag, Comment, Favorite, Like
         for cid in ids:
             category = db.query(Category).filter(Category.id == cid).first()
             if category:
+                post_ids = [p.id for p in db.query(Post).filter(Post.category_id == cid).all()]
+                for pid in post_ids:
+                    db.query(PostTag).filter(PostTag.post_id == pid).delete()
+                    db.query(Comment).filter(Comment.post_id == pid).delete()
+                    db.query(Favorite).filter(Favorite.post_id == pid).delete()
+                    db.query(Like).filter(Like.target_id == pid, Like.target_type == "post").delete()
+                db.query(Post).filter(Post.category_id == cid).delete()
                 db.delete(category)
-        logger.debug(f"批量操作:删除{len(ids)}个分类")
+        logger.debug(f"批量操作:删除{len(ids)}个分类及关联文章")
     else:
         logger.warning(f"批量操作分类失败:无效操作,action={action}")
         return response.json({"code": 400, "msg": "无效操作"})
@@ -172,9 +188,17 @@ async def batch_delete_categories(request):
         logger.warning("批量删除分类失败:未选择分类")
         return response.json({"code": 400, "msg": "请选择要删除的分类"})
     logger.info(f"管理员{admin_id}批量删除分类:ids={ids}")
+    from models.model import PostTag, Comment, Favorite, Like
     for cid in ids:
         category = db.query(Category).filter(Category.id == cid).first()
         if category:
+            post_ids = [p.id for p in db.query(Post).filter(Post.category_id == cid).all()]
+            for pid in post_ids:
+                db.query(PostTag).filter(PostTag.post_id == pid).delete()
+                db.query(Comment).filter(Comment.post_id == pid).delete()
+                db.query(Favorite).filter(Favorite.post_id == pid).delete()
+                db.query(Like).filter(Like.target_id == pid, Like.target_type == "post").delete()
+            db.query(Post).filter(Post.category_id == cid).delete()
             db.delete(category)
     db.commit()
     logger.info(f"管理员{admin_id}批量删除分类成功:共{len(ids)}个")

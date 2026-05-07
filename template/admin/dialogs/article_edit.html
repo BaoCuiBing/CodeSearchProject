@@ -5,7 +5,6 @@
     <link rel="icon" href="/static/imgs/favicon.ico" type="image/x-icon">
     <title>编辑文章</title>
     <link rel="stylesheet" href="/static/webs/layui/css/layui.css">
-    <link rel="stylesheet" href="/static/webs/easy_mde/easymde.min.css">
 </head>
 <body>
     <div style="padding:15px;">
@@ -13,7 +12,7 @@
             <input type="hidden" name="post_id" id="postId">
             <div class="layui-form-item"><label class="layui-form-label">标题</label><div class="layui-input-block"><input type="text" name="title" lay-verify="required" class="layui-input"></div></div>
             <div class="layui-form-item"><label class="layui-form-label">摘要</label><div class="layui-input-block"><textarea name="summary" class="layui-textarea"></textarea></div></div>
-            <div class="layui-form-item layui-form-text"><label class="layui-form-label">内容</label><div class="layui-input-block"><textarea name="content" lay-verify="required" id="contentEditor" style="height:400px;"></textarea></div></div>
+            <div class="layui-form-item layui-form-text"><label class="layui-form-label">内容</label><div class="layui-input-block"><textarea id="contentEditor" style="min-height:300px;"></textarea></div></div>
             <div class="layui-form-item"><label class="layui-form-label">分类</label><div class="layui-input-block"><select name="category_id" id="categorySelect"><option value="">请选择分类</option></select></div></div>
             <div class="layui-form-item"><label class="layui-form-label">状态</label><div class="layui-input-block"><select name="status"><option value="published">已发布</option><option value="draft">草稿</option><option value="hidden">隐藏</option></select></div></div>
             <div class="layui-form-item"><label class="layui-form-label">置顶</label><div class="layui-input-block"><input type="checkbox" name="is_top" lay-skin="switch" lay-text="是|否"></div></div>
@@ -22,13 +21,12 @@
         </form>
     </div>
     <script src="/static/webs/layui/js/layui.js"></script>
-    <script src="/static/webs/easy_mde/easymde.min.js"></script>
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
-    var easyMDE;
-    layui.use(['form', 'upload', 'jquery'], function() {
-        var form = layui.form, upload = layui.upload, L = parent.layer, $ = layui.$;
+    layui.extend({ tinymce: '/static/webs/layui_tinymce/layui_exts/tinymce/tinymce' });
+    layui.use(['tinymce', 'form', 'upload', 'jquery'], function() {
+        var t = layui.tinymce, form = layui.form, upload = layui.upload, L = parent.layer, $ = layui.$;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
@@ -36,8 +34,8 @@
         var postId = urlParams.get('post_id');
         document.getElementById('postId').value = postId || '';
         SendLog.log_info('加载编辑文章页面: ' + postId, 'article_edit');
-        easyMDE = new EasyMDE({ element: document.getElementById('contentEditor'), height: '300px', spellChecker: false, placeholder: '请输入内容...' });
         var coverUrls = [];
+        var articleData = null;
         upload.render({
             elem: '#uploadCoverBtn',
             url: '/api/upload/file',
@@ -58,21 +56,27 @@
                 if (postId) {
                     adminApi.article.getDetail(postId).then(function(r) {
                         if (r.code === 200) {
-                            var d = r.data;
-                            form.val('articleEditForm', { post_id: d.post_id, title: d.title, summary: d.summary || '', content: d.content, category_id: d.category ? d.category.category_id : '', status: d.status, is_top: d.is_top });
-                            easyMDE.value(d.content || '');
-                            if (d.cover_image) {
-                                try { var coverData = typeof d.cover_image === 'string' ? JSON.parse(d.cover_image) : d.cover_image; coverUrls = coverData.imgs || []; document.getElementById('coverImage').value = typeof d.cover_image === 'string' ? d.cover_image : JSON.stringify(d.cover_image); var preview = document.getElementById('coverPreview'); coverUrls.forEach(function(url, i) { var div = document.createElement('div'); div.className = 'layui-upload-img'; div.style.cssText = 'display:inline-block;margin:5px;position:relative;'; div.innerHTML = '<img src="' + url + '" style="width:100px;height:100px;object-fit:cover;"><span class="layui-icon layui-icon-close" style="position:absolute;top:0;right:0;cursor:pointer;color:red;" data-index="' + i + '"></span>'; preview.appendChild(div); }); } catch(e) {}
+                            articleData = r.data;
+                            form.val('articleEditForm', { post_id: articleData.post_id, title: articleData.title, summary: articleData.summary || '', category_id: articleData.category ? articleData.category.category_id : '', status: articleData.status, is_top: articleData.is_top });
+                            if (articleData.cover_image) {
+                                try { var coverData = typeof articleData.cover_image === 'string' ? JSON.parse(articleData.cover_image) : articleData.cover_image; coverUrls = coverData.imgs || []; document.getElementById('coverImage').value = typeof articleData.cover_image === 'string' ? articleData.cover_image : JSON.stringify(articleData.cover_image); var preview = document.getElementById('coverPreview'); coverUrls.forEach(function(url, i) { var div = document.createElement('div'); div.className = 'layui-upload-img'; div.style.cssText = 'display:inline-block;margin:5px;position:relative;'; div.innerHTML = '<img src="' + url + '" style="width:100px;height:100px;object-fit:cover;"><span class="layui-icon layui-icon-close" style="position:absolute;top:0;right:0;cursor:pointer;color:red;" data-index="' + i + '"></span>'; preview.appendChild(div); }); } catch(e) {}
                             }
                             SendLog.log_info('文章数据加载成功: ' + postId, 'article_edit');
+                            initEditor();
                         }
                     });
+                } else {
+                    initEditor();
                 }
             }
         });
+        function initEditor() {
+            t.render({ elem: '#contentEditor', height: 300, images_upload_url: '/api/upload/file', init_instance_callback: function(editor) { if (articleData && articleData.content) { editor.setContent(articleData.content); } } });
+        }
         form.on('submit(saveArticle)', function(data) {
             var d = data.field;
-            d.content = easyMDE.value();
+            var editor = t.get('#contentEditor');
+            d.content = editor ? editor.getContent() : '';
             d.is_top = d.is_top ? true : false;
             SendLog.log_info('保存文章: ' + data.field.post_id, 'article_edit');
             adminApi.article.edit(d).then(function(r) { L.msg(r.msg); SendLog.log_info('文章保存成功: ' + data.field.post_id, 'article_edit'); parent.layui.table.reload('articleTable'); var index = parent.layer.getFrameIndex(window.name); parent.layer.close(index); }).catch(function(err) { SendLog.log_error('文章保存失败', 'article_edit'); });

@@ -50,6 +50,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { showConfirmDialog } from 'vant'
 import { profileApi } from '@/assets/app_request_api.js'
 import { getUserId, isLogin, logout as clearUser } from '@/assets/local_storage.js'
 const router = useRouter()
@@ -70,8 +71,7 @@ const goToProfile = () => { router.push('/profile') }
 const goToSecurity = () => { router.push('/security') }
 const goToAbout = () => { router.push('/about') }
 const handleLogout = () => {
-    clearUser()
-    router.replace('/login')
+    showConfirmDialog({ title: '确认退出', message: '确定要退出登录吗？' }).then(() => { clearUser(); router.replace('/login') }).catch(() => {})
 }
 onMounted(() => { loadUserProfile() })
 </script>

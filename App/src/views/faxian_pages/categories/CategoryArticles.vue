@@ -7,7 +7,7 @@
                 <template #footer>
                     <div class="post-stats">
                         <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
-                        <span><van-icon name="good-job-o" /> {{ post.like_count }}</span>
+                        <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ post.like_count }}</span>
                     </div>
                 </template>
             </PostCard>

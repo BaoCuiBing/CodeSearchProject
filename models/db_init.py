@@ -2,6 +2,7 @@ import os
 import re
 import json
 import shutil
+import markdown2
 from config import PROJECT_DIR
 from models.db_base import Database, Base
 from models.model import User, File, Report, SearchHistory, Category, Post, Tag, PostTag, Comment, Favorite, Like, Follow, Message, Notification, SystemMessage, SystemMessageTarget, SystemSetting
@@ -175,7 +176,8 @@ def _init_default_data(session):
                     if not exist_post:
                         plain_text = _strip_md_tags(content)
                         summary = plain_text[:200] if len(plain_text) > 200 else plain_text
-                        post = Post(user_id=admin_user.id, category_id=cat_id, title=title, content=content, summary=summary, cover_image='{"imgs": []}', type="article", status="published")
+                        html_content = markdown2.markdown(content, extras=['fenced-code-blocks', 'tables', 'code-friendly'])
+                        post = Post(user_id=admin_user.id, category_id=cat_id, title=title, content=html_content, summary=summary, cover_image='{"imgs": []}', type="article", status="published")
                         session.add(post)
         session.commit()
     user_map = {u.username: u.id for u in session.query(User).all()}

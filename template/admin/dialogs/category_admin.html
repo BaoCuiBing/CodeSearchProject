@@ -12,7 +12,10 @@
             <div class="layui-form layui-row layui-col-space10">
                 <div class="layui-col-md3"><input type="text" id="searchKeyword" placeholder="分类名称" class="layui-input"></div>
                 <div class="layui-col-md1"><button class="layui-btn" id="searchBtn">搜索</button></div>
-                <div class="layui-col-md8" style="text-align:right;"><button class="layui-btn layui-btn-normal" id="addCategoryBtn">添加分类</button></div>
+            </div>
+            <div class="layui-form layui-row layui-col-space10" style="margin-top:10px;">
+                <div class="layui-col-md4" style="text-align:right;"><button class="layui-btn layui-btn-normal" id="addCategoryBtn">添加分类</button></div>
+                <div class="layui-col-md4" style="text-align:right;"><button class="layui-btn layui-btn-danger layui-btn-sm" id="batchDeleteBtn">批量删除</button></div>
             </div>
         </div>
         <div class="layui-card-body"><table id="categoryTable" lay-filter="categoryTable"></table></div>
@@ -38,6 +41,7 @@
             request: { pageName: 'page', limitName: 'page_size' },
             parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
             cols: [[
+                {type: 'checkbox', fixed: 'left'},
                 {field: 'category_id', title: 'ID', width: '10%'},
                 {field: 'name', title: '分类名称', width: '20%'},
                 {field: 'description', title: '描述', width: '30%'},
@@ -54,6 +58,23 @@
         document.getElementById('addCategoryBtn').onclick = function() {
             SendLog.log_info('打开添加分类弹窗', 'category_admin');
             parent.lostoryOption.openDialog('添加分类', '/admin/dialogs/category_create.html', ['600px', '400px']);
+        };
+        document.getElementById('batchDeleteBtn').onclick = function() {
+            var checkStatus = table.checkStatus('categoryTable');
+            if (checkStatus.data.length === 0) { L.msg('请先选择分类'); return; }
+            var ids = [];
+            checkStatus.data.forEach(function(d) { ids.push(d.category_id); });
+            SendLog.log_info('批量删除分类: ' + ids.join(','), 'category_admin');
+            parent.lostoryOption.confirmDialog('确认批量删除选中分类？关联文章将一并删除', function() {
+                adminApi.category.batchDelete(ids).then(function(r) {
+                    L.msg(r.msg);
+                    tableIns.reload();
+                    SendLog.log_info('批量删除分类成功', 'category_admin');
+                }).catch(function(err) {
+                    L.msg(err.msg || '批量删除失败');
+                    SendLog.log_error('批量删除分类失败', 'category_admin');
+                });
+            });
         };
         table.on('tool(categoryTable)', function(obj) {
             var d = obj.data;

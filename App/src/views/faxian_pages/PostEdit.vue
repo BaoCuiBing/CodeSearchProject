@@ -34,27 +34,32 @@
                 </div>
             </div>
             <div class="editor-wrapper">
-                <QuillEditor v-model:content="postForm.content" contentType="html" theme="snow" toolbar="essential" placeholder="请输入内容..." />
+                <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef" :default-config="toolbarConfig" :mode="'default'" />
+                <Editor style="height: 400px; overflow-y: hidden" v-model="postForm.content" :default-config="editorConfig" :mode="'default'" @on-created="handleCreated" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
 import { showToast, showSuccessToast } from 'vant'
-import { QuillEditor } from '@vueup/vue-quill'
-import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
+import '@wangeditor/editor/dist/css/style.css'
 import { articleApi, categoryApi, tagApi } from '@/assets/app_request_api.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 const router = useRouter()
+const editorRef = shallowRef()
+const toolbarConfig = {}
+const editorConfig = { placeholder: '请输入内容...' }
 const showCategoryPicker = ref(false)
 const showTagPicker = ref(false)
 const tagSearchText = ref('')
 const categoryColumns = ref([])
 const availableTags = ref([])
 const postForm = ref({ title: '', type: 'article', category_id: null, category_name: '', tags: [], content: '' })
+const handleCreated = (editor) => { editorRef.value = editor }
 const loadCategories = async () => {
     const data = await categoryApi.getList()
     categoryColumns.value = (data || []).map(c => ({ text: c.name, value: c.category_id }))
@@ -81,6 +86,11 @@ const publishPost = async () => {
     setTimeout(() => { router.back() }, 1000)
 }
 onMounted(() => { loadCategories(); loadTags() })
+onBeforeUnmount(() => {
+    const editor = editorRef.value
+    if (editor == null) return
+    editor.destroy()
+})
 </script>
 
 <style scoped>
@@ -94,7 +104,5 @@ onMounted(() => { loadCategories(); loadTags() })
 .tag-picker-list { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 16px 16px; max-height: 300px; overflow-y: auto; }
 .tag-picker-footer { padding: 0 16px 16px; }
 .tag-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 8px; }
-.editor-wrapper { background: #fff; }
-.editor-wrapper :deep(.ql-toolbar) { border: none; border-bottom: 1px solid #f0f0f0; }
-.editor-wrapper :deep(.ql-container) { border: none; min-height: 300px; font-size: 15px; }
+.editor-wrapper { background: #fff; z-index: 100; }
 </style>

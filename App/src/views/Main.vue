@@ -43,7 +43,7 @@
                             <template #footer>
                                 <div class="post-stats">
                                     <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
-                                    <span><van-icon name="good-job-o" /> {{ post.like_count }}</span>
+                                    <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ post.like_count }}</span>
                                     <span><van-icon name="comment-o" /> {{ post.comment_count }}</span>
                                 </div>
                             </template>
@@ -69,7 +69,7 @@
                             <template #footer>
                                 <div class="post-stats">
                                     <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
-                                    <span><van-icon name="good-job-o" /> {{ post.like_count }}</span>
+                                    <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ post.like_count }}</span>
                                     <span><van-icon name="comment-o" /> {{ post.comment_count }}</span>
                                 </div>
                             </template>
@@ -95,7 +95,7 @@
                             <template #footer>
                                 <div class="post-stats">
                                     <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
-                                    <span><van-icon name="good-job-o" /> {{ post.like_count }}</span>
+                                    <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ post.like_count }}</span>
                                     <span><van-icon name="comment-o" /> {{ post.comment_count }}</span>
                                 </div>
                             </template>
@@ -111,6 +111,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { showDialog } from 'vant'
 import { tagApi, articleApi, systemApi } from '@/assets/app_request_api.js'
 import { setCache, getCache, isLogin } from '@/assets/local_storage.js'
 import PostCard from '@/components/PostCard.vue'
@@ -122,6 +123,7 @@ const hotTags = ref([])
 const recommendPosts = ref([])
 const articlePosts = ref([])
 const questionPosts = ref([])
+const showLoginDialog = ref(false)
 const loadBanners = async () => {
     const cached = getCache('banners')
     if (cached) { banners.value = cached; return }
@@ -164,8 +166,9 @@ const onSearchFocus = () => { router.push('/search') }
 const goToTags = () => { router.push('/tags') }
 const goToTag = (tagId, tagName) => { router.push({ path: '/tag', query: { id: tagId, name: tagName } }) }
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
+const handleLoginConfirm = () => { router.push('/login') }
 onMounted(async () => {
-    if (!isLogin()) { router.replace('/login'); return }
+    if (!isLogin()) { showDialog({ title: '提示', message: '请先登录', showCancelButton: false, confirmButtonText: '去登录' }).then(handleLoginConfirm); return }
     await Promise.all([loadBanners(), loadHotTags(), loadRecommendPosts()])
 })
 </script>
