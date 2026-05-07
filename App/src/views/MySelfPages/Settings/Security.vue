@@ -10,9 +10,14 @@
 </template>
 
 <script setup>
-import { showToast } from 'vant'
+import { ref } from 'vue'
+import { showToast, showDialog } from 'vant'
+import { profileApi } from '@/assets/app_request_api.js'
+import { getUserId } from '@/assets/local_storage.js'
 import PageNavBar from '@/components/PageNavBar.vue'
-const changePassword = () => { showToast('修改密码') }
+const changePassword = () => {
+    showDialog({ title: '修改密码', message: '请输入原密码和新密码' }).then(() => { showToast('功能开发中') })
+}
 const bindEmail = () => { showToast('绑定邮箱') }
 const bindPhone = () => { showToast('绑定手机') }
 </script>

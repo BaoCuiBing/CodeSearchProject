@@ -1,5 +1,7 @@
 import os
 import re
+import json
+import shutil
 from config import PROJECT_DIR
 from models.db_base import Database, Base
 from models.model import User, File, Report, SearchHistory, Category, Post, Tag, PostTag, Comment, Favorite, Like, Follow, Message, Notification, SystemMessage, SystemMessageTarget, SystemSetting
@@ -67,6 +69,28 @@ def _init_default_data(session):
         session.commit()
     else:
         admin_avatar_file_id = None
+    init_lbt_img_dir = os.path.join(PROJECT_DIR, "static", "imgs", "init_lbt_img")
+    if os.path.exists(init_lbt_img_dir) and os.path.exists(uploads_dir):
+        lbt_images = []
+        for img_file in sorted(os.listdir(init_lbt_img_dir)):
+            if img_file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.webp')):
+                src_path = os.path.join(init_lbt_img_dir, img_file)
+                dst_path = os.path.join(uploads_dir, img_file)
+                if not os.path.exists(dst_path):
+                    shutil.copy2(src_path, dst_path)
+                exist_file = session.query(File).filter(File.filename == img_file).first()
+                if not exist_file:
+                    file_ext = os.path.splitext(img_file)[1].lower()
+                    file_type = f"image/{file_ext[1:]}"
+                    file_size = os.path.getsize(dst_path) if os.path.exists(dst_path) else 0
+                    new_file = File(user_id=None, filename=img_file, file_path=f"uploads/{img_file}", file_size=file_size, file_type=file_type, file_url=f"/static/uploads/{img_file}")
+                    session.add(new_file)
+                lbt_images.append(f"/static/uploads/{img_file}")
+        session.commit()
+        carousel_setting = session.query(SystemSetting).filter(SystemSetting.key == "carousel_imgs").first()
+        if carousel_setting and lbt_images:
+            carousel_setting.value = json.dumps({"imgs": lbt_images})
+            session.commit()
     user_data = [
         {"usernumber": "user001", "username": "张三", "email": "zhangsan@example.com", "phone": "13800138001", "bio": "全栈开发工程师", "location": "北京", "website": "https://zhangsan.com", "github": "https://github.com/zhangsan", "avatar": "/static/uploads/head_1.jpg"},
         {"usernumber": "user002", "username": "李四", "email": "lisi@example.com", "phone": "13800138002", "bio": "Python后端开发者", "location": "上海", "website": "https://lisi.com", "github": "https://github.com/lisi", "avatar": "/static/uploads/head_2.jpg"},

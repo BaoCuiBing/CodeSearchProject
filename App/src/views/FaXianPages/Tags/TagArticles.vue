@@ -2,6 +2,7 @@
     <div class="tag-articles-page">
         <PageNavBar :title="tagName" />
         <div class="article-list">
+            <van-empty v-if="articles.length === 0" description="暂无文章" />
             <PostCard v-for="post in articles" :key="post.post_id" :title="post.title" :summary="post.summary" @click="goToDetail(post.post_id)">
                 <template #footer>
                     <div class="post-stats">
@@ -15,18 +16,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { tagApi } from '@/assets/app_request_api.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 import PostCard from '@/components/PostCard.vue'
 const router = useRouter()
 const route = useRoute()
 const tagName = ref(route.query.name || '标签')
-const articles = ref([
-    { post_id: 1, title: 'Python多线程实战', summary: '详细介绍Python多线程的使用方法', view_count: 1205, like_count: 86 },
-    { post_id: 2, title: 'Python异步编程', summary: 'asyncio模块的使用技巧', view_count: 892, like_count: 64 }
-])
+const articles = ref([])
+const loadArticles = async () => {
+    const tagId = route.query.id
+    const data = await tagApi.getArticles(tagId, { page: 1 })
+    articles.value = data?.list || []
+}
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
+onMounted(() => { loadArticles() })
 </script>
 
 <style scoped>

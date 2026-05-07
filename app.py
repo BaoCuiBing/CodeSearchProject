@@ -37,6 +37,7 @@ from router.app_router.app_message_router import message_bp
 from router.app_router.app_search_router import search_bp
 from router.app_router.app_ranking_router import ranking_bp
 from router.app_router.app_report_router import report_bp
+from router.app_router.app_system_router import system_bp
 
 os.makedirs(config.LOG_DIR, exist_ok=True)
 logging.basicConfig(
@@ -48,6 +49,22 @@ logger = logging.getLogger(__name__)
 
 app = Sanic("CodeSearchProject")
 CORS(app)
+
+@app.on_request
+async def cors_preflight(request):
+    if request.method == "OPTIONS":
+        return json({}, status=204, headers={
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type, Authorization, X-Requested-With",
+            "Access-Control-Max-Age": "86400"
+        })
+
+@app.on_response
+async def cors_headers(request, response):
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With"
 extend = Extend(app)
 app.blueprint(admin_user_bp)  # 用户管理路由
 app.blueprint(admin_view_bp)  # 管理后台视图路由
@@ -80,6 +97,7 @@ app.blueprint(message_bp)  # APP消息路由
 app.blueprint(search_bp)  # APP搜索路由
 app.blueprint(ranking_bp)  # APP排行榜路由
 app.blueprint(report_bp)  # APP举报路由
+app.blueprint(system_bp)  # APP系统配置路由
 static_path = os.path.join(config.PROJECT_DIR, "static")
 app.static("/static", static_path, name="static_files")
 

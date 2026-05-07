@@ -3,24 +3,24 @@
         <van-nav-bar title="我的" fixed placeholder />
         <div class="user-header">
             <div class="user-info">
-                <van-image round width="64px" height="64px" :src="user.avatar" />
+                <van-image round width="64px" height="64px" :src="user?.avatar || ''" />
                 <div class="user-meta">
-                    <h3>{{ user.username }}</h3>
-                    <p>{{ user.bio || '这个人很懒，什么都没写' }}</p>
+                    <h3>{{ user?.username || '未登录' }}</h3>
+                    <p>{{ user?.bio || '这个人很懒，什么都没写' }}</p>
                 </div>
                 <van-icon name="setting-o" size="24" color="#999" @click="goToSettings" />
             </div>
             <div class="user-stats">
                 <div class="stat-item" @click="goToFollowing">
-                    <span class="stat-num">{{ user.stats.following_count }}</span>
+                    <span class="stat-num">{{ user?.stats?.following_count || 0 }}</span>
                     <span class="stat-label">关注</span>
                 </div>
                 <div class="stat-item" @click="goToFollowers">
-                    <span class="stat-num">{{ user.stats.follower_count }}</span>
+                    <span class="stat-num">{{ user?.stats?.follower_count || 0 }}</span>
                     <span class="stat-label">粉丝</span>
                 </div>
                 <div class="stat-item">
-                    <span class="stat-num">{{ user.stats.like_count }}</span>
+                    <span class="stat-num">{{ user?.stats?.like_count || 0 }}</span>
                     <span class="stat-label">获赞</span>
                 </div>
             </div>
@@ -45,21 +45,17 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { profileApi } from '@/assets/app_request_api.js'
+import { getUserId, isLogin } from '@/assets/local_storage.js'
 const router = useRouter()
-const user = ref({
-    user_id: 1,
-    username: '程序员小明',
-    avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-    bio: '热爱编程，乐于分享',
-    email: 'xiaoming@example.com',
-    location: '北京',
-    website: 'https://xiaoming.dev',
-    github: 'https://github.com/xiaoming',
-    stats: { article_count: 56, question_count: 12, follower_count: 256, following_count: 128, like_count: 1024, view_count: 15678 },
-    created_at: '2024-01-01 10:00:00'
-})
+const user = ref(null)
+const loadUserProfile = async () => {
+    if (!isLogin()) { return }
+    const data = await profileApi.getProfile(getUserId())
+    user.value = data
+}
 const goToSettings = () => { router.push('/settings') }
 const goToFollowing = () => { router.push('/following') }
 const goToFollowers = () => { router.push('/followers') }
@@ -70,6 +66,7 @@ const goToHistory = () => { router.push('/history') }
 const goToProfile = () => { router.push('/profile') }
 const goToSecurity = () => { router.push('/security') }
 const goToAbout = () => { router.push('/about') }
+onMounted(() => { loadUserProfile() })
 </script>
 
 <style scoped>

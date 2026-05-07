@@ -1,7 +1,6 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8848'
-let userId = null
-export const setUserId = (id) => { userId = id }
-export const getUserId = () => userId || ''
+import { getUserId } from './local_storage.js'
+import { showDialog, Toast } from 'vant'
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
 const request = async (method, url, data, isFormData) => {
     const options = { method, headers: {} }
     if (isFormData) {
@@ -10,8 +9,28 @@ const request = async (method, url, data, isFormData) => {
         options.headers['Content-Type'] = 'application/json'
         if (data) { options.body = JSON.stringify(data) }
     }
-    const res = await fetch(`${BASE_URL}${url}`, options)
-    return res.json()
+    try {
+        const res = await fetch(`${BASE_URL}${url}`, options)
+        const json = await res.json()
+        if (json.code !== 200) {
+            if (json.code === 403) {
+                showDialog({ message: '权限不足' }).then(() => { window.location.hash = '#/login' })
+            } else if (json.code === 404) {
+                showDialog({ message: '资源不存在' })
+            } else if (json.code >= 500) {
+                showDialog({ message: '服务器繁忙，请稍后重试' })
+            } else {
+                showDialog({ message: json.msg || '请求失败' })
+            }
+            throw new Error(json.msg)
+        }
+        return json.data
+    } catch (err) {
+        if (err instanceof TypeError) {
+            showDialog({ message: '网络连接失败，请检查网络' })
+        }
+        throw err
+    }
 }
 const get = async (url, params) => {
     const query = []
@@ -53,7 +72,7 @@ export const articleApi = {
     getDetail: (postId) => get(`/api/article/${postId}`, { user_id: getUserId() }),
     update: (data) => { data.user_id = getUserId(); return put('/api/article', data) },
     delete: (postId) => del(`/api/article/${postId}`, { user_id: getUserId() }),
-    getList: (params = {}) => { params.user_id = getUserId(); return get('/api/article/list', params) },
+    getList: (params = {}) => get('/api/article/list', params),
     toggleLike: (postId) => post('/api/article/like', { user_id: getUserId(), post_id: postId }),
     getRecommend: (type, limit) => get('/api/article/recommend', { type, limit }),
     getToc: (postId) => get(`/api/article/${postId}/toc`)
@@ -76,7 +95,7 @@ export const commentApi = {
 export const followApi = {
     getFollowing: (followerId, page, pageSize) => get('/api/follow/following', { follower_id: followerId, page, page_size: pageSize }),
     getFollowers: (followingId, page, pageSize) => get('/api/follow/followers', { following_id: followingId, page, page_size: pageSize }),
-    toggleFollow: (followingId) => post('/api/follow/user', { follower_id: getUserId(), following_id }),
+    toggleFollow: (followingId) => post('/api/follow/user', { follower_id: getUserId(), following_id: followingId }),
     getUserFollowing: (followerId, page, pageSize) => get(`/api/follow/user/${followerId}/following`, { user_id: getUserId(), page, page_size: pageSize }),
     getUserFollowers: (followingId, page, pageSize) => get(`/api/follow/user/${followingId}/followers`, { user_id: getUserId(), page, page_size: pageSize })
 }
@@ -121,4 +140,7 @@ export const uploadApi = {
         if (getUserId()) { formData.append('user_id', getUserId()) }
         return post('/api/upload/file', formData, true)
     }
+}
+export const systemApi = {
+    getCarousel: () => get('/api/system/carousel')
 }

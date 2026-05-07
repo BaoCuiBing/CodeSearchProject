@@ -4,6 +4,7 @@
         <van-tabs v-model:active="activeTab">
             <van-tab title="文章热榜">
                 <div class="ranking-list">
+                    <van-empty v-if="articleRanking.length === 0" description="暂无数据" />
                     <RankingItem v-for="(item, index) in articleRanking" :key="item.post_id" :index="index" :title="item.title" :subtitle="item.author.username + ' · 浏览 ' + item.view_count + ' · 点赞 ' + item.like_count" @click="goToDetail(item.post_id)">
                         <template #extra>
                             <div class="hot-score">{{ item.hot_score }}</div>
@@ -13,6 +14,7 @@
             </van-tab>
             <van-tab title="问题热榜">
                 <div class="ranking-list">
+                    <van-empty v-if="questionRanking.length === 0" description="暂无数据" />
                     <RankingItem v-for="(item, index) in questionRanking" :key="item.post_id" :index="index" :title="item.title" :subtitle="item.author.username + ' · 浏览 ' + item.view_count + ' · 回答 ' + item.comment_count" @click="goToDetail(item.post_id)">
                         <template #extra>
                             <div class="hot-score">{{ item.hot_score }}</div>
@@ -22,6 +24,7 @@
             </van-tab>
             <van-tab title="贡献者">
                 <div class="ranking-list">
+                    <van-empty v-if="contributorRanking.length === 0" description="暂无数据" />
                     <RankingItem v-for="(item, index) in contributorRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.article_count + ' · 获赞 ' + item.like_count">
                         <template #avatar>
                             <van-image round width="40px" height="40px" :src="item.avatar" />

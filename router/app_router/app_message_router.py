@@ -21,20 +21,29 @@ async def get_notifications(request):
     page = int(request.args.get("page", 1))
     page_size = int(request.args.get("page_size", 20))
     logger.info(f"查询通知列表:user_id={user_id}")
-    query = db.query(Notification).filter(Notification.user_id == user_id)
-    if notif_type != "all":
-        query = query.filter(Notification.type == notif_type)
-    total = query.count()
-    unread_count = db.query(Notification).filter(Notification.user_id == user_id, Notification.is_read == 0).count()
-    notifs = query.order_by(Notification.created_at.desc()).offset((page - 1) * page_size).limit(page_size).all()
     notif_list = []
-    for n in notifs:
-        actor = None
-        if n.type in ["comment", "like", "follow"]:
-            actor = db.query(User).filter(User.id == n.related_id).first()
-        notif_list.append({"notification_id": n.id, "type": n.type, "content": n.content, "is_read": bool(n.is_read), "created_at": str(n.created_at), "related_id": n.related_id, "actor": {"user_id": actor.id, "username": actor.username, "avatar": actor.avatar} if actor else None})
+    if notif_type in ["all", "system"]:
+        sys_targets = db.query(SystemMessageTarget).filter(SystemMessageTarget.user_id == user_id).all()
+        for st in sys_targets:
+            sm = db.query(SystemMessage).filter(SystemMessage.id == st.message_id, SystemMessage.status == "sent").first()
+            if sm:
+                notif_list.append({"notification_id": sm.id, "type": "system", "content": sm.content, "title": sm.title, "is_read": bool(st.is_read), "created_at": str(sm.send_time or sm.created_at), "related_id": sm.id, "actor": None})
+    if notif_type in ["all", "comment", "like", "follow"]:
+        query = db.query(Notification).filter(Notification.user_id == user_id)
+        if notif_type != "all":
+            query = query.filter(Notification.type == notif_type)
+        notifs = query.order_by(Notification.created_at.desc()).all()
+        for n in notifs:
+            actor = None
+            if n.type in ["comment", "like", "follow"]:
+                actor = db.query(User).filter(User.id == n.related_id).first()
+            notif_list.append({"notification_id": n.id, "type": n.type, "content": n.content, "is_read": bool(n.is_read), "created_at": str(n.created_at), "related_id": n.related_id, "actor": {"user_id": actor.id, "username": actor.username, "avatar": actor.avatar} if actor else None})
+    notif_list.sort(key=lambda x: x["created_at"], reverse=True)
+    total = len(notif_list)
+    unread_count = sum(1 for n in notif_list if not n["is_read"])
+    paged = notif_list[(page - 1) * page_size:page * page_size]
     logger.info(f"获取通知列表成功:total={total}")
-    return response.json({"code": 200, "msg": "获取成功", "data": {"list": notif_list, "total": total, "unread_count": unread_count, "page": page, "page_size": page_size}})
+    return response.json({"code": 200, "msg": "获取成功", "data": {"list": paged, "total": total, "unread_count": unread_count, "page": page, "page_size": page_size}})
 
 @message_bp.put("/notification/read")
 @openapi.summary("标记通知为已读")
@@ -96,7 +105,8 @@ async def get_unread_notification_count(request):
     like = db.query(Notification).filter(Notification.user_id == user_id, Notification.type == "like", Notification.is_read == 0).count()
     follow = db.query(Notification).filter(Notification.user_id == user_id, Notification.type == "follow", Notification.is_read == 0).count()
     system = db.query(Notification).filter(Notification.user_id == user_id, Notification.type == "system", Notification.is_read == 0).count()
-    system_msg = db.query(Notification).filter(Notification.user_id == user_id, Notification.type == "system_msg", Notification.is_read == 0).count()
+    system_msg = db.query(SystemMessageTarget).filter(SystemMessageTarget.user_id == user_id, SystemMessageTarget.is_read == 0).count()
+    total += system_msg
     return response.json({"code": 200, "msg": "获取成功", "data": {"total": total, "comment": comment, "like": like, "follow": follow, "system": system, "system_msg": system_msg}})
 
 @message_bp.get("/conversations")
@@ -107,6 +117,7 @@ async def get_conversations(request):
     if not user_id:
         logger.warning("获取会话列表失败:user_id为空")
         return response.json({"code": 400, "msg": "user_id不能为空"})
+    user_id = int(user_id)
     page = int(request.args.get("page", 1))
     page_size = int(request.args.get("page_size", 20))
     logger.info(f"查询会话列表:user_id={user_id}")
@@ -181,6 +192,8 @@ async def delete_conversation(request, to_user_id):
     if not user_id:
         logger.warning("删除会话失败:user_id为空")
         return response.json({"code": 400, "msg": "user_id不能为空"})
+    user_id = int(user_id)
+    to_user_id = int(to_user_id)
     user = db.query(User).filter(User.id == to_user_id).first()
     if not user:
         logger.warning(f"删除会话失败:用户不存在,to_user_id={to_user_id}")

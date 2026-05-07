@@ -2,6 +2,7 @@
     <div class="follow-list-page">
         <PageNavBar :title="title" />
         <div class="user-list">
+            <van-empty v-if="users.length === 0" description="暂无用户" />
             <UserListItem v-for="user in users" :key="user.user_id" :avatar="user.avatar" :username="user.username" :bio="user.bio" :is-followed="user.is_followed" @toggle="toggleFollow(user)" />
         </div>
     </div>

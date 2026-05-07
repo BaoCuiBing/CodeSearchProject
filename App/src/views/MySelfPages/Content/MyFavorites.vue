@@ -4,6 +4,7 @@
         <van-tabs v-model:active="activeTab">
             <van-tab title="全部">
                 <div class="fav-list">
+                    <van-empty v-if="favorites.length === 0" description="暂无收藏" />
                     <PostCard v-for="item in favorites" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
                             <div class="fav-meta">
@@ -16,6 +17,7 @@
             </van-tab>
             <van-tab title="文章">
                 <div class="fav-list">
+                    <van-empty v-if="articleFavorites.length === 0" description="暂无收藏文章" />
                     <PostCard v-for="item in articleFavorites" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
                             <div class="fav-meta">
@@ -27,6 +29,7 @@
             </van-tab>
             <van-tab title="问题">
                 <div class="fav-list">
+                    <van-empty v-if="questionFavorites.length === 0" description="暂无收藏问题" />
                     <PostCard v-for="item in questionFavorites" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
                             <div class="fav-meta">

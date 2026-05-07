@@ -5,27 +5,42 @@
         <div class="search-content">
             <div class="section-title">搜索历史</div>
             <div class="history-list">
-                <van-tag v-for="h in history" :key="h" plain closable @close="removeHistory(h)" @click="searchKeyword(h)">{{ h }}</van-tag>
+                <van-tag v-for="h in history" :key="h.history_id" plain closable @close="removeHistory(h.history_id)" @click="searchKeyword(h.keyword)">{{ h.keyword }}</van-tag>
             </div>
             <div class="section-title">热门搜索</div>
             <div class="hot-list">
-                <van-tag v-for="h in hotSearches" :key="h" type="primary" plain @click="searchKeyword(h)">{{ h }}</van-tag>
+                <van-tag v-for="h in hotSearches" :key="h.keyword" type="primary" plain @click="searchKeyword(h.keyword)">{{ h.keyword }}</van-tag>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { searchApi } from '@/assets/app_request_api.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 const router = useRouter()
 const keyword = ref('')
-const history = ref(['Python多线程', 'Vue3响应式', 'MySQL索引'])
-const hotSearches = ref(['Python', 'Vue3', 'React', 'Docker', 'MySQL', 'Redis'])
+const history = ref([])
+const hotSearches = ref([])
+const loadHistory = async () => {
+    const data = await searchApi.getHistory(1, 20)
+    history.value = data?.list || []
+}
+const loadHotSearches = async () => {
+    const data = await searchApi.getHot()
+    hotSearches.value = data || []
+}
 const onSearch = () => { if (keyword.value.trim()) { router.push({ path: '/search-result', query: { keyword: keyword.value } }) } }
 const searchKeyword = (kw) => { keyword.value = kw; onSearch() }
-const removeHistory = (kw) => { history.value = history.value.filter(h => h !== kw) }
+const removeHistory = async (historyId) => {
+    await searchApi.deleteHistoryItem(historyId)
+    history.value = history.value.filter(h => h.history_id !== historyId)
+}
+onMounted(async () => {
+    await Promise.all([loadHistory(), loadHotSearches()])
+})
 </script>
 
 <style scoped>

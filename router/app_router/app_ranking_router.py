@@ -99,7 +99,10 @@ async def get_ranking_list(request):
                 comments = comments.filter(Comment.created_at >= start_time)
             comment_count = comments.count()
             contribution_score = post_count * 20 + comment_count * 5
-            user_contrib.append({"user_id": u.id, "username": u.username, "avatar": u.avatar, "contribution_score": contribution_score, "post_count": post_count, "comment_count": comment_count})
+            is_followed = False
+            if user_id:
+                is_followed = db.query(Follow).filter(Follow.follower_id == user_id, Follow.following_id == u.id).first() is not None
+            user_contrib.append({"user_id": u.id, "username": u.username, "avatar": u.avatar, "bio": u.bio, "is_followed": is_followed, "contribution_score": contribution_score, "post_count": post_count, "comment_count": comment_count})
         user_contrib.sort(key=lambda x: x["contribution_score"], reverse=True)
         rank_list = [{"rank": i+1, **u} for i, u in enumerate(user_contrib[:limit])]
         if user_id:

@@ -4,9 +4,9 @@
         <div class="article-content">
             <h1 class="article-title">{{ article.title }}</h1>
             <div class="article-meta">
-                <van-image round width="36px" height="36px" :src="article.author.avatar" />
+                <van-image round width="36px" height="36px" :src="article.author?.avatar || ''" />
                 <div class="meta-info">
-                    <span class="author-name">{{ article.author.username }}</span>
+                    <span class="author-name">{{ article.author?.username || '' }}</span>
                     <span class="publish-time">{{ article.created_at }}</span>
                 </div>
                 <van-button size="small" :type="article.is_followed ? 'default' : 'primary'" @click="toggleFollow">{{ article.is_followed ? '已关注' : '关注' }}</van-button>
@@ -41,9 +41,9 @@
                 <span>评论 ({{ comments.length }})</span>
             </div>
             <div v-for="comment in comments" :key="comment.comment_id" class="comment-item">
-                <van-image round width="32px" height="32px" :src="comment.user.avatar" />
+                <van-image round width="32px" height="32px" :src="comment.user?.avatar || ''" />
                 <div class="comment-body">
-                    <div class="comment-user">{{ comment.user.username }}</div>
+                    <div class="comment-user">{{ comment.user?.username || '' }}</div>
                     <div class="comment-text">{{ comment.content }}</div>
                     <div class="comment-time">{{ comment.created_at }}</div>
                 </div>
@@ -53,38 +53,44 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { articleApi, commentApi, followApi, favoriteApi } from '@/assets/app_request_api.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 const route = useRoute()
-const article = ref({
-    post_id: route.query.id || 1,
-    type: 'article',
-    title: '如何在 Python 中实现多线程并发？',
-    content: 'Python 中的多线程可以通过 threading 模块实现。虽然由于 GIL（全局解释器锁）的存在，多线程在 CPU 密集型任务中无法真正实现并行，但在 I/O 密集型任务中仍然非常有用。\n\n首先，我们需要导入 threading 模块：\n\nimport threading\n\n然后，可以创建一个线程类或者使用 Thread 类的 target 参数来指定线程执行的函数。',
-    summary: '本文详细介绍了 Python 中多线程的使用方法，包括 threading 模块、线程池、以及 GIL 的影响...',
-    cover_image: ['https://img.yzcdn.cn/vant/cat.jpeg'],
-    author: { user_id: 1, username: '程序员小明', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' },
-    category: { category_id: 1, name: '后端开发' },
-    tags: [{ tag_id: 1, name: 'Python' }, { tag_id: 7, name: '并发' }],
-    like_count: 86,
-    favorite_count: 45,
-    comment_count: 23,
-    view_count: 1205,
-    is_liked: false,
-    is_favorited: false,
-    is_followed: false,
-    created_at: '2025-05-05 10:30:00',
-    updated_at: '2025-05-05 10:30:00'
+const article = ref({ title: '', content: '', author: {}, tags: [], like_count: 0, favorite_count: 0, comment_count: 0, view_count: 0, is_liked: false, is_favorited: false, is_followed: false, created_at: '' })
+const comments = ref([])
+const loadArticle = async () => {
+    const postId = route.query.id
+    const data = await articleApi.getDetail(postId)
+    article.value = { ...data, tags: data.tags || [], author: data.author || {} }
+}
+const loadComments = async () => {
+    const postId = route.query.id
+    const data = await commentApi.getList(postId, { page: 1 })
+    comments.value = data?.list || []
+}
+const toggleLike = async () => {
+    const postId = route.query.id
+    const data = await articleApi.toggleLike(postId)
+    article.value.is_liked = data.is_liked !== undefined ? data.is_liked : !article.value.is_liked
+    article.value.like_count += article.value.is_liked ? 1 : -1
+}
+const toggleFavorite = async () => {
+    const postId = route.query.id
+    const data = await favoriteApi.toggle(postId)
+    article.value.is_favorited = data.is_favorited !== undefined ? data.is_favorited : !article.value.is_favorited
+    article.value.favorite_count += article.value.is_favorited ? 1 : -1
+}
+const toggleFollow = async () => {
+    const authorId = article.value.author?.user_id
+    if (!authorId) return
+    const data = await followApi.toggleFollow(authorId)
+    article.value.is_followed = data.is_followed !== undefined ? data.is_followed : !article.value.is_followed
+}
+onMounted(async () => {
+    await Promise.all([loadArticle(), loadComments()])
 })
-const comments = ref([
-    { comment_id: 1, user: { user_id: 10, username: '用户A', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' }, content: '写得很详细，感谢分享！', like_count: 5, created_at: '2025-05-05 14:30:00' },
-    { comment_id: 2, user: { user_id: 11, username: '用户B', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' }, content: 'GIL 的问题确实让人头疼，多进程会不会更好一些？', like_count: 3, created_at: '2025-05-05 15:20:00' },
-    { comment_id: 3, user: { user_id: 12, username: '用户C', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' }, content: '收藏了，后面慢慢看', like_count: 1, created_at: '2025-05-05 16:00:00' }
-])
-const toggleLike = () => { article.value.is_liked = !article.value.is_liked; article.value.like_count += article.value.is_liked ? 1 : -1 }
-const toggleFavorite = () => { article.value.is_favorited = !article.value.is_favorited; article.value.favorite_count += article.value.is_favorited ? 1 : -1 }
-const toggleFollow = () => { article.value.is_followed = !article.value.is_followed }
 </script>
 
 <style scoped>

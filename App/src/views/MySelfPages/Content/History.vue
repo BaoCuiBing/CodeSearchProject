@@ -2,6 +2,7 @@
     <div class="history-page">
         <PageNavBar title="浏览历史" />
         <div class="article-list">
+            <van-empty v-if="historyList.length === 0" description="暂无浏览历史" />
             <PostCard v-for="item in historyList" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
                 <template #footer>
                     <div class="post-stats">

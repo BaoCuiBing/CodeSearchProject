@@ -16,100 +16,71 @@
                 </van-popup>
             </div>
             <div class="tag-selector">
-                <van-field v-model="tagInput" placeholder="添加标签（回车确认）" @keyup.enter="addTag" />
+                <van-field v-model="tagSearchText" readonly is-link placeholder="选择标签（最多5个）" @click="showTagPicker = true" />
+                <van-popup v-model:show="showTagPicker" position="bottom" round>
+                    <div class="tag-picker-header">
+                        <span>选择标签</span>
+                        <span class="tag-picker-count">{{ postForm.tags.length }}/5</span>
+                    </div>
+                    <div class="tag-picker-list">
+                        <van-tag v-for="tag in availableTags" :key="tag.tag_id" :type="isTagSelected(tag.tag_id) ? 'primary' : 'default'" size="large" @click="toggleTag(tag)">{{ tag.name }}</van-tag>
+                    </div>
+                    <div class="tag-picker-footer">
+                        <van-button block type="primary" @click="showTagPicker = false">确定</van-button>
+                    </div>
+                </van-popup>
                 <div class="tag-list">
-                    <van-tag v-for="(tag, index) in postForm.tags" :key="index" closeable size="medium" type="primary" @close="removeTag(index)">{{ tag }}</van-tag>
+                    <van-tag v-for="tag in postForm.tags" :key="tag.tag_id" closeable size="medium" type="primary" @close="removeTag(tag.tag_id)">{{ tag.name }}</van-tag>
                 </div>
             </div>
             <div class="editor-wrapper">
-                <textarea ref="editorRef"></textarea>
+                <QuillEditor v-model:content="postForm.content" contentType="html" theme="snow" toolbar="essential" placeholder="请输入内容..." />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { showToast, showSuccessToast } from 'vant'
-import EasyMDE from 'easymde'
+import { QuillEditor } from '@vueup/vue-quill'
+import '@vueup/vue-quill/dist/vue-quill.snow.css'
+import { articleApi, categoryApi, tagApi } from '@/assets/app_request_api.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 const router = useRouter()
-const editorRef = ref(null)
 const showCategoryPicker = ref(false)
-const tagInput = ref('')
-let easyMDE = null
-const categoryColumns = [
-    { text: '后端开发', value: 1 },
-    { text: '前端开发', value: 2 },
-    { text: '移动开发', value: 3 },
-    { text: '数据库', value: 4 },
-    { text: '运维部署', value: 5 },
-    { text: '人工智能', value: 6 },
-    { text: '算法', value: 7 },
-    { text: '工具', value: 8 }
-]
-const postForm = ref({
-    title: '',
-    type: 'article',
-    category_id: null,
-    category_name: '',
-    tags: [],
-    content: ''
-})
-const mockDrafts = ref([
-    { post_id: 1, title: 'Python多线程实战', type: 'article', category_id: 1, category_name: '后端开发', tags: ['Python', '并发'], content: '## Python多线程实战\n\n本文详细介绍Python多线程的使用方法...', created_at: '2025-05-05 10:30:00' },
-    { post_id: 2, title: 'Vue3组合式API入门', type: 'article', category_id: 2, category_name: '前端开发', tags: ['Vue', '前端'], content: '## Vue3组合式API\n\n组合式API是Vue3的重要特性...', created_at: '2025-05-04 14:20:00' }
-])
-onMounted(() => {
-    nextTick(() => {
-        easyMDE = new EasyMDE({
-            element: editorRef.value,
-            placeholder: '请输入内容，支持Markdown语法...',
-            spellChecker: false,
-            autoDownloadFontAwesome: false,
-            status: ['lines', 'words', 'cursor'],
-            toolbar: ['bold', 'italic', 'heading', '|', 'quote', 'unordered-list', 'ordered-list', '|', 'link', 'image', '|', 'preview', 'side-by-side', 'fullscreen', '|', 'guide']
-        })
-        easyMDE.codemirror.on('change', () => { postForm.value.content = easyMDE.value() })
-    })
-})
-const onCategoryConfirm = ({ selectedOptions }) => {
-    postForm.value.category_id = selectedOptions[0].value
-    postForm.value.category_name = selectedOptions[0].text
-    showCategoryPicker.value = false
+const showTagPicker = ref(false)
+const tagSearchText = ref('')
+const categoryColumns = ref([])
+const availableTags = ref([])
+const postForm = ref({ title: '', type: 'article', category_id: null, category_name: '', tags: [], content: '' })
+const loadCategories = async () => {
+    const data = await categoryApi.getList()
+    categoryColumns.value = (data || []).map(c => ({ text: c.name, value: c.category_id }))
 }
-const addTag = () => {
-    const tag = tagInput.value.trim()
-    if (tag && !postForm.value.tags.includes(tag) && postForm.value.tags.length < 5) {
-        postForm.value.tags.push(tag)
+const loadTags = async () => {
+    const data = await tagApi.getList({ page: 1, page_size: 100 })
+    availableTags.value = data?.list || []
+}
+const isTagSelected = (tagId) => postForm.value.tags.some(t => t.tag_id === tagId)
+const toggleTag = (tag) => {
+    if (isTagSelected(tag.tag_id)) {
+        postForm.value.tags = postForm.value.tags.filter(t => t.tag_id !== tag.tag_id)
+    } else if (postForm.value.tags.length < 5) {
+        postForm.value.tags.push({ tag_id: tag.tag_id, name: tag.name })
     }
-    tagInput.value = ''
 }
-const removeTag = (index) => { postForm.value.tags.splice(index, 1) }
-const publishPost = () => {
+const removeTag = (tagId) => { postForm.value.tags = postForm.value.tags.filter(t => t.tag_id !== tagId) }
+const publishPost = async () => {
     if (!postForm.value.title.trim()) { showToast('请输入标题'); return }
     if (!postForm.value.category_id) { showToast('请选择分类'); return }
     if (!postForm.value.content.trim()) { showToast('请输入内容'); return }
-    const newPost = {
-        post_id: Date.now(),
-        title: postForm.value.title,
-        type: postForm.value.type,
-        category_id: postForm.value.category_id,
-        category_name: postForm.value.category_name,
-        tags: [...postForm.value.tags],
-        content: postForm.value.content,
-        author: { user_id: 1, username: '程序员小明', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' },
-        view_count: 0,
-        like_count: 0,
-        comment_count: 0,
-        favorite_count: 0,
-        created_at: new Date().toLocaleString(),
-        hot_score: 0
-    }
+    await articleApi.create({ ...postForm.value, tag_ids: postForm.value.tags.map(t => t.tag_id) })
     showSuccessToast('发布成功')
     setTimeout(() => { router.back() }, 1000)
 }
+onMounted(() => { loadCategories(); loadTags() })
 </script>
 
 <style scoped>
@@ -118,9 +89,12 @@ const publishPost = () => {
 .type-selector { padding: 12px 16px; background: #fff; border-bottom: 1px solid #f0f0f0; }
 .category-selector { background: #fff; }
 .tag-selector { background: #fff; padding-bottom: 12px; }
+.tag-picker-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; font-size: 16px; font-weight: bold; }
+.tag-picker-count { font-size: 14px; color: #999; font-weight: normal; }
+.tag-picker-list { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 16px 16px; max-height: 300px; overflow-y: auto; }
+.tag-picker-footer { padding: 0 16px 16px; }
 .tag-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 8px; }
-.editor-wrapper { padding: 0; }
-.editor-wrapper :deep(.EasyMDEContainer) { border: none; }
-.editor-wrapper :deep(.editor-toolbar) { border: none; border-bottom: 1px solid #f0f0f0; }
-.editor-wrapper :deep(.CodeMirror) { border: none; min-height: 300px; }
+.editor-wrapper { background: #fff; }
+.editor-wrapper :deep(.ql-toolbar) { border: none; border-bottom: 1px solid #f0f0f0; }
+.editor-wrapper :deep(.ql-container) { border: none; min-height: 300px; font-size: 15px; }
 </style>

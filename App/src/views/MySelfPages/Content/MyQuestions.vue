@@ -2,11 +2,12 @@
     <div class="my-questions-page">
         <PageNavBar title="我的提问" />
         <div class="question-list">
-            <PostCard v-for="q in questions" :key="q.question_id" :title="q.title" :summary="q.summary" @click="goToDetail(q.question_id)">
+            <van-empty v-if="questions.length === 0" description="暂无提问" />
+            <PostCard v-for="q in questions" :key="q.post_id" :title="q.title" :summary="q.summary" @click="goToDetail(q.post_id)">
                 <template #footer>
                     <div class="question-stats">
                         <span><van-icon name="eye-o" /> {{ q.view_count }}</span>
-                        <span><van-icon name="chat-o" /> {{ q.answer_count }}</span>
+                        <span><van-icon name="chat-o" /> {{ q.comment_count }}</span>
                     </div>
                 </template>
             </PostCard>
@@ -15,16 +16,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { articleApi } from '@/assets/app_request_api.js'
+import { getUserId } from '@/assets/local_storage.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 import PostCard from '@/components/PostCard.vue'
 const router = useRouter()
-const questions = ref([
-    { question_id: 1, title: 'Python中如何实现多线程？', summary: '请问Python中如何实现多线程并发？', view_count: 325, answer_count: 12 },
-    { question_id: 2, title: 'Vue3响应式原理是什么？', summary: '想了解Vue3的响应式原理', view_count: 218, answer_count: 8 }
-])
-const goToDetail = (questionId) => { router.push({ path: '/question', query: { id: questionId } }) }
+const questions = ref([])
+const loadQuestions = async () => {
+    const data = await articleApi.getList({ user_id: getUserId(), type: 'question', page: 1 })
+    questions.value = data?.list || []
+}
+const goToDetail = (questionId) => { router.push({ path: '/article', query: { id: questionId } }) }
+onMounted(() => { loadQuestions() })
 </script>
 
 <style scoped>

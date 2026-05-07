@@ -4,7 +4,7 @@ import logging
 from sanic import Blueprint, response
 from sanic_ext import openapi
 from sqlalchemy import func
-from models.model import User, Post, Tag, PostTag, Comment, Like, Favorite, Category
+from models.model import User, Post, Tag, PostTag, Comment, Like, Favorite, Category, Follow
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
@@ -71,12 +71,14 @@ async def get_article_detail(request, post_id):
     favorite_count = db.query(Favorite).filter(Favorite.post_id == post.id).count()
     is_liked = False
     is_favorited = False
+    is_followed = False
     if user_id:
         is_liked = db.query(Like).filter(Like.user_id == user_id, Like.target_id == post.id, Like.target_type == "post").first() is not None
         is_favorited = db.query(Favorite).filter(Favorite.user_id == user_id, Favorite.post_id == post.id).first() is not None
+        is_followed = db.query(Follow).filter(Follow.follower_id == user_id, Follow.following_id == post.user_id).first() is not None
     cover_image = json.loads(post.cover_image) if post.cover_image else None
     logger.info(f"获取文章详情成功:title={post.title}")
-    return response.json({"code": 200, "msg": "获取成功", "data": {"post_id": post.id, "type": post.type, "title": post.title, "content": post.content, "summary": post.summary, "cover_image": cover_image, "author": {"user_id": author.id, "username": author.username, "avatar": author.avatar} if author else None, "category": {"category_id": category.id, "name": category.name} if category else None, "tags": [{"tag_id": t.id, "name": t.name} for t in tags], "view_count": post.view_count, "like_count": post.like_count, "comment_count": post.comment_count, "favorite_count": favorite_count, "created_at": str(post.created_at), "updated_at": str(post.updated_at), "is_liked": is_liked, "is_favorited": is_favorited}})
+    return response.json({"code": 200, "msg": "获取成功", "data": {"post_id": post.id, "type": post.type, "title": post.title, "content": post.content, "summary": post.summary, "cover_image": cover_image, "author": {"user_id": author.id, "username": author.username, "avatar": author.avatar} if author else None, "category": {"category_id": category.id, "name": category.name} if category else None, "tags": [{"tag_id": t.id, "name": t.name} for t in tags], "view_count": post.view_count, "like_count": post.like_count, "comment_count": post.comment_count, "favorite_count": favorite_count, "created_at": str(post.created_at), "updated_at": str(post.updated_at), "is_liked": is_liked, "is_favorited": is_favorited, "is_followed": is_followed}})
 
 @article_bp.put("/")
 @openapi.summary("编辑文章或问题")
@@ -173,7 +175,8 @@ async def get_article_list(request):
     for p in posts:
         author = db.query(User).filter(User.id == p.user_id).first()
         favorite_count = db.query(Favorite).filter(Favorite.post_id == p.id).count()
-        post_list.append({"post_id": p.id, "type": p.type, "title": p.title, "summary": p.summary, "author": {"user_id": author.id, "username": author.username, "avatar": author.avatar} if author else None, "view_count": p.view_count, "like_count": p.like_count, "comment_count": p.comment_count, "favorite_count": favorite_count, "created_at": str(p.created_at)})
+        tags = db.query(Tag).join(PostTag).filter(PostTag.post_id == p.id).all()
+        post_list.append({"post_id": p.id, "type": p.type, "title": p.title, "summary": p.summary, "author": {"user_id": author.id, "username": author.username, "avatar": author.avatar} if author else None, "tags": [{"tag_id": t.id, "name": t.name} for t in tags], "view_count": p.view_count, "like_count": p.like_count, "comment_count": p.comment_count, "favorite_count": favorite_count, "created_at": str(p.created_at)})
     logger.info(f"获取文章列表成功:total={total}")
     return response.json({"code": 200, "msg": "获取成功", "data": {"list": post_list, "total": total, "page": page, "page_size": page_size}})
 

@@ -2,21 +2,30 @@
     <div class="following-page">
         <PageNavBar title="我的关注" />
         <div class="user-list">
+            <van-empty v-if="followingList.length === 0" description="暂无关注" />
             <UserListItem v-for="user in followingList" :key="user.user_id" :avatar="user.avatar" :username="user.username" :bio="user.bio" :is-followed="user.is_followed" plain @toggle="unfollow(user.user_id)" />
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { showToast } from 'vant'
+import { followApi } from '@/assets/app_request_api.js'
+import { getUserId } from '@/assets/local_storage.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 import UserListItem from '@/components/UserListItem.vue'
-const followingList = ref([
-    { user_id: 1, username: '程序员小明', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', bio: 'Python开发者', is_followed: true },
-    { user_id: 2, username: '前端小王', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', bio: 'Vue3爱好者', is_followed: true }
-])
-const unfollow = (userId) => { const user = followingList.value.find(u => u.user_id === userId); if (user) { user.is_followed = false; showToast('已取消关注') } }
+const followingList = ref([])
+const loadFollowing = async () => {
+    const data = await followApi.getFollowing(getUserId(), 1, 20)
+    followingList.value = data?.list || []
+}
+const unfollow = async (userId) => {
+    await followApi.toggleFollow(userId)
+    followingList.value = followingList.value.filter(u => u.user_id !== userId)
+    showToast('已取消关注')
+}
+onMounted(() => { loadFollowing() })
 </script>
 
 <style scoped>

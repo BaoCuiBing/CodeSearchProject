@@ -2,7 +2,7 @@
     <div class="chat-detail-page">
         <PageNavBar :title="chatUser.username" />
         <div class="chat-messages">
-            <div v-for="msg in messages" :key="msg.id" class="chat-bubble" :class="{ self: msg.from_user_id === selfUserId }">
+            <div v-for="msg in messages" :key="msg.message_id" class="chat-bubble" :class="{ self: msg.from_user_id === selfUserId }">
                 <van-image round width="36px" height="36px" :src="msg.from_user_id === selfUserId ? selfAvatar : chatUser.avatar" />
                 <div class="bubble-content">{{ msg.content }}</div>
             </div>
@@ -15,26 +15,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { messageApi } from '@/assets/app_request_api.js'
+import { getUserId } from '@/assets/local_storage.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 const route = useRoute()
-const chatUser = ref({ user_id: route.query.user_id || 1, username: route.query.username || '用户A', avatar: route.query.avatar || 'https://img.yzcdn.cn/vant/cat.jpeg' })
-const selfAvatar = ref('https://img.yzcdn.cn/vant/cat.jpeg')
-const selfUserId = ref(1)
+const chatUser = ref({ user_id: route.query.user_id || 1, username: route.query.username || '用户', avatar: route.query.avatar || '' })
+const selfAvatar = ref('')
+const selfUserId = ref(getUserId())
 const inputMessage = ref('')
-const messages = ref([
-    { id: 1, from_user_id: 10, to_user_id: 1, content: '你好，请问那个 Python 多线程的问题解决了吗？', is_read: 1, created_at: '2025-05-05 14:30:00' },
-    { id: 2, from_user_id: 1, to_user_id: 10, content: '还没完全解决，正在研究中', is_read: 1, created_at: '2025-05-05 14:32:00' },
-    { id: 3, from_user_id: 10, to_user_id: 1, content: '需要我帮忙看看吗？', is_read: 1, created_at: '2025-05-05 14:35:00' },
-    { id: 4, from_user_id: 1, to_user_id: 10, content: '太好了，谢谢！', is_read: 1, created_at: '2025-05-05 14:36:00' }
-])
-const sendMessage = () => {
-    if (inputMessage.value.trim()) {
-        messages.value.push({ id: Date.now(), from_user_id: selfUserId.value, to_user_id: chatUser.value.user_id, content: inputMessage.value, is_read: 0, created_at: new Date().toLocaleString() })
-        inputMessage.value = ''
-    }
+const messages = ref([])
+const loadMessages = async () => {
+    const data = await messageApi.getConversationMessages(chatUser.value.user_id, 1, 20)
+    messages.value = data?.list || []
 }
+const sendMessage = async () => {
+    if (!inputMessage.value.trim()) return
+    await messageApi.sendMessage(chatUser.value.user_id, inputMessage.value)
+    inputMessage.value = ''
+    loadMessages()
+}
+onMounted(() => { loadMessages() })
 </script>
 
 <style scoped>

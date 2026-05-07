@@ -22,12 +22,14 @@
                 <van-tabs v-model:active="activeRankingTab">
                     <van-tab title="文章热榜">
                         <div class="ranking-list">
-                            <RankingItem v-for="(item, index) in articleRanking" :key="item.post_id" :index="index" :title="item.title" :subtitle="item.author.username + ' · 热度 ' + item.hot_score" @click="goToDetail(item.post_id)" />
+                            <van-empty v-if="articleRanking.length === 0" description="暂无数据" />
+                            <RankingItem v-for="(item, index) in articleRanking" :key="item.post_id" :index="index" :title="item.title" :subtitle="item.author?.username + ' · 热度 ' + item.hot_score" @click="goToDetail(item.post_id)" />
                         </div>
                     </van-tab>
                     <van-tab title="用户活跃">
                         <div class="ranking-list">
-                            <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.article_count + ' · 获赞 ' + item.like_count">
+                            <van-empty v-if="userRanking.length === 0" description="暂无数据" />
+                            <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.post_count + ' · 评论 ' + item.comment_count">
                                 <template #avatar>
                                     <van-image round width="40px" height="40px" :src="item.avatar" />
                                 </template>
@@ -40,6 +42,7 @@
         <div class="recommend-section">
             <div class="section-title">推荐关注</div>
             <div class="user-list">
+                <van-empty v-if="recommendUsers.length === 0" description="暂无推荐" />
                 <UserListItem v-for="user in recommendUsers" :key="user.user_id" :avatar="user.avatar" :username="user.username" :bio="user.bio" :is-followed="user.is_followed" @toggle="followUser(user)" />
             </div>
         </div>
@@ -49,42 +52,49 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { categoryApi, rankingApi, followApi } from '@/assets/app_request_api.js'
+import { setCache, getCache } from '@/assets/local_storage.js'
 import RankingItem from '@/components/RankingItem.vue'
 import UserListItem from '@/components/UserListItem.vue'
 const router = useRouter()
 const searchKeyword = ref('')
 const activeRankingTab = ref(0)
-const categories = ref([
-    { category_id: 1, name: '后端开发', icon: 'cluster-o' },
-    { category_id: 2, name: '前端开发', icon: 'desktop-o' },
-    { category_id: 3, name: '移动开发', icon: 'phone-o' },
-    { category_id: 4, name: '数据库', icon: 'records' },
-    { category_id: 5, name: '运维部署', icon: 'setting-o' },
-    { category_id: 6, name: '人工智能', icon: 'photo-fail' },
-    { category_id: 7, name: '算法', icon: 'chart-trending-o' },
-    { category_id: 8, name: '工具', icon: 'bag-o' }
-])
-const articleRanking = ref([
-    { post_id: 1, type: 'article', title: '如何在 Python 中实现多线程并发？', author: { user_id: 1, username: '程序员小明', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' }, category: { category_id: 1, name: '后端开发' }, view_count: 1205, like_count: 86, comment_count: 23, favorite_count: 45, created_at: '2025-05-05 10:30:00', hot_score: 8500 },
-    { post_id: 2, type: 'article', title: 'Vue3 中的组合式 API 如何使用？', author: { user_id: 2, username: '前端小王', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' }, category: { category_id: 2, name: '前端开发' }, view_count: 892, like_count: 64, comment_count: 15, favorite_count: 32, created_at: '2025-05-04 14:20:00', hot_score: 7200 },
-    { post_id: 3, type: 'article', title: 'MySQL 索引失效的常见场景', author: { user_id: 3, username: 'DBA老张', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' }, category: { category_id: 4, name: '数据库' }, view_count: 2341, like_count: 156, comment_count: 42, favorite_count: 89, created_at: '2025-05-03 09:15:00', hot_score: 6800 },
-    { post_id: 4, type: 'article', title: 'Docker 容器化部署实战', author: { user_id: 4, username: '运维小李', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' }, category: { category_id: 5, name: '运维部署' }, view_count: 987, like_count: 72, comment_count: 18, favorite_count: 34, created_at: '2025-05-01 11:20:00', hot_score: 5400 },
-    { post_id: 5, type: 'article', title: '深入理解 Vue3 响应式原理', author: { user_id: 2, username: '前端小王', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg' }, category: { category_id: 2, name: '前端开发' }, view_count: 1567, like_count: 98, comment_count: 31, favorite_count: 56, created_at: '2025-05-02 16:45:00', hot_score: 4900 }
-])
-const userRanking = ref([
-    { user_id: 1, username: '程序员小明', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', bio: '热爱编程，乐于分享', article_count: 56, question_count: 12, follower_count: 2341, following_count: 128, like_count: 2341, view_count: 15678, is_followed: false },
-    { user_id: 2, username: '前端小王', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', bio: '专注前端技术', article_count: 43, question_count: 8, follower_count: 1892, following_count: 95, like_count: 1892, view_count: 12345, is_followed: true },
-    { user_id: 3, username: 'DBA老张', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', bio: '数据库专家', article_count: 38, question_count: 5, follower_count: 1567, following_count: 67, like_count: 1567, view_count: 9876, is_followed: false },
-    { user_id: 4, username: '运维小李', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', bio: 'DevOps实践者', article_count: 29, question_count: 15, follower_count: 1234, following_count: 89, like_count: 1234, view_count: 8765, is_followed: false },
-    { user_id: 5, username: 'AI大牛', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', bio: '人工智能研究者', article_count: 25, question_count: 20, follower_count: 987, following_count: 45, like_count: 987, view_count: 6543, is_followed: true }
-])
-const recommendUsers = ref([
-    { user_id: 6, username: '全栈工程师', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', bio: '热爱技术，分享经验', article_count: 67, question_count: 23, follower_count: 3456, following_count: 156, like_count: 3456, view_count: 23456, is_followed: false },
-    { user_id: 7, username: '数据分析师', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', bio: '专注数据分析与可视化', article_count: 45, question_count: 18, follower_count: 2345, following_count: 98, like_count: 2345, view_count: 15678, is_followed: false },
-    { user_id: 8, username: '安全专家', avatar: 'https://img.yzcdn.cn/vant/cat.jpeg', bio: '网络安全从业者', article_count: 34, question_count: 12, follower_count: 1890, following_count: 76, like_count: 1890, view_count: 12345, is_followed: true }
-])
+const categories = ref([])
+const articleRanking = ref([])
+const userRanking = ref([])
+const recommendUsers = ref([])
+const categoryIcons = ['cluster-o', 'desktop-o', 'phone-o', 'records', 'setting-o', 'photo-fail', 'chart-trending-o', 'bag-o']
+const loadCategories = async () => {
+    const cached = getCache('categories')
+    if (cached) { categories.value = cached; return }
+    const data = await categoryApi.getList()
+    categories.value = (data || []).map((cat, idx) => ({ ...cat, icon: categoryIcons[idx % categoryIcons.length] }))
+    setCache('categories', categories.value, 30 * 60 * 1000)
+}
+const loadArticleRanking = async () => {
+    const cached = getCache('articleRanking')
+    if (cached) { articleRanking.value = cached; return }
+    const data = await rankingApi.getList('article_hot', 'week', 5)
+    articleRanking.value = data?.list || []
+    setCache('articleRanking', data?.list, 5 * 60 * 1000)
+}
+const loadUserRanking = async () => {
+    const cached = getCache('userRanking')
+    if (cached) { userRanking.value = cached; return }
+    const data = await rankingApi.getList('user_active', 'week', 5)
+    userRanking.value = data?.list || []
+    setCache('userRanking', data?.list, 5 * 60 * 1000)
+}
+const loadRecommendUsers = async () => {
+    const data = await rankingApi.getList('contributor', 'week', 3)
+    recommendUsers.value = data?.list || []
+}
+const followUser = async (user) => {
+    const data = await followApi.toggleFollow(user.user_id)
+    user.is_followed = data.is_followed !== undefined ? data.is_followed : !user.is_followed
+}
 const onSearch = () => {
     if (searchKeyword.value.trim()) {
         router.push({ path: '/search', query: { keyword: searchKeyword.value } })
@@ -93,8 +103,10 @@ const onSearch = () => {
 const goToCategory = (catId) => { router.push({ path: '/category', query: { id: catId } }) }
 const goToRankings = () => { router.push('/rankings') }
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
-const followUser = (user) => { user.is_followed = !user.is_followed }
 const goToPostEdit = () => { router.push('/post-edit') }
+onMounted(async () => {
+    await Promise.all([loadCategories(), loadArticleRanking(), loadUserRanking(), loadRecommendUsers()])
+})
 </script>
 
 <style scoped>

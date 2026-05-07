@@ -2,7 +2,7 @@
     <div class="user-profile-page">
         <PageNavBar title="个人资料" right-text="保存" @click-right="saveProfile" />
         <div class="avatar-section">
-            <van-image round width="80px" height="80px" :src="profile.avatar" />
+            <van-image round width="80px" height="80px" :src="profile.avatar || ''" />
             <span class="change-avatar" @click="changeAvatar">更换头像</span>
         </div>
         <van-cell-group>
@@ -17,21 +17,22 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { showToast } from 'vant'
+import { profileApi } from '@/assets/app_request_api.js'
+import { getUserId } from '@/assets/local_storage.js'
 import PageNavBar from '@/components/PageNavBar.vue'
-const profile = ref({
-    user_id: 1,
-    username: '程序员小明',
-    avatar: 'https://img.yzcdn.cn/vant/cat.jpeg',
-    bio: '热爱编程，乐于分享',
-    email: 'xiaoming@example.com',
-    location: '北京',
-    website: 'https://xiaoming.dev',
-    github: 'https://github.com/xiaoming'
-})
-const saveProfile = () => { showToast('保存成功') }
+const profile = ref({ username: '', avatar: '', bio: '', email: '', location: '', website: '', github: '' })
+const loadProfile = async () => {
+    const data = await profileApi.getProfile(getUserId())
+    profile.value = data || {}
+}
+const saveProfile = async () => {
+    await profileApi.updateProfile(profile.value)
+    showToast('保存成功')
+}
 const changeAvatar = () => { showToast('选择头像') }
+onMounted(() => { loadProfile() })
 </script>
 
 <style scoped>

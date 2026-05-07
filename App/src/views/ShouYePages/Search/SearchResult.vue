@@ -2,13 +2,14 @@
     <div class="search-result-page">
         <PageNavBar title="搜索结果" />
         <van-search v-model="keyword" placeholder="搜索技术问题、代码..." @search="onSearch" />
-        <van-tabs v-model:active="activeTab">
+        <van-tabs v-model:active="activeTab" @change="onTabChange">
             <van-tab title="综合">
                 <div class="result-list">
+                    <van-empty v-if="results.length === 0" description="暂无搜索结果" />
                     <PostCard v-for="item in results" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
                             <div class="result-meta">
-                                <span>{{ item.author.username }}</span>
+                                <span>{{ item.author?.username || '' }}</span>
                                 <span><van-icon name="eye-o" /> {{ item.view_count }}</span>
                                 <span><van-icon name="good-job-o" /> {{ item.like_count }}</span>
                             </div>
@@ -18,10 +19,11 @@
             </van-tab>
             <van-tab title="文章">
                 <div class="result-list">
+                    <van-empty v-if="articleResults.length === 0" description="暂无文章" />
                     <PostCard v-for="item in articleResults" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
                             <div class="result-meta">
-                                <span>{{ item.author.username }}</span>
+                                <span>{{ item.author?.username || '' }}</span>
                                 <span><van-icon name="eye-o" /> {{ item.view_count }}</span>
                                 <span><van-icon name="good-job-o" /> {{ item.like_count }}</span>
                             </div>
@@ -31,10 +33,11 @@
             </van-tab>
             <van-tab title="问题">
                 <div class="result-list">
+                    <van-empty v-if="questionResults.length === 0" description="暂无问题" />
                     <PostCard v-for="item in questionResults" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
                             <div class="result-meta">
-                                <span>{{ item.author.username }}</span>
+                                <span>{{ item.author?.username || '' }}</span>
                                 <span><van-icon name="eye-o" /> {{ item.view_count }}</span>
                                 <span><van-icon name="good-job-o" /> {{ item.like_count }}</span>
                             </div>
@@ -47,27 +50,43 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { searchApi } from '@/assets/app_request_api.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 import PostCard from '@/components/PostCard.vue'
 const router = useRouter()
 const route = useRoute()
 const keyword = ref(route.query.keyword || '')
 const activeTab = ref(0)
-const results = ref([
-    { post_id: 1, title: '如何在 Python 中实现多线程并发？', summary: '本文详细介绍了 Python 中多线程的使用方法...', author: { username: '程序员小明' }, view_count: 1205, like_count: 86 },
-    { post_id: 2, title: 'Vue3 中的组合式 API 如何使用？', summary: '组合式 API 是 Vue3 的重要特性...', author: { username: '前端小王' }, view_count: 892, like_count: 64 },
-    { post_id: 3, title: 'MySQL 索引失效的常见场景', summary: '总结 MySQL 索引失效的 10 种常见场景...', author: { username: 'DBA老张' }, view_count: 2341, like_count: 156 }
-])
-const articleResults = ref([
-    { post_id: 2, title: 'Vue3 中的组合式 API 如何使用？', summary: '组合式 API 是 Vue3 的重要特性...', author: { username: '前端小王' }, view_count: 892, like_count: 64 }
-])
-const questionResults = ref([
-    { post_id: 1, title: '如何在 Python 中实现多线程并发？', summary: '本文详细介绍了 Python 中多线程的使用方法...', author: { username: '程序员小明' }, view_count: 1205, like_count: 86 }
-])
-const onSearch = () => {}
+const results = ref([])
+const articleResults = ref([])
+const questionResults = ref([])
+const loadResults = async () => {
+    const data = await searchApi.search(keyword.value, { type: 'all' })
+    results.value = data?.list || []
+}
+const loadArticleResults = async () => {
+    const data = await searchApi.search(keyword.value, { type: 'article' })
+    articleResults.value = data?.list || []
+}
+const loadQuestionResults = async () => {
+    const data = await searchApi.search(keyword.value, { type: 'question' })
+    questionResults.value = data?.list || []
+}
+const onTabChange = async (index) => {
+    if (index === 0 && results.value.length === 0) { await loadResults() }
+    if (index === 1 && articleResults.value.length === 0) { await loadArticleResults() }
+    if (index === 2 && questionResults.value.length === 0) { await loadQuestionResults() }
+}
+const onSearch = () => {
+    if (keyword.value.trim()) {
+        router.push({ path: '/search-result', query: { keyword: keyword.value } })
+        loadResults()
+    }
+}
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
+onMounted(() => { loadResults() })
 </script>
 
 <style scoped>

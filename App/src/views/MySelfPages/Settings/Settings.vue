@@ -12,11 +12,12 @@
 <script setup>
 import { useRouter } from 'vue-router'
 import { showToast } from 'vant'
+import { logout as doLogout } from '@/assets/local_storage.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 const router = useRouter()
 const clearCache = () => { showToast('缓存已清除') }
 const goToAbout = () => { router.push('/about') }
-const logout = () => { showToast('已退出登录'); router.push('/shouye') }
+const logout = () => { doLogout(); showToast('已退出登录'); router.push('/shouye') }
 </script>
 
 <style scoped>
