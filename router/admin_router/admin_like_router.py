@@ -5,7 +5,6 @@ from models.model import User, Like, Post, Comment
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 admin_like_bp = Blueprint("admin_like", url_prefix="/api/admin/like")
 
 def check_admin(db, admin_id):

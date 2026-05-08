@@ -2,6 +2,7 @@ from sanic import Sanic
 from sanic.response import html, json
 from sanic_cors import CORS
 from sanic_ext import Extend
+from sanic.worker.manager import WorkerManager
 import os
 import logging
 import config
@@ -46,7 +47,7 @@ logging.basicConfig(
     handlers=[logging.FileHandler(config.LOG_FILE, encoding="utf-8"), logging.StreamHandler()]
 )
 logger = logging.getLogger(__name__)
-
+WorkerManager.THRESHOLD = config.SANIC_THRESHOLD  # worker ack超时(单位0.1s)
 app = Sanic("CodeSearchProject")
 CORS(app)
 
@@ -100,11 +101,10 @@ app.blueprint(report_bp)  # APP举报路由
 app.blueprint(system_bp)  # APP系统配置路由
 static_path = os.path.join(config.PROJECT_DIR, "static")
 app.static("/static", static_path, name="static_files")
-
 db_instance = None
 
 @app.listener("before_server_start")
-async def init_app(app, loop):
+async def init_app(app):
     """初始化应用,创建数据库表"""
     global db_instance
     db_instance = init_database()

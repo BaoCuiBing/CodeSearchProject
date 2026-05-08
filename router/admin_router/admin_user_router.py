@@ -8,7 +8,6 @@ from models.db_init import get_db_session
 from utils.password_analysis import generate_salt, hash_password, verify_password
 
 logger = logging.getLogger(__name__)
-
 admin_user_bp = Blueprint("admin_user", url_prefix="/api/admin/user")
 
 @admin_user_bp.get("/list")

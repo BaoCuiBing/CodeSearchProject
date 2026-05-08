@@ -36,6 +36,7 @@
 | data.avatar | string | 头像URL |
 | data.bio | string | 个人简介 |
 | data.email | string | 邮箱（脱敏） |
+| data.phone | string | 手机号 |
 | data.location | string | 所在地 |
 | data.website | string | 个人网站 |
 | data.github | string | GitHub地址 |
@@ -81,6 +82,7 @@ GET /api/profile/1?current_user_id=2
 | location | string | no | 所在地 | Body (JSON) |
 | website | string | no | 个人网站 | Body (JSON) |
 | github | string | no | GitHub地址 | Body (JSON) |
+| phone | string | no | 手机号 | Body (JSON) |
 
 #### 请求示例
 ```

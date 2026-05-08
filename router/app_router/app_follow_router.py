@@ -5,7 +5,6 @@ from models.model import User, Follow
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 follow_bp = Blueprint("follow", url_prefix="/api/follow")
 
 @follow_bp.get("/following")

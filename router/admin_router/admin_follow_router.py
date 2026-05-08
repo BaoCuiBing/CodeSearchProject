@@ -5,7 +5,6 @@ from models.model import User, Follow
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 admin_follow_bp = Blueprint("admin_follow", url_prefix="/api/admin/follow")
 
 def check_admin(db, admin_id):

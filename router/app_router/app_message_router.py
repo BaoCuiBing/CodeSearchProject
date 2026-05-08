@@ -6,7 +6,6 @@ from models.model import User, Notification, Message, SystemMessage, SystemMessa
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 message_bp = Blueprint("message", url_prefix="/api/message")
 
 @message_bp.get("/notifications")

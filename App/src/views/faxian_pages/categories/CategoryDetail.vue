@@ -1,24 +1,34 @@
 <template>
     <div class="category-detail-page">
         <PageNavBar :title="category.name" />
-        <div class="category-info">
-            <van-icon :name="category.icon" size="48" color="#1989fa" />
-            <h2>{{ category.name }}</h2>
-            <p>{{ category.description }}</p>
-            <span class="post-count">{{ category.post_count }} 篇文章</span>
+        <div v-if="loading" class="loading-wrap">
+            <van-loading size="24px" vertical>加载中...</van-loading>
         </div>
-        <div class="post-list">
-            <van-empty v-if="posts.length === 0" description="暂无文章" />
-            <PostCard v-for="post in posts" :key="post.post_id" :title="post.title" :summary="post.summary" @click="goToDetail(post.post_id)">
-                <template #footer>
-                    <div class="post-meta">
-                        <span>{{ post.author?.username || '' }}</span>
-                        <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
-                        <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ post.like_count }}</span>
-                    </div>
-                </template>
-            </PostCard>
+        <div v-else-if="error" class="error-wrap">
+            <van-icon name="warn-o" size="48" color="#999" />
+            <p class="error-text">{{ error }}</p>
+            <van-button type="primary" size="small" @click="loadAll">重试</van-button>
         </div>
+        <template v-else>
+            <div class="category-info">
+                <van-icon :name="category.icon" size="48" color="#1989fa" />
+                <h2>{{ category.name }}</h2>
+                <p>{{ category.description }}</p>
+                <span class="post-count">{{ category.post_count }} 篇文章</span>
+            </div>
+            <div class="post-list">
+                <van-empty v-if="posts.length === 0" description="暂无文章" />
+                <PostCard v-for="post in posts" :key="post.post_id" :title="post.title" :summary="post.summary" @click="goToDetail(post.post_id)">
+                    <template #footer>
+                        <div class="post-meta">
+                            <span>{{ post.author?.username || '' }}</span>
+                            <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
+                            <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ post.like_count }}</span>
+                        </div>
+                    </template>
+                </PostCard>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -31,6 +41,8 @@ import PostCard from '@/components/PostCard.vue'
 const router = useRouter()
 const route = useRoute()
 const categoryIcons = ['cluster-o', 'desktop-o', 'phone-o', 'records', 'setting-o', 'photo-fail', 'chart-trending-o', 'bag-o']
+const loading = ref(true)
+const error = ref('')
 const category = ref({ name: '', icon: '', description: '', post_count: 0 })
 const posts = ref([])
 const loadCategory = async () => {
@@ -46,14 +58,26 @@ const loadPosts = async () => {
     const data = await articleApi.getList({ category_id: categoryId, page: 1 })
     posts.value = data?.list || []
 }
+const loadAll = async () => {
+    loading.value = true
+    error.value = ''
+    try {
+        await Promise.all([loadCategory(), loadPosts()])
+    } catch (err) {
+        error.value = err.message || '加载失败'
+    } finally {
+        loading.value = false
+    }
+}
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
-onMounted(async () => {
-    await Promise.all([loadCategory(), loadPosts()])
-})
+onMounted(() => { loadAll() })
 </script>
 
 <style scoped>
 .category-detail-page { background: #f5f5f5; min-height: 100vh; }
+.loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
+.error-text { font-size: 14px; color: #999; }
 .category-info { background: #fff; padding: 24px; text-align: center; margin-bottom: 8px; }
 .category-info h2 { margin: 12px 0 8px; font-size: 20px; color: #333; }
 .category-info p { margin: 0 0 8px; font-size: 14px; color: #666; }

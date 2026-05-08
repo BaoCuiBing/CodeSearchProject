@@ -9,7 +9,6 @@ from models.db_init import get_db_session
 from utils.oss_option import oss_client
 
 logger = logging.getLogger(__name__)
-
 upload_bp = Blueprint("upload", url_prefix="/api/upload")
 UPLOAD_DIR = os.path.join(config.PROJECT_DIR, "static", "uploads")
 MAX_SIZE = config.MAX_UPLOAD_SIZE * 1024 * 1024  # 字节

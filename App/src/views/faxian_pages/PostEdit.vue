@@ -34,32 +34,43 @@
                 </div>
             </div>
             <div class="editor-wrapper">
-                <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef" :default-config="toolbarConfig" :mode="'default'" />
-                <Editor style="height: 400px; overflow-y: hidden" v-model="postForm.content" :default-config="editorConfig" :mode="'default'" @on-created="handleCreated" />
+                <tinymce-editor v-model="postForm.content" :init="editorConfig" :tinymce-script-src="tinymceScriptSrc" :license-key="licenseKey" />
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, shallowRef } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { showToast, showSuccessToast } from 'vant'
-import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
-import '@wangeditor/editor/dist/css/style.css'
+import TinymceEditor from '@tinymce/tinymce-vue'
 import { articleApi, categoryApi, tagApi } from '@/assets/app_request_api.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 const router = useRouter()
-const editorRef = shallowRef()
-const toolbarConfig = {}
-const editorConfig = { placeholder: '请输入内容...' }
 const showCategoryPicker = ref(false)
 const showTagPicker = ref(false)
 const tagSearchText = ref('')
 const categoryColumns = ref([])
 const availableTags = ref([])
+const publishing = ref(false)
 const postForm = ref({ title: '', type: 'article', category_id: null, category_name: '', tags: [], content: '' })
-const handleCreated = (editor) => { editorRef.value = editor }
+const editorConfig = {
+    language_url: '/tinymce/langs/zh_CN.js',
+    language: 'zh_CN',
+    skin_url: '/tinymce/skins/ui/oxide',
+    content_css: '/tinymce/skins/content/default/content.min.css',
+    plugins: 'lists code image link table codesample fullscreen preview wordcount',
+    toolbar: ['undo redo | bold italic underline strikethrough', 'alignleft aligncenter alignright | bullist numlist', 'table forecolor backcolor | codesample image link', 'fullscreen preview code'],
+    width: '100%',
+    height: 700,
+    branding: false,
+    statusbar: true,
+    paste_data_images: true,
+    license_key: 'gpl'
+}
+const tinymceScriptSrc = '/tinymce/tinymce.min.js'
+const licenseKey = 'gpl'
 const loadCategories = async () => {
     const data = await categoryApi.getList()
     categoryColumns.value = (data || []).map(c => ({ text: c.name, value: c.category_id }))
@@ -81,21 +92,23 @@ const publishPost = async () => {
     if (!postForm.value.title.trim()) { showToast('请输入标题'); return }
     if (!postForm.value.category_id) { showToast('请选择分类'); return }
     if (!postForm.value.content.trim()) { showToast('请输入内容'); return }
-    await articleApi.create({ ...postForm.value, tag_ids: postForm.value.tags.map(t => t.tag_id) })
-    showSuccessToast('发布成功')
-    setTimeout(() => { router.back() }, 1000)
+    publishing.value = true
+    try {
+        await articleApi.create({ ...postForm.value, tag_ids: postForm.value.tags.map(t => t.tag_id) })
+        showSuccessToast('发布成功')
+        setTimeout(() => { router.back() }, 1000)
+    } catch (err) {
+        showToast(err.message || '发布失败')
+    } finally {
+        publishing.value = false
+    }
 }
 onMounted(() => { loadCategories(); loadTags() })
-onBeforeUnmount(() => {
-    const editor = editorRef.value
-    if (editor == null) return
-    editor.destroy()
-})
 </script>
 
 <style scoped>
-.post-edit-page { background: #f5f5f5; min-height: 100vh; }
-.edit-form { padding: 0; }
+.post-edit-page { background: #f5f5f5; min-height: 100vh; overflow-x: hidden; }
+.edit-form { padding: 0; max-width: 100%; overflow-x: hidden; width: 100%; }
 .type-selector { padding: 12px 16px; background: #fff; border-bottom: 1px solid #f0f0f0; }
 .category-selector { background: #fff; }
 .tag-selector { background: #fff; padding-bottom: 12px; }
@@ -104,5 +117,5 @@ onBeforeUnmount(() => {
 .tag-picker-list { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 16px 16px; max-height: 300px; overflow-y: auto; }
 .tag-picker-footer { padding: 0 16px 16px; }
 .tag-list { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 8px; }
-.editor-wrapper { background: #fff; z-index: 100; }
+.editor-wrapper { background: #fff; z-index: 100; padding: 12px 16px; max-width: 100%; box-sizing: border-box; width: 100%; }
 </style>

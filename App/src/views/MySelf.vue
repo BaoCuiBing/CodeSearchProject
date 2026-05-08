@@ -1,7 +1,15 @@
 <template>
     <div class="myself-page">
         <van-nav-bar title="我的" fixed placeholder />
-        <div class="user-header">
+        <div v-if="loading" class="loading-wrap">
+            <van-loading size="24px" vertical>加载中...</van-loading>
+        </div>
+        <div v-else-if="error" class="error-wrap">
+            <van-icon name="warn-o" size="48" color="#999" />
+            <p class="error-text">{{ error }}</p>
+            <van-button type="primary" size="small" @click="loadUserProfile">重试</van-button>
+        </div>
+        <div v-else class="user-header">
             <div class="user-info">
                 <van-image round width="64px" height="64px" :src="user?.avatar || ''" />
                 <div class="user-meta">
@@ -30,7 +38,6 @@
                 <van-cell title="我的文章" icon="notes-o" is-link @click="goToMyArticles" />
                 <van-cell title="我的问题" icon="question-o" is-link @click="goToMyQuestions" />
                 <van-cell title="我的收藏" icon="star-o" is-link @click="goToFavorites" />
-                <van-cell title="浏览历史" icon="clock-o" is-link @click="goToHistory" />
             </van-cell-group>
         </div>
         <div class="menu-section">
@@ -54,11 +61,21 @@ import { showConfirmDialog } from 'vant'
 import { profileApi } from '@/assets/app_request_api.js'
 import { getUserId, isLogin, logout as clearUser } from '@/assets/local_storage.js'
 const router = useRouter()
+const loading = ref(true)
+const error = ref('')
 const user = ref(null)
 const loadUserProfile = async () => {
-    if (!isLogin()) { return }
-    const data = await profileApi.getProfile(getUserId())
-    user.value = data
+    if (!isLogin()) { loading.value = false; return }
+    loading.value = true
+    error.value = ''
+    try {
+        const data = await profileApi.getProfile(getUserId())
+        user.value = data
+    } catch (err) {
+        error.value = err.message || '加载失败'
+    } finally {
+        loading.value = false
+    }
 }
 const goToSettings = () => { router.push('/settings') }
 const goToFollowing = () => { router.push('/following') }
@@ -66,7 +83,6 @@ const goToFollowers = () => { router.push('/followers') }
 const goToMyArticles = () => { router.push('/my-articles') }
 const goToMyQuestions = () => { router.push('/my-questions') }
 const goToFavorites = () => { router.push('/favorites') }
-const goToHistory = () => { router.push('/history') }
 const goToProfile = () => { router.push('/profile') }
 const goToSecurity = () => { router.push('/security') }
 const goToAbout = () => { router.push('/about') }
@@ -78,6 +94,9 @@ onMounted(() => { loadUserProfile() })
 
 <style scoped>
 .myself-page { padding-bottom: 60px; background: #f5f5f5; min-height: 100vh; }
+.loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
+.error-text { font-size: 14px; color: #999; }
 .user-header { background: #fff; padding: 24px 16px; margin-bottom: 8px; }
 .user-info { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
 .user-meta { flex: 1; }

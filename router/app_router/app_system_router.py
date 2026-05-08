@@ -5,7 +5,6 @@ from models.model import SystemSetting
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 system_bp = Blueprint("system", url_prefix="/api/system")
 
 @system_bp.get("/carousel")

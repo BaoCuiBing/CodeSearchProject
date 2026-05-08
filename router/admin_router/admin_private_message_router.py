@@ -5,7 +5,6 @@ from models.model import User, Message
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 admin_private_message_bp = Blueprint("admin_private_message", url_prefix="/api/admin/private_message")
 
 def check_admin(db, admin_id):

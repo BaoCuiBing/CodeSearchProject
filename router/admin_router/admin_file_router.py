@@ -9,7 +9,6 @@ from utils.oss_option import oss_client
 import config
 
 logger = logging.getLogger(__name__)
-
 admin_file_bp = Blueprint("admin_file", url_prefix="/api/admin/file")
 
 def check_admin(db, admin_id):

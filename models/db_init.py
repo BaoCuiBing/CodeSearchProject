@@ -2,11 +2,14 @@ import os
 import re
 import json
 import shutil
+import logging
 import markdown2
 from config import PROJECT_DIR
 from models.db_base import Database, Base
 from models.model import User, File, Report, SearchHistory, Category, Post, Tag, PostTag, Comment, Favorite, Like, Follow, Message, Notification, SystemMessage, SystemMessageTarget, SystemSetting
 from utils.password_analysis import generate_salt, hash_password
+
+logger = logging.getLogger(__name__)
 
 def _strip_md_tags(text):
     """去除Markdown标识符,只保留纯文本"""
@@ -28,6 +31,7 @@ def _strip_md_tags(text):
 
 def _init_default_data(session):
     """初始化默认数据(管理员账号和系统设置)"""
+    logger.info("开始初始化默认数据...")
     admin = session.query(User).filter(User.usernumber == "admin").first()
     if not admin:
         salt = generate_salt()
@@ -35,6 +39,9 @@ def _init_default_data(session):
         admin_user = User(usernumber="admin", username="管理员", password=hashed_password, salt=salt, email="wx18455930538@163.com", phone="13800138000", role="admin", avatar="/static/uploads/admin_head.png", bio="我是一名专注于后端开发的工程师，主要从事高性能服务架构设计与系统优化。熟悉 Python 生态及相关框架，具备扎实的网络与系统基础。当前重点关注分布式系统与高并发处理方向，致力于构建稳定、高效的服务系统。", location="上海", website="http://8.130.94.251:5173/", github="https://github.com/BaoCuiBing/CodeSearchKu.git", status="active", is_verified=0)
         session.add(admin_user)
         session.commit()
+        logger.info("管理员账号创建完成: usernumber=admin")
+    else:
+        logger.info("管理员账号已存在,跳过创建")
     settings = [
         {"key": "site_name", "value": "CodeSearch", "description": "站点名称"},
         {"key": "site_description", "value": "CodeSearch是一个专业的代码搜索与知识分享社区，汇聚海量编程教程、技术文档与开源代码资源，支持精准搜索、分类浏览、收藏互动等功能，助力开发者高效学习、快速解决问题，共同成长进步。", "description": "站点描述"},
@@ -154,7 +161,10 @@ def _init_default_data(session):
     if os.path.exists(pots_mds_dir):
         admin_user = session.query(User).filter(User.usernumber == "admin").first()
         sort_idx = 0
-        for folder_name in sorted(os.listdir(pots_mds_dir)):
+        folder_list = sorted(os.listdir(pots_mds_dir))
+        total_folders = len([f for f in folder_list if os.path.isdir(os.path.join(pots_mds_dir, f))])
+        logger.info(f"开始导入教程数据: 共{total_folders}个分类目录")
+        for folder_name in folder_list:
             folder_path = os.path.join(pots_mds_dir, folder_name)
             if os.path.isdir(folder_path):
                 exist_cat = session.query(Category).filter(Category.name == folder_name).first()
@@ -164,22 +174,74 @@ def _init_default_data(session):
                     session.flush()
                     sort_idx += 1
                     cat_id = category.id
+                    logger.debug(f"创建分类: {folder_name}")
                 else:
                     cat_id = exist_cat.id
-                md_files = [f for f in os.listdir(folder_path) if f.endswith(".md")]
-                for md_file in md_files:
-                    md_path = os.path.join(folder_path, md_file)
-                    with open(md_path, "r", encoding="utf-8") as f:
+                    logger.debug(f"分类已存在: {folder_name}")
+                html_files = [f for f in os.listdir(folder_path) if f.endswith(".html")]
+                for html_file in html_files:
+                    html_path = os.path.join(folder_path, html_file)
+                    with open(html_path, "r", encoding="utf-8") as f:
                         content = f.read()
-                    title = os.path.splitext(md_file)[0]
+                    title = os.path.splitext(html_file)[0]
                     exist_post = session.query(Post).filter(Post.title == title, Post.category_id == cat_id).first()
                     if not exist_post:
-                        plain_text = _strip_md_tags(content)
+                        plain_text = re.sub(r'<[^>]+>', '', content)
+                        plain_text = re.sub(r'\s{2,}', ' ', plain_text).strip()
+                        plain_text = re.sub(r'https?://\S+', '', plain_text)
                         summary = plain_text[:200] if len(plain_text) > 200 else plain_text
-                        html_content = markdown2.markdown(content, extras=['fenced-code-blocks', 'tables', 'code-friendly'])
-                        post = Post(user_id=admin_user.id, category_id=cat_id, title=title, content=html_content, summary=summary, cover_image='{"imgs": []}', type="article", status="published")
+                        post = Post(user_id=admin_user.id, category_id=cat_id, title=title, content=content, summary=summary, cover_image='{"imgs": []}', type="article", status="published")
                         session.add(post)
+                logger.info(f"分类[{folder_name}]导入完成: {len(html_files)}篇文章")
         session.commit()
+        logger.info(f"教程数据导入完成: 共{total_folders}个分类")
+    logger.info("开始关联标签与文章...")
+    tag_map = {tag.name: tag for tag in session.query(Tag).all()}
+    cat_map = {cat.id: cat.name for cat in session.query(Category).all()}
+    existing_pt = set((pt.post_id, pt.tag_id) for pt in session.query(PostTag).all())
+    all_posts = session.query(Post).all()
+    tag_category_map = {
+        "Python": ["Python"],
+        "JavaScript": ["JavaScript", "JS", "AJAX"],
+        "Vue": ["Vue"],
+        "React": ["React"],
+        "Docker": ["Docker"],
+        "MySQL": ["MySQL", "SQL"],
+        "Redis": ["Redis"],
+        "Linux": ["Linux"],
+        "Go": ["Go"],
+        "Java": ["Java"],
+        "前端": ["HTML", "CSS", "JavaScript", "Vue", "React", "Bootstrap", "Angular", "jQuery", "前端", "AppML", "SVG", "Canvas", "Sass", "Less", "Tailwind", "Echarts", "Chart.js", "Highcharts", "D3.js"],
+        "数据库": ["MySQL", "SQL", "Redis", "MongoDB", "SQLite", "数据库"],
+        "运维": ["Docker", "Linux", "Nginx", "Apache", "运维", "部署", "服务器", "Zookeeper"],
+        "算法": ["算法", "数据结构"],
+        "数据结构": ["数据结构"],
+        "Git": ["Git", "SVN", "版本控制"],
+        "网络安全": ["安全", "网络", "协议", "TCP"],
+        "云计算": ["云", "AWS", "Azure", "Docker", "Kubernetes"],
+        "UI设计": ["UI", "设计", "CSS", "Bootstrap", "Tailwind"],
+    }
+    post_tag_count = 0
+    for post in all_posts:
+        cat_name = cat_map.get(post.category_id, "")
+        if not cat_name:
+            continue
+        for tag_name, keywords in tag_category_map.items():
+            if tag_name not in tag_map:
+                continue
+            if any(kw.lower() in cat_name.lower() for kw in keywords):
+                tag_id = tag_map[tag_name].id
+                if (post.id, tag_id) not in existing_pt:
+                    session.add(PostTag(post_id=post.id, tag_id=tag_id))
+                    existing_pt.add((post.id, tag_id))
+                    post_tag_count += 1
+    session.commit()
+    logger.info(f"标签关联完成: 共{post_tag_count}条关联")
+    for tag in session.query(Tag).all():
+        count = session.query(PostTag).filter(PostTag.tag_id == tag.id).count()
+        tag.post_count = count
+    session.commit()
+    logger.info("标签文章计数更新完成")
     user_map = {u.username: u.id for u in session.query(User).all()}
     post_ids = [p.id for p in session.query(Post.id).order_by(Post.id).all()]
     comment_data = [
@@ -281,11 +343,14 @@ def _init_default_data(session):
 
 def init_database():
     """初始化数据库,创建表结构"""
+    logger.info("开始初始化数据库...")
     db = Database()
     db.create_tables()
+    logger.info("数据库表创建完成")
     session = db.get_session()
     try:
         _init_default_data(session)
+        logger.info("数据库初始化完成")
     finally:
         session.close()
     return db

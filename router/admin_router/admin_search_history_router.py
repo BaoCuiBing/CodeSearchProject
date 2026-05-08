@@ -5,7 +5,6 @@ from models.model import User, SearchHistory
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 admin_search_history_bp = Blueprint("admin_search_history", url_prefix="/api/admin/search-history")
 
 def check_admin(db, admin_id):

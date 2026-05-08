@@ -71,7 +71,7 @@
             }
         });
         function initEditor() {
-            t.render({ elem: '#contentEditor', height: 300, images_upload_url: '/api/upload/file', init_instance_callback: function(editor) { if (articleData && articleData.content) { editor.setContent(articleData.content); } } });
+            t.render({ elem: '#contentEditor', height: 700, images_upload_url: '/api/upload/file', init_instance_callback: function(editor) { if (articleData && articleData.content) { editor.setContent(articleData.content); } } });
         }
         form.on('submit(saveArticle)', function(data) {
             var d = data.field;

@@ -31,7 +31,7 @@
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
         SendLog.log_info('加载新建内容页面', 'article_create');
-        t.render({ elem: '#contentEditor', height: 300, images_upload_url: '/api/upload/file' });
+        t.render({ elem: '#contentEditor', height: 700, images_upload_url: '/api/upload/file' });
         var coverUrls = [];
         upload.render({
             elem: '#uploadCoverBtn',

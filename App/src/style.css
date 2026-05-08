@@ -1,2 +1,2 @@
-body { margin: 0; padding: 0; }
-#app { width: 100%; max-width: 100%; margin: 0 auto; min-height: 100vh; }
+html, body { margin: 0; padding: 0; width: 100%; max-width: 100%; overflow-x: hidden; }
+#app { width: 100%; max-width: 100%; margin: 0 auto; min-height: 100vh; overflow-x: hidden; }

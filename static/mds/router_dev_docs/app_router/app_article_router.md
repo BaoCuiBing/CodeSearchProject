@@ -302,10 +302,11 @@ Content-Type: application/json
 |--------|------|------|------|------|
 | type | string | no | 类型：hot_question/recommend_article，默认混合 | Query |
 | limit | int | no | 返回数量限制，默认10 | Query |
+| random | bool | no | 是否随机返回，默认false | Query |
 
 #### 请求示例
 ```
-GET /api/article/recommend?type=hot_question&limit=10
+GET /api/article/recommend?type=hot_question&limit=10&random=true
 ```
 
 #### 响应格式

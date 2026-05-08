@@ -45,8 +45,15 @@
         <div class="setting-item">
             <div class="setting-label">清明节模式</div>
             <div class="setting-value">
-                <input type="checkbox" name="special_ancestor_worship" lay-skin="switch" lay-text="开启|关闭" lay-filter="specialAncestorWorship">
+                <input type="checkbox" name="special_ancestor_worship" lay-skin="switch" lay-text="开启 | 关闭" lay-filter="specialAncestorWorship">
                 <span class="setting-desc" style="margin-left: 10px;">开启后网站显示清明节主题</span>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div class="setting-label">重置数据库</div>
+            <div class="setting-value">
+                <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" onclick="resetDatabase()">重置数据库</button>
+                <span class="setting-desc" style="margin-left: 10px;">危险操作：清空所有数据并恢复初始状态</span>
             </div>
         </div>
         </form>
@@ -115,6 +122,28 @@
     function openCarouselDialog() {
         SendLog.log_info('打开轮播图设置弹窗', 'settings');
         lostoryOption.openDialog('首页轮播图设置', '/admin/dialogs/settings_carousel_imgs.html', ['800px', '600px']);
+    }
+    function resetDatabase() {
+        SendLog.log_info('点击重置数据库按钮', 'settings');
+        var L = lostoryOption.getLayer();
+        L.confirm('警告：此操作将清空所有数据并恢复初始状态！<br/>包括：用户、文章、评论、收藏等所有数据<br/><br/>确定要继续吗？', '重置数据库', function() {
+            adminApi.system.resetDatabase(true).then(function(res) {
+                if (res.code === 200) {
+                    L.msg('重置成功', {icon: 1, time: 2000}, function() {
+                        window.location.reload();
+                    });
+                    SendLog.log_info('数据库重置成功', 'settings');
+                } else {
+                    L.msg('重置失败：' + res.msg, {icon: 2});
+                    SendLog.log_warning('数据库重置失败：' + res.msg, 'settings');
+                }
+            }).catch(function(err) {
+                L.msg('请求异常：' + err.message, {icon: 2});
+                SendLog.log_error('数据库重置请求异常：' + err.message, 'settings');
+            });
+        }, function() {
+            SendLog.log_info('取消重置数据库', 'settings');
+        });
     }
     window.updateCarouselDesc = function(value) {
         try { var parsed = JSON.parse(value); document.getElementById('carousel_imgs_display').textContent = '已设置' + (parsed.imgs ? parsed.imgs.length : 0) + '个图片'; }

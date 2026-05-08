@@ -1,16 +1,26 @@
 <template>
     <div class="chat-detail-page">
         <PageNavBar :title="chatUser.username" />
-        <div class="chat-messages">
-            <div v-for="msg in messages" :key="msg.message_id" class="chat-bubble" :class="{ self: msg.from_user_id === selfUserId }">
-                <van-image round width="36px" height="36px" :src="msg.from_user_id === selfUserId ? selfAvatar : chatUser.avatar" />
-                <div class="bubble-content">{{ msg.content }}</div>
+        <div v-if="loading" class="loading-wrap">
+            <van-loading size="24px" vertical>加载中...</van-loading>
+        </div>
+        <div v-else-if="error" class="error-wrap">
+            <van-icon name="warn-o" size="48" color="#999" />
+            <p class="error-text">{{ error }}</p>
+            <van-button type="primary" size="small" @click="loadMessages">重试</van-button>
+        </div>
+        <template v-else>
+            <div class="chat-messages">
+                <div v-for="msg in messages" :key="msg.message_id" class="chat-bubble" :class="{ self: msg.from_user_id === selfUserId }">
+                    <van-image round width="36px" height="36px" :src="msg.from_user_id === selfUserId ? selfAvatar : chatUser.avatar" />
+                    <div class="bubble-content">{{ msg.content }}</div>
+                </div>
             </div>
-        </div>
-        <div class="chat-input">
-            <van-field v-model="inputMessage" placeholder="输入消息..." />
-            <van-button type="primary" size="small" @click="sendMessage">发送</van-button>
-        </div>
+            <div class="chat-input">
+                <van-field v-model="inputMessage" placeholder="输入消息..." />
+                <van-button type="primary" size="small" @click="sendMessage">发送</van-button>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -25,10 +35,20 @@ const chatUser = ref({ user_id: route.query.user_id || 1, username: route.query.
 const selfAvatar = ref('')
 const selfUserId = ref(getUserId())
 const inputMessage = ref('')
+const loading = ref(true)
+const error = ref('')
 const messages = ref([])
 const loadMessages = async () => {
-    const data = await messageApi.getConversationMessages(chatUser.value.user_id, 1, 20)
-    messages.value = data?.list || []
+    loading.value = true
+    error.value = ''
+    try {
+        const data = await messageApi.getConversationMessages(chatUser.value.user_id, 1, 20)
+        messages.value = data?.list || []
+    } catch (err) {
+        error.value = err.message || '加载失败'
+    } finally {
+        loading.value = false
+    }
 }
 const sendMessage = async () => {
     if (!inputMessage.value.trim()) return
@@ -41,6 +61,9 @@ onMounted(() => { loadMessages() })
 
 <style scoped>
 .chat-detail-page { background: #f5f5f5; min-height: 100vh; display: flex; flex-direction: column; }
+.loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
+.error-text { font-size: 14px; color: #999; }
 .chat-messages { flex: 1; padding: 16px; overflow-y: auto; }
 .chat-bubble { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 16px; }
 .chat-bubble.self { flex-direction: row-reverse; }

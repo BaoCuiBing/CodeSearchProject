@@ -6,7 +6,6 @@ from models.model import Post, User, Tag, PostTag, SearchHistory, Category
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 search_bp = Blueprint("search", url_prefix="/api/search")
 
 @search_bp.get("/")

@@ -7,7 +7,6 @@ from models.model import User, Post, Follow, Comment
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 ranking_bp = Blueprint("ranking", url_prefix="/api/ranking")
 
 @ranking_bp.get("/list")

@@ -6,7 +6,6 @@ from models.model import Favorite, Post, User
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 favorite_bp = Blueprint("favorite", url_prefix="/api/favorite")
 
 @favorite_bp.get("/list")

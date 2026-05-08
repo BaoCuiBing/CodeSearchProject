@@ -7,7 +7,6 @@ from models.db_init import get_db_session
 from utils.password_analysis import generate_salt, hash_password, verify_password
 
 logger = logging.getLogger(__name__)
-
 admin_auth_bp = Blueprint("admin_auth", url_prefix="/api/admin/auth")
 
 @admin_auth_bp.post("/login")

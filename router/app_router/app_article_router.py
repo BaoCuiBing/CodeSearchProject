@@ -214,6 +214,7 @@ async def get_recommend_articles(request):
     db = request.ctx.db
     rec_type = request.args.get("type", "all")
     limit = int(request.args.get("limit", 10))
+    random_flag = request.args.get("random", "false").lower() == "true"
     if limit > 50:
         logger.warning("获取推荐失败:数量超出限制")
         return response.json({"code": 400, "msg": "返回数量超出限制"})
@@ -222,12 +223,16 @@ async def get_recommend_articles(request):
         query = query.filter(Post.type == "question")
     elif rec_type == "recommend_article":
         query = query.filter(Post.type == "article")
-    query = query.order_by(Post.like_count.desc(), Post.view_count.desc()).limit(limit)
+    if random_flag:
+        query = query.order_by(func.rand()).limit(limit)
+    else:
+        query = query.order_by(Post.like_count.desc(), Post.view_count.desc()).limit(limit)
     posts = query.all()
     post_list = []
     for p in posts:
         author = db.query(User).filter(User.id == p.user_id).first()
-        post_list.append({"post_id": p.id, "type": p.type, "title": p.title, "summary": p.summary, "author": {"user_id": author.id, "username": author.username, "avatar": author.avatar} if author else None, "view_count": p.view_count, "like_count": p.like_count, "comment_count": p.comment_count, "created_at": str(p.created_at)})
+        tags = db.query(Tag).join(PostTag).filter(PostTag.post_id == p.id).all()
+        post_list.append({"post_id": p.id, "type": p.type, "title": p.title, "summary": p.summary, "author": {"user_id": author.id, "username": author.username, "avatar": author.avatar} if author else None, "tags": [{"tag_id": t.id, "name": t.name} for t in tags], "view_count": p.view_count, "like_count": p.like_count, "comment_count": p.comment_count, "created_at": str(p.created_at)})
     logger.info(f"获取推荐文章成功:count={len(post_list)}")
     return response.json({"code": 200, "msg": "获取成功", "data": post_list})
 

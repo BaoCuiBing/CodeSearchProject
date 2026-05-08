@@ -1,7 +1,15 @@
 <template>
     <div class="rankings-page">
         <PageNavBar title="排行榜" />
-        <van-tabs v-model:active="activeTab" @change="onTabChange">
+        <div v-if="loading" class="loading-wrap">
+            <van-loading size="24px" vertical>加载中...</van-loading>
+        </div>
+        <div v-else-if="error" class="error-wrap">
+            <van-icon name="warn-o" size="48" color="#999" />
+            <p class="error-text">{{ error }}</p>
+            <van-button type="primary" size="small" @click="loadArticleRanking">重试</van-button>
+        </div>
+        <van-tabs v-else v-model:active="activeTab" @change="onTabChange">
             <van-tab title="文章热榜">
                 <div class="ranking-list">
                     <van-empty v-if="articleRanking.length === 0" description="暂无数据" />
@@ -30,15 +38,29 @@ import PageNavBar from '@/components/PageNavBar.vue'
 import RankingItem from '@/components/RankingItem.vue'
 const router = useRouter()
 const activeTab = ref(0)
+const loading = ref(true)
+const error = ref('')
 const articleRanking = ref([])
 const userRanking = ref([])
 const loadArticleRanking = async () => {
-    const data = await rankingApi.getList('article_hot', 'week', 20)
-    articleRanking.value = data?.list || []
+    loading.value = true
+    error.value = ''
+    try {
+        const data = await rankingApi.getList('article_hot', 'week', 20)
+        articleRanking.value = data?.list || []
+    } catch (err) {
+        error.value = err.message || '加载失败'
+    } finally {
+        loading.value = false
+    }
 }
 const loadUserRanking = async () => {
-    const data = await rankingApi.getList('user_active', 'week', 20)
-    userRanking.value = data?.list || []
+    try {
+        const data = await rankingApi.getList('user_active', 'week', 20)
+        userRanking.value = data?.list || []
+    } catch (err) {
+        error.value = err.message || '加载失败'
+    }
 }
 const onTabChange = async (index) => {
     if (index === 0 && articleRanking.value.length === 0) { await loadArticleRanking() }
@@ -48,3 +70,11 @@ const goToDetail = (postId) => { router.push({ path: '/article', query: { id: po
 const goToProfile = (userId) => { router.push({ path: '/user-profile', query: { id: userId } }) }
 onMounted(() => { loadArticleRanking() })
 </script>
+
+<style scoped>
+.rankings-page { background: #f5f5f5; min-height: 100vh; }
+.loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
+.error-text { font-size: 14px; color: #999; }
+.ranking-list { padding: 8px 0; }
+</style>

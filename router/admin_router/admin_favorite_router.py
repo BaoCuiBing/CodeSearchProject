@@ -5,7 +5,6 @@ from models.model import User, Favorite, Post
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 admin_favorite_bp = Blueprint("admin_favorite", url_prefix="/api/admin/favorite")
 
 def check_admin(db, admin_id):

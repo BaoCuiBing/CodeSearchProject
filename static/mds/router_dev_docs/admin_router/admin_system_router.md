@@ -112,89 +112,17 @@ GET /api/admin/system/settings?admin_id=1
 
 ---
 
-### 3. 重置设置为默认值（管理端）
-- **路径**: `/api/admin/system/settings/reset`
-- **方法**: `POST`
-- **函数名**: `reset_settings_to_default`
-- **OpenAPI摘要**: 重置指定设置键为默认值
-
-#### 请求参数
-| 参数名 | 类型 | 必填 | 说明 | 位置 |
-|--------|------|------|------|------|
-| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
-| key | string | yes | 要重置的设置键 | Body (JSON) |
-
-#### 请求示例
-```json
-{
-    "admin_id": 1,
-    "key": "site_name"
-}
-```
-
-#### 响应示例（失败）
-```json
-{
-    "code": 404,
-    "msg": "设置项不存在"
-}
-```
-
----
-
-### 4. 测试邮件发送（管理端）
-- **路径**: `/api/admin/system/test-email`
-- **方法**: `POST`
-- **函数名**: `test_email_config`
-- **OpenAPI摘要**: 测试邮件配置是否正确
-
-#### 请求参数
-| 参数名 | 类型 | 必填 | 说明 | 位置 |
-|--------|------|------|------|------|
-| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
-| to_email | string | yes | 测试接收邮箱 | Body (JSON) |
-
-#### 请求示例
-```json
-{
-    "admin_id": 1,
-    "to_email": "test@example.com"
-}
-```
-
-#### 响应格式
-```json
-{
-    "code": 200,
-    "msg": "测试邮件发送成功",
-    "data": {
-        "success": true,
-        "message": "邮件已发送至 test@example.com"
-    }
-}
-```
-
-#### 响应示例（失败）
-```json
-{
-    "code": 400,
-    "msg": "邮箱格式不正确"
-}
-```
-
----
-
-### 5. 清除缓存（管理端）
+### 3. 清除缓存（管理端）
 - **路径**: `/api/admin/system/clear-cache`
 - **方法**: `POST`
 - **函数名**: `clear_cache`
-- **OpenAPI摘要**: 清除系统缓存
+- **OpenAPI 摘要**: 清除系统缓存
 
 #### 请求参数
 | 参数名 | 类型 | 必填 | 说明 | 位置 |
 |--------|------|------|------|------|
-| admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
-| cache_types | array | no | 缓存类型：all/page/data/session/template，默认all | Body (JSON) |
+| admin_id | int | yes | 管理员 ID（需校验 users.role=admin） | Body (JSON) |
+| cache_types | array | no | 缓存类型：all/page/data/session/template，默认 all | Body (JSON) |
 
 #### 请求示例
 ```json
@@ -223,3 +151,50 @@ GET /api/admin/system/settings?admin_id=1
     }
 }
 ```
+
+---
+
+### 6. 重置数据库（管理端）
+- **路径**: `/api/admin/system/reset-database`
+- **方法**: `POST`
+- **函数名**: `reset_database`
+- **OpenAPI 摘要**: 重置数据库（清空所有数据并恢复初始状态）
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| admin_id | int | yes | 管理员 ID（需校验 users.role=admin） | Body (JSON) |
+| confirm | boolean | yes | 确认重置操作（必须为 true） | Body (JSON) |
+
+#### 请求示例
+```json
+{
+    "admin_id": 1,
+    "confirm": true
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 400,
+    "msg": "请确认重置操作，此操作将清空所有数据"
+}
+```
+
+#### 响应格式
+```json
+{
+    "code": 200,
+    "msg": "重置成功",
+    "data": {
+        "success": true
+    }
+}
+```
+
+#### 注意事项
+- ⚠️ **危险操作**：此操作将删除数据库中所有表数据
+- 操作前请务必备份重要数据
+- 重置后会自动初始化默认数据（管理员账号、系统设置、默认标签等）
+- 建议仅在开发或测试环境使用

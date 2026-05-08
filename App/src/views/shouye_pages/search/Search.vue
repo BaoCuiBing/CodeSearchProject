@@ -2,7 +2,15 @@
     <div class="search-page">
         <PageNavBar title="搜索" />
         <van-search v-model="keyword" placeholder="搜索技术问题、代码..." @search="onSearch" />
-        <div class="search-content">
+        <div v-if="loading" class="loading-wrap">
+            <van-loading size="24px" vertical>加载中...</van-loading>
+        </div>
+        <div v-else-if="error" class="error-wrap">
+            <van-icon name="warn-o" size="48" color="#999" />
+            <p class="error-text">{{ error }}</p>
+            <van-button type="primary" size="small" @click="loadAll">重试</van-button>
+        </div>
+        <div v-else class="search-content">
             <div class="section-title">搜索历史</div>
             <div class="history-list">
                 <van-tag v-for="h in history" :key="h.history_id" plain closable @close="removeHistory(h.history_id)" @click="searchKeyword(h.keyword)">{{ h.keyword }}</van-tag>
@@ -22,6 +30,8 @@ import { searchApi } from '@/assets/app_request_api.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 const router = useRouter()
 const keyword = ref('')
+const loading = ref(true)
+const error = ref('')
 const history = ref([])
 const hotSearches = ref([])
 const loadHistory = async () => {
@@ -32,19 +42,31 @@ const loadHotSearches = async () => {
     const data = await searchApi.getHot()
     hotSearches.value = data || []
 }
+const loadAll = async () => {
+    loading.value = true
+    error.value = ''
+    try {
+        await Promise.all([loadHistory(), loadHotSearches()])
+    } catch (err) {
+        error.value = err.message || '加载失败'
+    } finally {
+        loading.value = false
+    }
+}
 const onSearch = () => { if (keyword.value.trim()) { router.push({ path: '/search-result', query: { keyword: keyword.value } }) } }
 const searchKeyword = (kw) => { keyword.value = kw; onSearch() }
 const removeHistory = async (historyId) => {
     await searchApi.deleteHistoryItem(historyId)
     history.value = history.value.filter(h => h.history_id !== historyId)
 }
-onMounted(async () => {
-    await Promise.all([loadHistory(), loadHotSearches()])
-})
+onMounted(() => { loadAll() })
 </script>
 
 <style scoped>
 .search-page { background: #f5f5f5; min-height: 100vh; }
+.loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
+.error-text { font-size: 14px; color: #999; }
 .search-content { padding: 16px; }
 .section-title { font-size: 14px; color: #999; margin-bottom: 12px; }
 .history-list, .hot-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }

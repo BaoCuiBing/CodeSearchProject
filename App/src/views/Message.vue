@@ -5,7 +5,15 @@
             <h2>消息</h2>
             <span class="read-all" @click="markAllRead">全部已读</span>
         </div>
-        <div class="message-tabs">
+        <div v-if="loading" class="loading-wrap">
+            <van-loading size="24px" vertical>加载中...</van-loading>
+        </div>
+        <div v-else-if="error" class="error-wrap">
+            <van-icon name="warn-o" size="48" color="#999" />
+            <p class="error-text">{{ error }}</p>
+            <van-button type="primary" size="small" @click="loadAll">重试</van-button>
+        </div>
+        <div v-else class="message-tabs">
             <van-tabs v-model:active="activeTab" @change="onTabChange">
                 <van-tab title="全部">
                     <div class="message-list">
@@ -101,6 +109,8 @@ import { useRouter } from 'vue-router'
 import { messageApi } from '@/assets/app_request_api.js'
 const router = useRouter()
 const activeTab = ref(0)
+const loading = ref(true)
+const error = ref('')
 const allMessages = ref([])
 const privateChats = ref([])
 const commentMessages = computed(() => allMessages.value.filter(m => m.type === 'comment'))
@@ -113,6 +123,17 @@ const loadNotifications = async () => {
 const loadConversations = async () => {
     const data = await messageApi.getConversations(1, 20)
     privateChats.value = data?.list || []
+}
+const loadAll = async () => {
+    loading.value = true
+    error.value = ''
+    try {
+        await Promise.all([loadNotifications(), loadConversations()])
+    } catch (err) {
+        error.value = err.message || '加载失败'
+    } finally {
+        loading.value = false
+    }
 }
 const onTabChange = async (index) => {
     if (index === 0) { await loadNotifications() }
@@ -144,13 +165,14 @@ const deleteConversation = async (chat) => {
     await messageApi.deleteConversation(chat.user?.user_id)
     privateChats.value = privateChats.value.filter(c => c.user?.user_id !== chat.user?.user_id)
 }
-onMounted(async () => {
-    await Promise.all([loadNotifications(), loadConversations()])
-})
+onMounted(() => { loadAll() })
 </script>
 
 <style scoped>
 .message-page { padding-bottom: 60px; background: #f5f5f5; min-height: 100vh; }
+.loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
+.error-text { font-size: 14px; color: #999; }
 .message-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #fff; }
 .message-header h2 { margin: 0; font-size: 20px; color: #333; }
 .read-all { color: #1989fa; font-size: 14px; }

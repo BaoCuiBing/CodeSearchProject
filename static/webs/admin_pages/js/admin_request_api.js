@@ -120,7 +120,8 @@ var adminApi = {
         updateSettings: function(key, value, description) { return adminApi._put('/api/admin/system/settings', { admin_id: adminApi.getAdminId(), key: key, value: value, description: description }); },
         resetSettings: function(key) { return adminApi._post('/api/admin/system/settings/reset', { admin_id: adminApi.getAdminId(), key: key }); },
         testEmail: function(toEmail) { return adminApi._post('/api/admin/system/test-email', { admin_id: adminApi.getAdminId(), to_email: toEmail }); },
-        clearCache: function(cacheTypes) { return adminApi._post('/api/admin/system/clear-cache', { admin_id: adminApi.getAdminId(), cache_types: cacheTypes || ['all'] }); }
+        clearCache: function(cacheTypes) { return adminApi._post('/api/admin/system/clear-cache', { admin_id: adminApi.getAdminId(), cache_types: cacheTypes || ['all'] }); },
+        resetDatabase: function(confirm) { return adminApi._post('/api/admin/system/reset-database', { admin_id: adminApi.getAdminId(), confirm: confirm }); }
     },
     file: {
         getList: function(params) { params = params || {}; params.admin_id = adminApi.getAdminId(); return adminApi._get('/api/admin/file/list', params); },

@@ -5,7 +5,6 @@ import logging
 import config
 
 logger = logging.getLogger(__name__)
-
 admin_view_bp = Blueprint("admin_view", url_prefix="/admin")
 template_dir = os.path.join(config.PROJECT_DIR, "template")
 

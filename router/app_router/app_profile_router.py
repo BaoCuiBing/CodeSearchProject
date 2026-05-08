@@ -7,7 +7,6 @@ from models.db_init import get_db_session
 from utils.password_analysis import generate_salt, hash_password, verify_password
 
 logger = logging.getLogger(__name__)
-
 profile_bp = Blueprint("profile", url_prefix="/api/profile")
 
 @profile_bp.get("/<user_id>")
@@ -30,7 +29,7 @@ async def get_user_profile(request, user_id):
     if current_user_id:
         is_followed = db.query(Follow).filter(Follow.follower_id == current_user_id, Follow.following_id == user.id).first() is not None
     logger.info(f"获取用户资料成功:username={user.username}")
-    return response.json({"code": 200, "msg": "获取成功", "data": {"user_id": user.id, "username": user.username, "avatar": user.avatar, "bio": user.bio, "email": user.email, "location": user.location, "website": user.website, "github": user.github, "stats": {"article_count": article_count, "question_count": question_count, "follower_count": follower_count, "following_count": following_count, "like_count": like_count, "view_count": view_count}, "created_at": str(user.created_at), "is_followed": is_followed}})
+    return response.json({"code": 200, "msg": "获取成功", "data": {"user_id": user.id, "username": user.username, "avatar": user.avatar, "bio": user.bio, "email": user.email, "phone": user.phone, "location": user.location, "website": user.website, "github": user.github, "stats": {"article_count": article_count, "question_count": question_count, "follower_count": follower_count, "following_count": following_count, "like_count": like_count, "view_count": view_count}, "created_at": str(user.created_at), "is_followed": is_followed}})
 
 @profile_bp.put("/")
 @openapi.summary("更新用户个人资料")
@@ -67,6 +66,8 @@ async def update_profile(request):
         user.website = data["website"]
     if "github" in data:
         user.github = data["github"]
+    if "phone" in data:
+        user.phone = data["phone"]
     db.commit()
     logger.info(f"更新用户资料成功:user_id={user_id}")
     return response.json({"code": 200, "msg": "更新成功", "data": {"user_id": user.id, "username": user.username, "avatar": user.avatar, "bio": user.bio}})

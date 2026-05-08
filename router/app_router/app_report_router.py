@@ -5,7 +5,6 @@ from models.model import Report, Post, Comment, User
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 report_bp = Blueprint("report", url_prefix="/api/report")
 
 @report_bp.post("/")

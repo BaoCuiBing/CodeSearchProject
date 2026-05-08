@@ -47,7 +47,7 @@
                 document.getElementById('d_like_count').innerText = d.like_count || 0;
                 document.getElementById('d_comment_count').innerText = d.comment_count || 0;
                 document.getElementById('d_created_at').innerText = d.created_at || '-';
-                t.render({ elem: '#d_content', height: 300, readonly: true, init_instance_callback: function(editor) { editor.setContent(d.content || ''); } });
+                t.render({ elem: '#d_content', height: 500, readonly: true, init_instance_callback: function(editor) { editor.setContent(d.content || ''); } });
                 SendLog.log_info('文章详情加载成功: ' + postId, 'article_detail');
             }
         }).catch(function(err) { SendLog.log_error('文章详情请求异常: ' + err.message, 'article_detail'); });

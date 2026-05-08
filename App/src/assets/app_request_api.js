@@ -74,7 +74,7 @@ export const articleApi = {
     delete: (postId) => del(`/api/article/${postId}`, { user_id: getUserId() }),
     getList: (params = {}) => get('/api/article/list', params),
     toggleLike: (postId) => post('/api/article/like', { user_id: getUserId(), post_id: postId }),
-    getRecommend: (type, limit) => get('/api/article/recommend', { type, limit }),
+    getRecommend: (type, limit, random = false) => get('/api/article/recommend', { type, limit, random }),
     getToc: (postId) => get(`/api/article/${postId}/toc`)
 }
 export const categoryApi = {

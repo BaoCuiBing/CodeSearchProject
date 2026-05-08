@@ -6,7 +6,6 @@ from models.model import Tag, PostTag, Post, User
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 tag_bp = Blueprint("tag", url_prefix="/api/tag")
 
 @tag_bp.get("/list")

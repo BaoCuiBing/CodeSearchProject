@@ -5,7 +5,6 @@ from models.model import Post, Comment, User, Like
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 comment_bp = Blueprint("comment", url_prefix="/api/comment")
 
 @comment_bp.get("/list/<post_id>")

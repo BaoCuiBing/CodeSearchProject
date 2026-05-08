@@ -6,7 +6,6 @@ from models.model import Category, Post
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 category_bp = Blueprint("category", url_prefix="/api/category")
 
 @category_bp.get("/list")

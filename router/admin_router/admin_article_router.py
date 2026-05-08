@@ -8,7 +8,6 @@ from models.model import User, Post, Category, Tag, PostTag, Comment, Favorite, 
 from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
-
 admin_article_bp = Blueprint("admin_article", url_prefix="/api/admin/article")
 
 def check_admin(db, admin_id):
