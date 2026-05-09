@@ -14,10 +14,15 @@
         </div>
         <template v-else>
             <div class="category-section">
-                <div class="section-title">分类浏览</div>
+                <div class="section-title">
+                    <span>分类浏览</span>
+                    <span v-if="!showAllCategories && categories.length > 16" class="more" @click="showAllCategories = true">显示更多</span>
+                    <span v-else-if="showAllCategories && categories.length > 16" class="more" @click="showAllCategories = false">收起</span>
+                </div>
                 <div class="category-grid">
-                    <div v-for="cat in categories" :key="cat.category_id" class="category-item" @click="goToCategory(cat.category_id)">
-                        <van-icon :name="cat.icon" size="28" color="#1989fa" />
+                    <div v-for="cat in displayCategories" :key="cat.category_id" class="category-item" @click="goToCategory(cat.category_id)">
+                        <img v-if="cat.icon" :src="cat.icon" class="category-icon" />
+                        <van-icon v-else name="folder-o" size="28" color="#1989fa" />
                         <span>{{ cat.name }}</span>
                     </div>
                 </div>
@@ -38,7 +43,7 @@
                         <van-tab title="用户活跃">
                             <div class="ranking-list">
                                 <van-empty v-if="userRanking.length === 0" description="暂无数据" />
-                                <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.post_count + ' · 评论 ' + item.comment_count">
+                                <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.article_count + ' · 评论 ' + item.comment_count">
                                     <template #avatar>
                                         <van-image round width="40px" height="40px" :src="item.avatar" />
                                     </template>
@@ -62,7 +67,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { categoryApi, rankingApi, followApi } from '@/assets/app_request_api.js'
 import { setCache, getCache } from '@/assets/local_storage.js'
@@ -74,15 +79,16 @@ const activeRankingTab = ref(0)
 const loading = ref(true)
 const error = ref('')
 const categories = ref([])
+const showAllCategories = ref(false)
+const displayCategories = computed(() => showAllCategories.value ? categories.value : categories.value.slice(0, 16))
 const articleRanking = ref([])
 const userRanking = ref([])
 const recommendUsers = ref([])
-const categoryIcons = ['cluster-o', 'desktop-o', 'phone-o', 'records', 'setting-o', 'photo-fail', 'chart-trending-o', 'bag-o']
 const loadCategories = async () => {
     const cached = getCache('categories')
     if (cached) { categories.value = cached; return }
     const data = await categoryApi.getList()
-    categories.value = (data || []).map((cat, idx) => ({ ...cat, icon: categoryIcons[idx % categoryIcons.length] }))
+    categories.value = data || []
     setCache('categories', categories.value, 30 * 60 * 1000)
 }
 const loadArticleRanking = async () => {
@@ -138,10 +144,11 @@ onMounted(() => { loadAll() })
 .search-header { background: #fff; padding: 8px 12px; }
 .category-section { background: #fff; padding: 16px; margin-bottom: 8px; }
 .section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; font-size: 16px; font-weight: 500; }
-.section-title .more { color: #1989fa; font-size: 14px; }
+.section-title .more { color: #1989fa; font-size: 14px; cursor: pointer; }
 .category-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-.category-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-.category-item span { font-size: 13px; color: #666; }
+.category-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+.category-icon { width: 28px; height: 28px; object-fit: contain; }
+.category-item span { font-size: 13px; color: #666; max-width: 75px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ranking-section { background: #fff; padding: 16px; margin-bottom: 8px; }
 .ranking-list { padding: 8px 0; }
 .recommend-section { background: #fff; padding: 16px; }

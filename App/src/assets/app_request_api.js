@@ -28,6 +28,7 @@ const request = async (method, url, data, isFormData) => {
     } catch (err) {
         if (err instanceof TypeError) {
             showDialog({ message: '网络连接失败，请检查网络' })
+            throw new Error('加载失败')
         }
         throw err
     }

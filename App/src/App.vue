@@ -28,5 +28,5 @@ onMounted(() => { loadUnreadCount() })
 </script>
 
 <style scoped>
-.app-container {height: 100vh; display: flex; flex-direction: column;}
+.app-container {min-height: 100vh; display: flex; flex-direction: column;}
 </style>

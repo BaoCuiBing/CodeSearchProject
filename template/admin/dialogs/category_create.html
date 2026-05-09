@@ -11,6 +11,7 @@
         <form class="layui-form" lay-filter="categoryCreateForm">
             <div class="layui-form-item"><label class="layui-form-label">分类名称</label><div class="layui-input-block"><input type="text" name="name" lay-verify="required" placeholder="请输入分类名称" class="layui-input"></div></div>
             <div class="layui-form-item"><label class="layui-form-label">分类描述</label><div class="layui-input-block"><textarea name="description" placeholder="请输入分类描述" class="layui-textarea"></textarea></div></div>
+            <div class="layui-form-item"><label class="layui-form-label">分类图标</label><div class="layui-input-block"><button type="button" class="layui-btn" id="iconUpload"><i class="layui-icon">&#xe67c;</i>上传图标</button><input type="hidden" name="icon" id="iconUrl"><div class="layui-upload-list"><img class="layui-upload-img" id="iconPreview" style="max-width:100px;display:none;"></div></div></div>
             <div class="layui-form-item"><label class="layui-form-label">排序</label><div class="layui-input-block"><input type="number" name="sort" value="0" class="layui-input"></div></div>
             <div class="layui-form-item"><div class="layui-input-block"><button class="layui-btn" lay-submit lay-filter="createCategory">创建</button></div></div>
         </form>
@@ -19,12 +20,24 @@
     <script src="/static/webs/admin_pages/js/admin_request_api.js"></script>
     <script src="/static/webs/admin_pages/js/send_log.js"></script>
     <script>
-    layui.use(['form'], function() {
-        var form = layui.form, L = parent.layer;
+    layui.use(['form', 'upload'], function() {
+        var form = layui.form, L = parent.layer, upload = layui.upload;
         var adminId = localStorage.getItem('admin_id');
         if (!adminId) { parent.window.location.href = '/admin/login'; return; }
         adminApi.setAdminId(adminId);
         SendLog.log_info('加载添加分类页面', 'category_create');
+        upload.render({
+            elem: '#iconUpload', url: '/api/upload/file', accept: 'images', field: 'file',
+            done: function(res) {
+                if (res.code === 200) {
+                    document.getElementById('iconUrl').value = res.data.file_url;
+                    var preview = document.getElementById('iconPreview');
+                    preview.src = res.data.file_url;
+                    preview.style.display = 'block';
+                    L.msg('图标上传成功');
+                } else { L.msg(res.msg || '上传失败'); }
+            }
+        });
         form.on('submit(createCategory)', function(data) {
             var d = data.field;
             d.sort = parseInt(d.sort) || 0;

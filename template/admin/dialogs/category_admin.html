@@ -42,12 +42,13 @@
             parseData: function(res) { return { code: 0, msg: res.msg, count: res.data.total, data: res.data.list }; },
             cols: [[
                 {type: 'checkbox', fixed: 'left'},
-                {field: 'category_id', title: 'ID', width: '10%'},
-                {field: 'name', title: '分类名称', width: '20%'},
-                {field: 'description', title: '描述', width: '30%'},
-                {field: 'sort', title: '排序', width: '10%'},
-                {field: 'post_count', title: '文章数', width: '10%'},
-                {field: 'created_at', title: '创建时间', width: '15%'},
+                {field: 'category_id', title: 'ID', width: '8%'},
+                {field: 'icon', title: '图标', width: '8%', templet: function(d) { return d.icon ? '<img src="' + d.icon + '" style="width:32px;height:32px;">' : '无'; }},
+                {field: 'name', title: '分类名称', width: '18%'},
+                {field: 'description', title: '描述', width: '26%'},
+                {field: 'sort', title: '排序', width: '8%'},
+                {field: 'post_count', title: '文章数', width: '8%'},
+                {field: 'created_at', title: '创建时间', width: '14%'},
                 {title: '操作', width: '150', toolbar: '#toolbarTpl', fixed: 'right'}
             ]]
         });
@@ -80,7 +81,7 @@
             var d = obj.data;
             if (obj.event === 'edit') {
                 SendLog.log_info('编辑分类: ' + d.category_id, 'category_admin');
-                var params = 'category_id=' + d.category_id + '&name=' + encodeURIComponent(d.name) + '&description=' + encodeURIComponent(d.description || '') + '&sort=' + d.sort;
+                var params = 'category_id=' + d.category_id + '&name=' + encodeURIComponent(d.name) + '&description=' + encodeURIComponent(d.description || '') + '&sort=' + d.sort + '&icon=' + encodeURIComponent(d.icon || '');
                 parent.lostoryOption.openDialog('编辑分类', '/admin/dialogs/category_edit.html?' + params, ['600px', '400px']);
             }
             if (obj.event === 'delete') {

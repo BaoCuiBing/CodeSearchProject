@@ -65,6 +65,7 @@ class Category(Base):
     id = Column(BigInteger, primary_key=True, autoincrement=True)  # 主键ID
     name = Column(String(100), nullable=False)  # 分类名称
     description = Column(String(500), nullable=True)  # 分类描述
+    icon = Column(String(500), nullable=True)  # 分类图标URL
     sort = Column(Integer, default=0, nullable=True)  # 排序
     created_at = Column(DateTime, server_default=func.now(), nullable=False)  # 创建时间
     updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now(), nullable=False)  # 更新时间

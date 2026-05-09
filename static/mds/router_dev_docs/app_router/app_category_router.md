@@ -23,7 +23,8 @@
 | data | array | 分类列表 |
 | data[].category_id | int | 分类ID |
 | data[].name | string | 分类名称 |
-| data[].icon | string | 分类图标 |
+| data[].description | string | 分类描述 |
+| data[].icon | string | 分类图标URL |
 | data[].sort | int | 排序 |
 | data[].post_count | int | 文章数量（动态查询posts表统计） |
 

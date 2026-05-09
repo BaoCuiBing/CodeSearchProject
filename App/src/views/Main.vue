@@ -251,7 +251,6 @@ onMounted(async () => {
 .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
 .hot-tag { padding: 6px 12px; cursor: pointer; }
 .content-tabs { background: #fff; }
-.post-list { padding: 12px; }
 .post-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .author-name { font-size: 14px; color: #333; font-weight: 500; }
 .post-time { font-size: 12px; color: #999; margin-left: auto; }

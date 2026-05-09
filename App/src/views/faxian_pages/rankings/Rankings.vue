@@ -19,7 +19,7 @@
             <van-tab title="用户活跃">
                 <div class="ranking-list">
                     <van-empty v-if="userRanking.length === 0" description="暂无数据" />
-                    <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.post_count + ' · 获赞 ' + item.like_count" @click="goToProfile(item.user_id)">
+                    <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + (item.article_count || 0) + ' · 获赞 ' + (item.like_count || 0)" @click="goToProfile(item.user_id)">
                         <template #avatar>
                             <van-image round width="40px" height="40px" :src="item.avatar || ''" />
                         </template>
@@ -76,5 +76,5 @@ onMounted(() => { loadArticleRanking() })
 .loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
 .error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
 .error-text { font-size: 14px; color: #999; }
-.ranking-list { padding: 8px 0; }
+.ranking-list { padding: 12px; }
 </style>

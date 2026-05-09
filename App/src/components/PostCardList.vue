@@ -1,5 +1,5 @@
 <template>
-    <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
+    <van-list v-model:loading="loading" :finished="finished" :immediate-check="immediateCheck" finished-text="没有更多了" @load="onLoad">
         <PostCard v-for="post in posts" :key="post.post_id" :title="post.title" :summary="post.summary" @click="$emit('click', post)">
             <template #header>
                 <slot name="header" :post="post" />
@@ -20,7 +20,8 @@ import PostCard from './PostCard.vue'
 const props = defineProps({
     loading: { type: Boolean, default: false },
     finished: { type: Boolean, default: false },
-    posts: { type: Array, default: () => [] }
+    posts: { type: Array, default: () => [] },
+    immediateCheck: { type: Boolean, default: true }
 })
 const emit = defineEmits(['load', 'click'])
 const loading = computed({

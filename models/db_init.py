@@ -195,6 +195,38 @@ def _init_default_data(session):
                 logger.info(f"分类[{folder_name}]导入完成: {len(html_files)}篇文章")
         session.commit()
         logger.info(f"教程数据导入完成: 共{total_folders}个分类")
+    init_tag_img_dir = os.path.join(PROJECT_DIR, "static", "imgs", "init_tag_img")
+    tag_icon_map_path = os.path.join(init_tag_img_dir, "tag_icon_map.json")
+    if os.path.exists(init_tag_img_dir) and os.path.exists(tag_icon_map_path) and os.path.exists(uploads_dir):
+        with open(tag_icon_map_path, "r", encoding="utf-8") as f:
+            tag_icon_map = json.load(f)
+        logger.info(f"开始导入分类图标: 共{len(tag_icon_map)}个")
+        icon_url_map = {}
+        for folder_name, img_file in tag_icon_map.items():
+            src_path = os.path.join(init_tag_img_dir, img_file)
+            if not os.path.exists(src_path):
+                logger.warning(f"图标文件不存在: {img_file}")
+                continue
+            dst_path = os.path.join(uploads_dir, img_file)
+            if not os.path.exists(dst_path):
+                shutil.copy2(src_path, dst_path)
+            exist_file = session.query(File).filter(File.filename == img_file).first()
+            if not exist_file:
+                file_ext = os.path.splitext(img_file)[1].lower()
+                file_type = f"image/{file_ext[1:]}"
+                file_size = os.path.getsize(dst_path) if os.path.exists(dst_path) else 0
+                new_file = File(user_id=None, filename=img_file, file_path=f"uploads/{img_file}", file_size=file_size, file_type=file_type, file_url=f"/static/uploads/{img_file}")
+                session.add(new_file)
+                session.flush()
+                icon_url_map[folder_name] = f"/static/uploads/{img_file}"
+            else:
+                icon_url_map[folder_name] = exist_file.file_url
+        session.commit()
+        for cat in session.query(Category).all():
+            if cat.name in icon_url_map:
+                cat.icon = icon_url_map[cat.name]
+        session.commit()
+        logger.info(f"分类图标导入完成: 共{len(icon_url_map)}个")
     logger.info("开始关联标签与文章...")
     tag_map = {tag.name: tag for tag in session.query(Tag).all()}
     cat_map = {cat.id: cat.name for cat in session.query(Category).all()}
