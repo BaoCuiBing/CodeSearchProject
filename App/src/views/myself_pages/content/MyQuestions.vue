@@ -4,11 +4,7 @@
         <div v-if="loading" class="loading-wrap">
             <van-loading size="24px" vertical>加载中...</van-loading>
         </div>
-        <div v-else-if="error" class="error-wrap">
-            <van-icon name="warn-o" size="48" color="#999" />
-            <p class="error-text">{{ error }}</p>
-            <van-button type="primary" size="small" @click="loadQuestions">重试</van-button>
-        </div>
+        <van-empty v-else-if="error" :description="error" />
         <div v-else class="question-list">
             <van-empty v-if="questions.length === 0" description="暂无提问" />
             <PostCard v-for="q in questions" :key="q.post_id" :title="q.title" :summary="q.summary" @click="goToDetail(q.post_id)">

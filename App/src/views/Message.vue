@@ -8,11 +8,7 @@
         <div v-if="loading" class="loading-wrap">
             <van-loading size="24px" vertical>加载中...</van-loading>
         </div>
-        <div v-else-if="error" class="error-wrap">
-            <van-icon name="warn-o" size="48" color="#999" />
-            <p class="error-text">{{ error }}</p>
-            <van-button type="primary" size="small" @click="loadAll">重试</van-button>
-        </div>
+        <van-empty v-else-if="error" :description="error" />
         <div v-else class="message-tabs">
             <van-tabs v-model:active="activeTab" @change="onTabChange">
                 <van-tab title="全部">
@@ -99,7 +95,6 @@
                 </van-tab>
             </van-tabs>
         </div>
-        <div class="bottom-spacer"></div>
     </div>
 </template>
 

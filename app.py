@@ -129,4 +129,4 @@ async def index(request):
     return html(content)
 
 if __name__ == "__main__":
-    app.run(host=config.SANIC_HOST, port=config.SANIC_PORT, debug=True, auto_reload=True)
+    app.run(host=config.SANIC_HOST, port=config.SANIC_PORT, debug=False, auto_reload=False)

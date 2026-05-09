@@ -4,11 +4,7 @@
         <div v-if="loading" class="loading-wrap">
             <van-loading size="24px" vertical>加载中...</van-loading>
         </div>
-        <div v-else-if="error" class="error-wrap">
-            <van-icon name="warn-o" size="48" color="#999" />
-            <p class="error-text">{{ error }}</p>
-            <van-button type="primary" size="small" @click="loadAll">重试</van-button>
-        </div>
+        <van-empty v-else-if="error" :description="error" />
         <template v-else>
             <div class="tag-section">
                 <div class="section-title">热门标签</div>

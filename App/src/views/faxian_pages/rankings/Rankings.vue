@@ -4,11 +4,7 @@
         <div v-if="loading" class="loading-wrap">
             <van-loading size="24px" vertical>加载中...</van-loading>
         </div>
-        <div v-else-if="error" class="error-wrap">
-            <van-icon name="warn-o" size="48" color="#999" />
-            <p class="error-text">{{ error }}</p>
-            <van-button type="primary" size="small" @click="loadArticleRanking">重试</van-button>
-        </div>
+        <van-empty v-else-if="error" :description="error" />
         <van-tabs v-else v-model:active="activeTab" @change="onTabChange">
             <van-tab title="文章热榜">
                 <div class="ranking-list">

@@ -3,7 +3,6 @@ import re
 import json
 import shutil
 import logging
-import markdown2
 from config import PROJECT_DIR
 from models.db_base import Database, Base
 from models.model import User, File, Report, SearchHistory, Category, Post, Tag, PostTag, Comment, Favorite, Like, Follow, Message, Notification, SystemMessage, SystemMessageTarget, SystemSetting

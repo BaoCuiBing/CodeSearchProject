@@ -4,11 +4,7 @@
         <div v-if="loading" class="loading-wrap">
             <van-loading size="24px" vertical>加载中...</van-loading>
         </div>
-        <div v-else-if="error" class="error-wrap">
-            <van-icon name="warn-o" size="48" color="#999" />
-            <p class="error-text">{{ error }}</p>
-            <van-button type="primary" size="small" @click="loadUserProfile">重试</van-button>
-        </div>
+        <van-empty v-else-if="error" :description="error" />
         <div v-else class="user-header">
             <div class="user-info">
                 <van-image round width="64px" height="64px" :src="user?.avatar || ''" />
@@ -50,7 +46,6 @@
         <div class="menu-section">
             <van-button block type="danger" class="logout-btn" @click="handleLogout">退出登录</van-button>
         </div>
-        <div class="bottom-spacer"></div>
     </div>
 </template>
 

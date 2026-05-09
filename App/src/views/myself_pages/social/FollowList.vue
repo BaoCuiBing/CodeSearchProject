@@ -4,11 +4,7 @@
         <div v-if="loading" class="loading-wrap">
             <van-loading size="24px" vertical>加载中...</van-loading>
         </div>
-        <div v-else-if="error" class="error-wrap">
-            <van-icon name="warn-o" size="48" color="#999" />
-            <p class="error-text">{{ error }}</p>
-            <van-button type="primary" size="small" @click="loadUsers">重试</van-button>
-        </div>
+        <van-empty v-else-if="error" :description="error" />
         <div v-else class="user-list">
             <van-empty v-if="users.length === 0" description="暂无用户" />
             <UserListItem v-for="user in users" :key="user.user_id" :avatar="user.avatar" :username="user.username" :bio="user.bio" :is-followed="user.is_followed" @toggle="toggleFollow(user)" />

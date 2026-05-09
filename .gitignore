@@ -8,3 +8,4 @@ App/node_modules/
 static/webs/layui_tinymce/
 App/src/assets/layui_tinymce/
 App/public/tinymce/
+App/dist/

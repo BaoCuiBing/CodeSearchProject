@@ -7,11 +7,7 @@
         <div v-if="initLoading" class="loading-wrap">
             <van-loading size="24px" vertical>加载中...</van-loading>
         </div>
-        <div v-else-if="initError" class="error-wrap">
-            <van-icon name="warn-o" size="48" color="#999" />
-            <p class="error-text">{{ initError }}</p>
-            <van-button type="primary" size="small" @click="loadInitData">重试</van-button>
-        </div>
+        <van-empty v-else-if="initError" :description="initError" />
         <template v-else>
             <div class="banner-section">
                 <van-swipe class="banner-swipe" :autoplay="3000" indicator-color="white">
@@ -60,11 +56,7 @@
                         </div>
                     </van-tab>
                     <van-tab title="文章">
-                        <div v-if="articleError" class="error-wrap">
-                            <van-icon name="warn-o" size="48" color="#999" />
-                            <p class="error-text">{{ articleError }}</p>
-                            <van-button type="primary" size="small" @click="loadArticlePosts">重试</van-button>
-                        </div>
+                        <van-empty v-if="articleError" :description="articleError" />
                         <template v-else>
                             <van-empty v-if="!articleLoading && articlePosts.length === 0" description="暂无文章" />
                             <PostCardList v-else :loading="articleLoading" :finished="articleFinished" :posts="articlePosts" @load="loadArticlePosts" @click="goToDetail">
@@ -91,11 +83,7 @@
                         </template>
                     </van-tab>
                     <van-tab title="问题">
-                        <div v-if="questionError" class="error-wrap">
-                            <van-icon name="warn-o" size="48" color="#999" />
-                            <p class="error-text">{{ questionError }}</p>
-                            <van-button type="primary" size="small" @click="loadQuestionPosts">重试</van-button>
-                        </div>
+                        <van-empty v-if="questionError" :description="questionError" />
                         <template v-else>
                             <van-empty v-if="!questionLoading && questionPosts.length === 0" description="暂无问题" />
                             <PostCardList v-else :loading="questionLoading" :finished="questionFinished" :posts="questionPosts" @load="loadQuestionPosts" @click="goToDetail">
@@ -124,7 +112,6 @@
                 </van-tabs>
             </div>
         </template>
-        <div class="bottom-spacer"></div>
     </div>
 </template>
 
@@ -187,8 +174,8 @@ const loadInitData = async () => {
     }
 }
 const loadArticlePosts = async () => {
+    if (articleLoading.value || articleFinished.value) return
     articleLoading.value = true
-    articleError.value = ''
     try {
         const data = await articleApi.getList({ type: 'article', page: articlePage.value, page_size: 8, sort: 'hot' })
         const list = data.list || []
@@ -197,13 +184,14 @@ const loadArticlePosts = async () => {
         if (list.length === 0) { articleFinished.value = true }
     } catch (err) {
         articleError.value = err.message || '加载失败'
+        articleFinished.value = true
     } finally {
         articleLoading.value = false
     }
 }
 const loadQuestionPosts = async () => {
+    if (questionLoading.value || questionFinished.value) return
     questionLoading.value = true
-    questionError.value = ''
     try {
         const data = await articleApi.getList({ type: 'question', page: questionPage.value, page_size: 8, sort: 'hot' })
         const list = data.list || []
@@ -212,13 +200,14 @@ const loadQuestionPosts = async () => {
         if (list.length === 0) { questionFinished.value = true }
     } catch (err) {
         questionError.value = err.message || '加载失败'
+        questionFinished.value = true
     } finally {
         questionLoading.value = false
     }
 }
 const onTabChange = async (index) => {
-    if (index === 1 && articlePosts.value.length === 0) { await loadArticlePosts() }
-    if (index === 2 && questionPosts.value.length === 0) { await loadQuestionPosts() }
+    if (index === 1 && articlePosts.value.length === 0 && !articleFinished.value) { await loadArticlePosts() }
+    if (index === 2 && questionPosts.value.length === 0 && !questionFinished.value) { await loadQuestionPosts() }
 }
 const onSearch = () => {
     if (searchKeyword.value.trim()) {
