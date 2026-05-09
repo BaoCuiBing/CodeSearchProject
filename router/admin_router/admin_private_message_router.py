@@ -1,8 +1,7 @@
 import logging
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 from models.model import User, Message
-from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
 admin_private_message_bp = Blueprint("admin_private_message", url_prefix="/api/admin/private_message")

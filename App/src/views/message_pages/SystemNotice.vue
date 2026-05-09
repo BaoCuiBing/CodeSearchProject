@@ -7,12 +7,13 @@
         <van-empty v-else-if="error" :description="error" />
         <div v-else class="notice-list">
             <van-empty v-if="notices.length === 0" description="暂无通知" />
-            <div v-for="notice in notices" :key="notice.notice_id" class="notice-item">
+            <div v-for="(notice, index) in notices" :key="notice.notice_id" class="notice-item">
                 <div class="notice-time">{{ notice.created_at }}</div>
-                <div class="notice-card">
-                    <h4>{{ notice.title }}</h4>
-                    <p>{{ notice.content }}</p>
-                </div>
+                <van-collapse v-model="activeNames">
+                    <van-collapse-item :title="notice.title" :name="notice.notice_id">
+                        <p>{{ notice.content }}</p>
+                    </van-collapse-item>
+                </van-collapse>
             </div>
         </div>
     </div>
@@ -25,12 +26,14 @@ import PageNavBar from '@/components/PageNavBar.vue'
 const loading = ref(true)
 const error = ref('')
 const notices = ref([])
+const activeNames = ref([])
 const loadNotices = async () => {
     loading.value = true
     error.value = ''
     try {
         const data = await messageApi.getNotifications({ type: 'system' })
         notices.value = data?.list || []
+        if (notices.value.length > 0) { activeNames.value = [notices.value[0].notice_id] }
     } catch (err) {
         error.value = err.message || '加载失败'
     } finally {
@@ -48,7 +51,5 @@ onMounted(() => { loadNotices() })
 .notice-list { padding: 12px; }
 .notice-item { margin-bottom: 16px; }
 .notice-time { text-align: center; font-size: 12px; color: #999; margin-bottom: 8px; }
-.notice-card { background: #fff; border-radius: 8px; padding: 16px; }
-.notice-card h4 { margin: 0 0 8px; font-size: 16px; color: #333; }
-.notice-card p { margin: 0; font-size: 14px; color: #666; line-height: 1.6; }
+.notice-item p { margin: 0; font-size: 14px; color: #666; line-height: 1.6; }
 </style>

@@ -77,7 +77,7 @@ const goToFollowing = () => { router.push('/following') }
 const goToFollowers = () => { router.push('/followers') }
 const goToMyArticles = () => { router.push('/my-articles') }
 const goToMyQuestions = () => { router.push('/my-questions') }
-const goToFavorites = () => { router.push('/favorites') }
+const goToFavorites = () => { router.push('/my-favorites') }
 const goToProfile = () => { router.push('/profile') }
 const goToSecurity = () => { router.push('/security') }
 const goToAbout = () => { router.push('/about') }

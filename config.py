@@ -13,6 +13,7 @@ SQLALCHEMY_DATABASE_URI = f"mysql+pymysql://{MYSQL_DB_USER}:{MYSQL_DB_PASSWORD}@
 SANIC_HOST = "0.0.0.0"  # Sanic主机
 SANIC_PORT = 8848  # Sanic端口
 SANIC_THRESHOLD = 3000  # worker ack超时(单位0.1s,即300秒)
+SANIC_DOC_API = False  # 是否开启Sanic文档API
 MAX_UPLOAD_SIZE = 2  # 最大上传大小（单位：MB）
 
 LOG_DIR = os.path.join(PROJECT_DIR, "static", "logs")  # 日志目录
@@ -26,4 +27,4 @@ OSS_ACCESS_KEY_ID = ""
 OSS_ACCESS_KEY_SECRET = ""
 
 UPLOAD_DIR = os.path.join(PROJECT_DIR, "static", "uploads")  # 上传目录（本地存储）
-USE_OSS = True  # 是否使用OSS存储文件
+USE_OSS = False  # 是否使用OSS存储文件

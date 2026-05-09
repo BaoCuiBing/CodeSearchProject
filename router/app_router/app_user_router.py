@@ -2,9 +2,8 @@ import re
 import logging
 from datetime import datetime
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 from models.model import User
-from models.db_init import get_db_session
 from utils.password_analysis import generate_salt, hash_password, verify_password
 
 logger = logging.getLogger(__name__)

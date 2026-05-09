@@ -1,7 +1,6 @@
 from sanic import Sanic
 from sanic.response import html, json
 from sanic_cors import CORS
-from sanic_ext import Extend
 from sanic.worker.manager import WorkerManager
 import os
 import logging
@@ -66,7 +65,10 @@ async def cors_headers(request, response):
     response.headers["Access-Control-Allow-Origin"] = "*"
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
     response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Requested-With"
-extend = Extend(app)
+extend = None
+if config.SANIC_DOC_API:
+    from sanic_ext import Extend
+    extend = Extend(app)
 app.blueprint(admin_user_bp)  # 用户管理路由
 app.blueprint(admin_view_bp)  # 管理后台视图路由
 app.blueprint(upload_bp)  # 文件上传路由
@@ -105,20 +107,15 @@ db_instance = None
 
 @app.listener("before_server_start")
 async def init_app(app):
-    """初始化应用,创建数据库表"""
+    """初始化应用,创建数据库表并初始化共享会话"""
     global db_instance
     db_instance = init_database()
+    db_instance.init_session()  # 初始化共享数据库会话,后续不再频繁开关
 
 @app.on_request
 async def inject_db(request):
-    """注入数据库会话到请求上下文"""
+    """注入共享数据库会话到请求上下文"""
     request.ctx.db = db_instance.get_session()
-
-@app.on_response
-async def close_db(request, response):
-    """请求结束后关闭数据库会话"""
-    if hasattr(request.ctx, "db"):
-        request.ctx.db.close()
 
 @app.get("/")
 async def index(request):

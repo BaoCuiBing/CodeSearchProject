@@ -2,7 +2,7 @@ import os
 import logging
 from datetime import datetime
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 import config
 
 logger = logging.getLogger(__name__)

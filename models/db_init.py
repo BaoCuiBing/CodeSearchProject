@@ -373,17 +373,24 @@ def _init_default_data(session):
         session.commit()
 
 def init_database():
-    """初始化数据库,创建表结构"""
+    """初始化数据库,创建表结构并初始化共享会话"""
     logger.info("开始初始化数据库...")
     db = Database()
     db.create_tables()
     logger.info("数据库表创建完成")
+    db.init_session()  # 初始化共享会话
     session = db.get_session()
     try:
-        _init_default_data(session)
-        logger.info("数据库初始化完成")
+        exist_admin = session.query(User).filter(User.usernumber == "admin").first()
+        exist_setting = session.query(SystemSetting).filter(SystemSetting.key == "site_name").first()
+        if exist_admin and exist_setting:
+            logger.info("数据库已初始化,跳过默认数据导入")
+        else:
+            _init_default_data(session)
+            logger.info("数据库初始化完成")
     finally:
-        session.close()
+        session.commit()  # 提交默认数据,不关闭共享会话
+        session.expire_all()  # 清理session缓存,释放导入数据占用的内存
     return db
 
 def reset_database():
@@ -403,14 +410,6 @@ def reset_database():
     finally:
         session.close()
     return db
-
-def get_db_session(db: Database):
-    """获取数据库会话生成器,用于依赖注入"""
-    session = db.get_session()
-    try:
-        yield session
-    finally:
-        session.close()
 
 if __name__ == "__main__":
     reset_database()

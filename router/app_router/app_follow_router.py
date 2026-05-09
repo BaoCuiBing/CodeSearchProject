@@ -1,8 +1,7 @@
 import logging
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 from models.model import User, Follow
-from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
 follow_bp = Blueprint("follow", url_prefix="/api/follow")

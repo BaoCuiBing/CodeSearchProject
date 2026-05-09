@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
 import logging
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 from sqlalchemy import func
 from models.model import User, Post, Comment, SearchHistory, Report
-from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
 admin_stats_bp = Blueprint("admin_stats", url_prefix="/api/admin/stats")

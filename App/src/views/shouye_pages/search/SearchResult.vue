@@ -2,13 +2,11 @@
     <div class="search-result-page">
         <PageNavBar title="搜索结果" />
         <van-search v-model="keyword" placeholder="搜索技术问题、代码..." @search="onSearch" />
-        <div v-if="loading" class="loading-wrap">
-            <van-loading size="24px" vertical>加载中...</van-loading>
-        </div>
-        <van-empty v-else-if="error" :description="error" />
-        <van-tabs v-else v-model:active="activeTab" @change="onTabChange">
+        <van-tabs v-model:active="activeTab" @change="onTabChange">
             <van-tab title="综合">
-                <div class="result-list">
+                <div v-if="allLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+                <van-empty v-else-if="allError" :description="allError" />
+                <div v-else class="result-list">
                     <van-empty v-if="results.length === 0" description="暂无搜索结果" />
                     <PostCard v-for="item in results" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
@@ -22,7 +20,9 @@
                 </div>
             </van-tab>
             <van-tab title="文章">
-                <div class="result-list">
+                <div v-if="articleLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+                <van-empty v-else-if="articleError" :description="articleError" />
+                <div v-else class="result-list">
                     <van-empty v-if="articleResults.length === 0" description="暂无文章" />
                     <PostCard v-for="item in articleResults" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
@@ -36,7 +36,9 @@
                 </div>
             </van-tab>
             <van-tab title="问题">
-                <div class="result-list">
+                <div v-if="questionLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+                <van-empty v-else-if="questionError" :description="questionError" />
+                <div v-else class="result-list">
                     <van-empty v-if="questionResults.length === 0" description="暂无问题" />
                     <PostCard v-for="item in questionResults" :key="item.post_id" :title="item.title" :summary="item.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
@@ -63,37 +65,49 @@ const router = useRouter()
 const route = useRoute()
 const keyword = ref(route.query.keyword || '')
 const activeTab = ref(0)
-const loading = ref(true)
-const error = ref('')
+const allLoading = ref(true)
+const allError = ref('')
+const articleLoading = ref(false)
+const articleError = ref('')
+const questionLoading = ref(false)
+const questionError = ref('')
 const results = ref([])
 const articleResults = ref([])
 const questionResults = ref([])
 const loadResults = async () => {
-    loading.value = true
-    error.value = ''
+    allLoading.value = true
+    allError.value = ''
     try {
         const data = await searchApi.search(keyword.value, { type: 'all' })
         results.value = data?.list || []
     } catch (err) {
-        error.value = err.message || '加载失败'
+        allError.value = err.message || '加载失败'
     } finally {
-        loading.value = false
+        allLoading.value = false
     }
 }
 const loadArticleResults = async () => {
+    articleLoading.value = true
+    articleError.value = ''
     try {
         const data = await searchApi.search(keyword.value, { type: 'article' })
         articleResults.value = data?.list || []
     } catch (err) {
-        error.value = err.message || '加载失败'
+        articleError.value = err.message || '加载失败'
+    } finally {
+        articleLoading.value = false
     }
 }
 const loadQuestionResults = async () => {
+    questionLoading.value = true
+    questionError.value = ''
     try {
         const data = await searchApi.search(keyword.value, { type: 'question' })
         questionResults.value = data?.list || []
     } catch (err) {
-        error.value = err.message || '加载失败'
+        questionError.value = err.message || '加载失败'
+    } finally {
+        questionLoading.value = false
     }
 }
 const onTabChange = async (index) => {
@@ -114,6 +128,7 @@ onMounted(() => { loadResults() })
 <style scoped>
 .search-result-page { background: #f5f5f5; min-height: 100vh; }
 .loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.section-loading { display: flex; justify-content: center; align-items: center; padding: 40px 0; }
 .error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
 .error-text { font-size: 14px; color: #999; }
 .result-list { padding: 12px; }

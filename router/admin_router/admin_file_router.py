@@ -2,9 +2,8 @@ from datetime import datetime
 import logging
 import os
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 from models.model import User, File
-from models.db_init import get_db_session
 from utils.oss_option import oss_client
 import config
 

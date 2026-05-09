@@ -5,14 +5,12 @@
             <h2>消息</h2>
             <span class="read-all" @click="markAllRead">全部已读</span>
         </div>
-        <div v-if="loading" class="loading-wrap">
-            <van-loading size="24px" vertical>加载中...</van-loading>
-        </div>
-        <van-empty v-else-if="error" :description="error" />
-        <div v-else class="message-tabs">
+        <div class="message-tabs">
             <van-tabs v-model:active="activeTab" @change="onTabChange">
                 <van-tab title="全部">
-                    <div class="message-list">
+                    <div v-if="notificationsLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+                    <van-empty v-else-if="notificationsError" :description="notificationsError" />
+                    <div v-else class="message-list">
                         <van-empty v-if="allMessages.length === 0" description="暂无消息" />
                         <div v-for="msg in allMessages" :key="msg.notification_id" class="message-item" :class="{ unread: !msg.is_read }" @click="msg.type === 'chat' ? goToChat(msg) : goToDetail(msg)">
                             <template v-if="msg.type === 'chat'">
@@ -37,7 +35,9 @@
                     </div>
                 </van-tab>
                 <van-tab title="私信">
-                    <div class="message-list">
+                    <div v-if="chatsLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+                    <van-empty v-else-if="chatsError" :description="chatsError" />
+                    <div v-else class="message-list">
                         <van-empty v-if="privateChats.length === 0" description="暂无私信" />
                         <van-swipe-cell v-for="chat in privateChats" :key="chat.user?.user_id">
                             <div class="message-item" :class="{ unread: chat.unread_count > 0 }" @click="goToChat(chat)">
@@ -55,7 +55,9 @@
                     </div>
                 </van-tab>
                 <van-tab title="评论">
-                    <div class="message-list">
+                    <div v-if="notificationsLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+                    <van-empty v-else-if="notificationsError" :description="notificationsError" />
+                    <div v-else class="message-list">
                         <van-empty v-if="commentMessages.length === 0" description="暂无评论" />
                         <div v-for="msg in commentMessages" :key="msg.notification_id" class="message-item" :class="{ unread: !msg.is_read }" @click="goToDetail(msg)">
                             <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
@@ -68,7 +70,9 @@
                     </div>
                 </van-tab>
                 <van-tab title="点赞">
-                    <div class="message-list">
+                    <div v-if="notificationsLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+                    <van-empty v-else-if="notificationsError" :description="notificationsError" />
+                    <div v-else class="message-list">
                         <van-empty v-if="likeMessages.length === 0" description="暂无点赞" />
                         <div v-for="msg in likeMessages" :key="msg.notification_id" class="message-item" :class="{ unread: !msg.is_read }" @click="goToDetail(msg)">
                             <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
@@ -81,7 +85,9 @@
                     </div>
                 </van-tab>
                 <van-tab title="关注">
-                    <div class="message-list">
+                    <div v-if="notificationsLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+                    <van-empty v-else-if="notificationsError" :description="notificationsError" />
+                    <div v-else class="message-list">
                         <van-empty v-if="followMessages.length === 0" description="暂无关注" />
                         <div v-for="msg in followMessages" :key="msg.notification_id" class="message-item" :class="{ unread: !msg.is_read }" @click="goToDetail(msg)">
                             <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
@@ -104,31 +110,41 @@ import { useRouter } from 'vue-router'
 import { messageApi } from '@/assets/app_request_api.js'
 const router = useRouter()
 const activeTab = ref(0)
-const loading = ref(true)
-const error = ref('')
+const notificationsLoading = ref(true)
+const notificationsError = ref('')
+const chatsLoading = ref(true)
+const chatsError = ref('')
 const allMessages = ref([])
 const privateChats = ref([])
 const commentMessages = computed(() => allMessages.value.filter(m => m.type === 'comment'))
 const likeMessages = computed(() => allMessages.value.filter(m => m.type === 'like'))
 const followMessages = computed(() => allMessages.value.filter(m => m.type === 'follow'))
 const loadNotifications = async () => {
-    const data = await messageApi.getNotifications({ type: 'all' })
-    allMessages.value = data?.list || []
+    notificationsLoading.value = true
+    notificationsError.value = ''
+    try {
+        const data = await messageApi.getNotifications({ type: 'all' })
+        allMessages.value = data?.list || []
+    } catch (err) {
+        notificationsError.value = err.message || '加载失败'
+    } finally {
+        notificationsLoading.value = false
+    }
 }
 const loadConversations = async () => {
-    const data = await messageApi.getConversations(1, 20)
-    privateChats.value = data?.list || []
+    chatsLoading.value = true
+    chatsError.value = ''
+    try {
+        const data = await messageApi.getConversations(1, 20)
+        privateChats.value = data?.list || []
+    } catch (err) {
+        chatsError.value = err.message || '加载失败'
+    } finally {
+        chatsLoading.value = false
+    }
 }
 const loadAll = async () => {
-    loading.value = true
-    error.value = ''
-    try {
-        await Promise.all([loadNotifications(), loadConversations()])
-    } catch (err) {
-        error.value = err.message || '加载失败'
-    } finally {
-        loading.value = false
-    }
+    await Promise.all([loadNotifications(), loadConversations()])
 }
 const onTabChange = async (index) => {
     if (index === 0) { await loadNotifications() }
@@ -166,6 +182,7 @@ onMounted(() => { loadAll() })
 <style scoped>
 .message-page { padding-bottom: 60px; background: #f5f5f5; min-height: 100vh; }
 .loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.section-loading { display: flex; justify-content: center; align-items: center; padding: 40px 0; }
 .error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
 .error-text { font-size: 14px; color: #999; }
 .message-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; background: #fff; }

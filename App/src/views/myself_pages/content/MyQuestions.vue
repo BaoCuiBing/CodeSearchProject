@@ -16,6 +16,7 @@
                 </template>
             </PostCard>
         </div>
+        <van-floating-bubble :gap="{x: 30, y: 80}" icon="plus" @click="goToPostEdit" />
     </div>
 </template>
 
@@ -43,6 +44,7 @@ const loadQuestions = async () => {
     }
 }
 const goToDetail = (questionId) => { router.push({ path: '/article', query: { id: questionId } }) }
+const goToPostEdit = () => { router.push('/post-edit') }
 onMounted(() => { loadQuestions() })
 </script>
 

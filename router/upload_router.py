@@ -2,10 +2,9 @@ import os
 import uuid
 import logging
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 import config
 from models.model import File
-from models.db_init import get_db_session
 from utils.oss_option import oss_client
 
 logger = logging.getLogger(__name__)

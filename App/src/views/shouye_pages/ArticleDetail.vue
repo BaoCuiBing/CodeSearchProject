@@ -1,10 +1,8 @@
 <template>
     <div class="article-detail-page">
         <PageNavBar title="文章详情" />
-        <div v-if="loading" class="loading-wrap">
-            <van-loading size="24px" vertical>加载中...</van-loading>
-        </div>
-        <van-empty v-else-if="error" :description="error" />
+        <div v-if="articleLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+        <van-empty v-else-if="articleError" :description="articleError" />
         <template v-else>
             <div class="article-content">
                 <h1 class="article-title">{{ article.title }}</h1>
@@ -50,7 +48,9 @@
                 <div class="comment-header">
                     <span>评论 ({{ comments.length }})</span>
                 </div>
-                <div v-for="comment in comments" :key="comment.comment_id" class="comment-item">
+                <div v-if="commentsLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+                <van-empty v-else-if="commentsError" :description="commentsError" />
+                <div v-else v-for="comment in comments" :key="comment.comment_id" class="comment-item">
                     <van-image round width="32px" height="32px" :src="comment.user?.avatar || ''" />
                     <div class="comment-body">
                         <div class="comment-user">{{ comment.user?.username || '' }}</div>
@@ -70,8 +70,10 @@ import { showToast } from 'vant'
 import { articleApi, commentApi, followApi, favoriteApi } from '@/assets/app_request_api.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 const route = useRoute()
-const loading = ref(true)
-const error = ref('')
+const articleLoading = ref(true)
+const articleError = ref('')
+const commentsLoading = ref(true)
+const commentsError = ref('')
 const article = ref({ title: '', content: '', author: {}, tags: [], like_count: 0, favorite_count: 0, comment_count: 0, view_count: 0, is_liked: false, is_favorited: false, is_followed: false, created_at: '' })
 const comments = ref([])
 const showCommentSheet = ref(false)
@@ -89,25 +91,33 @@ const onShareSelect = (option) => {
     showShareSheet.value = false
 }
 const loadArticle = async () => {
-    const postId = route.query.id
-    const data = await articleApi.getDetail(postId)
-    article.value = { ...data, tags: data.tags || [], author: data.author || {} }
+    articleLoading.value = true
+    articleError.value = ''
+    try {
+        const postId = route.query.id
+        const data = await articleApi.getDetail(postId)
+        article.value = { ...data, tags: data.tags || [], author: data.author || {} }
+    } catch (err) {
+        articleError.value = err.message || '加载失败'
+    } finally {
+        articleLoading.value = false
+    }
 }
 const loadComments = async () => {
-    const postId = route.query.id
-    const data = await commentApi.getList(postId, { page: 1 })
-    comments.value = data?.list || []
+    commentsLoading.value = true
+    commentsError.value = ''
+    try {
+        const postId = route.query.id
+        const data = await commentApi.getList(postId, { page: 1 })
+        comments.value = data?.list || []
+    } catch (err) {
+        commentsError.value = err.message || '加载失败'
+    } finally {
+        commentsLoading.value = false
+    }
 }
 const loadAll = async () => {
-    loading.value = true
-    error.value = ''
-    try {
-        await Promise.all([loadArticle(), loadComments()])
-    } catch (err) {
-        error.value = err.message || '加载失败'
-    } finally {
-        loading.value = false
-    }
+    await Promise.all([loadArticle(), loadComments()])
 }
 const toggleLike = async () => {
     const postId = route.query.id
@@ -149,6 +159,7 @@ onMounted(() => { loadAll() })
 <style scoped>
 .article-detail-page { background: #f5f5f5; min-height: 100vh; padding-bottom: 60px; overflow-x: hidden; }
 .loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.section-loading { display: flex; justify-content: center; align-items: center; padding: 40px 0; }
 .error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
 .error-text { font-size: 14px; color: #999; }
 .article-content { background: #fff; padding: 16px; margin-bottom: 8px; }

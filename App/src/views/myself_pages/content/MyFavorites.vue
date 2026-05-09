@@ -1,13 +1,14 @@
 <template>
     <div class="my-favorites-page">
         <PageNavBar title="我的收藏" />
-        <div v-if="loading" class="loading-wrap">
+        <div v-if="initialLoading" class="loading-wrap">
             <van-loading size="24px" vertical>加载中...</van-loading>
         </div>
         <van-empty v-else-if="error" :description="error" />
         <van-tabs v-else v-model:active="activeTab" @change="onTabChange">
             <van-tab title="全部">
-                <div class="fav-list">
+                <div v-if="tabLoading" class="tab-loading"><van-loading size="20px" /></div>
+                <div v-else class="fav-list">
                     <van-empty v-if="favorites.length === 0" description="暂无收藏" />
                     <PostCard v-for="item in favorites" :key="item.post_id" :title="item.post.title" :summary="item.post.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
@@ -20,7 +21,8 @@
                 </div>
             </van-tab>
             <van-tab title="文章">
-                <div class="fav-list">
+                <div v-if="tabLoading" class="tab-loading"><van-loading size="20px" /></div>
+                <div v-else class="fav-list">
                     <van-empty v-if="articleFavorites.length === 0" description="暂无收藏文章" />
                     <PostCard v-for="item in articleFavorites" :key="item.post_id" :title="item.post.title" :summary="item.post.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
@@ -32,7 +34,8 @@
                 </div>
             </van-tab>
             <van-tab title="问题">
-                <div class="fav-list">
+                <div v-if="tabLoading" class="tab-loading"><van-loading size="20px" /></div>
+                <div v-else class="fav-list">
                     <van-empty v-if="questionFavorites.length === 0" description="暂无收藏问题" />
                     <PostCard v-for="item in questionFavorites" :key="item.post_id" :title="item.post.title" :summary="item.post.summary" @click="goToDetail(item.post_id)">
                         <template #footer>
@@ -55,13 +58,15 @@ import PostCard from '@/components/PostCard.vue'
 import { favoriteApi } from '@/assets/app_request_api.js'
 const router = useRouter()
 const activeTab = ref(0)
-const loading = ref(true)
+const initialLoading = ref(true)
+const tabLoading = ref(false)
 const error = ref('')
 const favorites = ref([])
 const articleFavorites = computed(() => favorites.value.filter(f => f.post.type === 'article'))
 const questionFavorites = computed(() => favorites.value.filter(f => f.post.type === 'question'))
-const loadFavorites = async () => {
-    loading.value = true
+const loadFavorites = async (isInitial = false) => {
+    if (isInitial) { initialLoading.value = true }
+    else { tabLoading.value = true }
     error.value = ''
     try {
         const typeMap = { 0: 'all', 1: 'article', 2: 'question' }
@@ -70,12 +75,13 @@ const loadFavorites = async () => {
     } catch (err) {
         error.value = err.message || '加载失败'
     } finally {
-        loading.value = false
+        initialLoading.value = false
+        tabLoading.value = false
     }
 }
-const onTabChange = () => { loadFavorites() }
+const onTabChange = () => { loadFavorites(false) }
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
-loadFavorites()
+loadFavorites(true)
 </script>
 
 <style scoped>
@@ -84,5 +90,6 @@ loadFavorites()
 .error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
 .error-text { font-size: 14px; color: #999; }
 .fav-list { padding: 12px; }
+.tab-loading { display: flex; justify-content: center; padding: 40px 0; }
 .fav-meta { display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: #999; margin-top: 12px; }
 </style>

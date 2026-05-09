@@ -4,61 +4,62 @@
         <div class="search-header">
             <van-search v-model="searchKeyword" placeholder="搜索技术问题、代码..." @search="onSearch" />
         </div>
-        <div v-if="loading" class="loading-wrap">
-            <van-loading size="24px" vertical>加载中...</van-loading>
+        <div class="category-section">
+            <div class="section-title">
+                <span>分类浏览</span>
+                <span v-if="!showAllCategories && categories.length > 16" class="more" @click="showAllCategories = true">显示更多</span>
+                <span v-else-if="showAllCategories && categories.length > 16" class="more" @click="showAllCategories = false">收起</span>
+            </div>
+            <div v-if="categoriesLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+            <van-empty v-else-if="categoriesError" :description="categoriesError" />
+            <div v-else class="category-grid">
+                <div v-for="cat in displayCategories" :key="cat.category_id" class="category-item" @click="goToCategory(cat.category_id)">
+                    <img v-if="cat.icon" :src="cat.icon" class="category-icon" />
+                    <van-icon v-else name="folder-o" size="28" color="#1989fa" />
+                    <span>{{ cat.name }}</span>
+                </div>
+            </div>
         </div>
-        <van-empty v-else-if="error" :description="error" />
-        <template v-else>
-            <div class="category-section">
-                <div class="section-title">
-                    <span>分类浏览</span>
-                    <span v-if="!showAllCategories && categories.length > 16" class="more" @click="showAllCategories = true">显示更多</span>
-                    <span v-else-if="showAllCategories && categories.length > 16" class="more" @click="showAllCategories = false">收起</span>
-                </div>
-                <div class="category-grid">
-                    <div v-for="cat in displayCategories" :key="cat.category_id" class="category-item" @click="goToCategory(cat.category_id)">
-                        <img v-if="cat.icon" :src="cat.icon" class="category-icon" />
-                        <van-icon v-else name="folder-o" size="28" color="#1989fa" />
-                        <span>{{ cat.name }}</span>
-                    </div>
-                </div>
+        <div class="ranking-section">
+            <div class="section-title">
+                <span>排行榜</span>
+                <span class="more" @click="goToRankings">更多</span>
             </div>
-            <div class="ranking-section">
-                <div class="section-title">
-                    <span>排行榜</span>
-                    <span class="more" @click="goToRankings">更多</span>
-                </div>
-                <div class="ranking-tabs">
-                    <van-tabs v-model:active="activeRankingTab">
-                        <van-tab title="文章热榜">
-                            <div class="ranking-list">
-                                <van-empty v-if="articleRanking.length === 0" description="暂无数据" />
-                                <RankingItem v-for="(item, index) in articleRanking" :key="item.post_id" :index="index" :title="item.title" :subtitle="item.author?.username + ' · 热度 ' + item.hot_score" @click="goToDetail(item.post_id)" />
-                            </div>
-                        </van-tab>
-                        <van-tab title="用户活跃">
-                            <div class="ranking-list">
-                                <van-empty v-if="userRanking.length === 0" description="暂无数据" />
-                                <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.article_count + ' · 评论 ' + item.comment_count">
-                                    <template #avatar>
-                                        <van-image round width="40px" height="40px" :src="item.avatar" />
-                                    </template>
-                                </RankingItem>
-                            </div>
-                        </van-tab>
-                    </van-tabs>
-                </div>
+            <div v-if="rankingLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+            <van-empty v-else-if="rankingError" :description="rankingError" />
+            <div v-else class="ranking-tabs">
+                <van-tabs v-model:active="activeRankingTab">
+                    <van-tab title="文章热榜">
+                        <div class="ranking-list">
+                            <van-empty v-if="articleRanking.length === 0" description="暂无数据" />
+                            <RankingItem v-for="(item, index) in articleRanking" :key="item.post_id" :index="index" :title="item.title" :subtitle="item.author?.username + ' · 热度 ' + item.hot_score" @click="goToDetail(item.post_id)" />
+                        </div>
+                    </van-tab>
+                    <van-tab title="用户活跃">
+                        <div class="ranking-list">
+                            <van-empty v-if="userRanking.length === 0" description="暂无数据" />
+                            <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.article_count + ' · 评论 ' + item.comment_count">
+                                <template #avatar>
+                                    <van-image round width="40px" height="40px" :src="item.avatar" />
+                                </template>
+                            </RankingItem>
+                        </div>
+                    </van-tab>
+                </van-tabs>
             </div>
-            <div class="recommend-section">
-                <div class="section-title">推荐关注</div>
-                <div class="user-list">
-                    <van-empty v-if="recommendUsers.length === 0" description="暂无推荐" />
-                    <UserListItem v-for="user in recommendUsers" :key="user.user_id" :avatar="user.avatar" :username="user.username" :bio="user.bio" :is-followed="user.is_followed" @toggle="followUser(user)" />
-                </div>
+        </div>
+        <div class="recommend-section">
+            <div class="section-title">推荐关注</div>
+            <div v-if="recommendLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+            <van-empty v-else-if="recommendError" :description="recommendError" />
+            <div v-else class="user-list">
+                <van-empty v-if="recommendUsers.length === 0" description="暂无推荐" />
+                <UserListItem v-for="user in recommendUsers" :key="user.user_id" :avatar="user.avatar" :username="user.username" :bio="user.bio" :is-followed="user.is_followed" @toggle="followUser(user)" />
             </div>
-        </template>
+        </div>
         <div class="bottom-spacer"></div>
         <van-floating-bubble :gap="{x: 30, y: 80}" icon="plus" @click="goToPostEdit" />
+        <van-back-top right="30px" bottom="130px" />
     </div>
 </template>
 
@@ -72,49 +73,73 @@ import UserListItem from '@/components/UserListItem.vue'
 const router = useRouter()
 const searchKeyword = ref('')
 const activeRankingTab = ref(0)
-const loading = ref(true)
-const error = ref('')
 const categories = ref([])
 const showAllCategories = ref(false)
 const displayCategories = computed(() => showAllCategories.value ? categories.value : categories.value.slice(0, 16))
+const categoriesLoading = ref(true)
+const categoriesError = ref('')
+const rankingLoading = ref(true)
+const rankingError = ref('')
+const recommendLoading = ref(true)
+const recommendError = ref('')
 const articleRanking = ref([])
 const userRanking = ref([])
 const recommendUsers = ref([])
 const loadCategories = async () => {
-    const cached = getCache('categories')
-    if (cached) { categories.value = cached; return }
-    const data = await categoryApi.getList()
-    categories.value = data || []
-    setCache('categories', categories.value, 30 * 60 * 1000)
+    categoriesLoading.value = true
+    categoriesError.value = ''
+    try {
+        const cached = getCache('categories')
+        if (cached) { categories.value = cached; return }
+        const data = await categoryApi.getList()
+        categories.value = data || []
+        setCache('categories', categories.value, 30 * 60 * 1000)
+    } catch (err) {
+        categoriesError.value = err.message || '加载失败'
+    } finally {
+        categoriesLoading.value = false
+    }
 }
 const loadArticleRanking = async () => {
-    const cached = getCache('articleRanking')
-    if (cached) { articleRanking.value = cached; return }
-    const data = await rankingApi.getList('article_hot', 'week', 5)
-    articleRanking.value = data?.list || []
-    setCache('articleRanking', data?.list, 5 * 60 * 1000)
+    rankingLoading.value = true
+    rankingError.value = ''
+    try {
+        const cached = getCache('articleRanking')
+        if (cached) { articleRanking.value = cached; return }
+        const data = await rankingApi.getList('article_hot', 'week', 5)
+        articleRanking.value = data?.list || []
+        setCache('articleRanking', data?.list, 5 * 60 * 1000)
+    } catch (err) {
+        rankingError.value = err.message || '加载失败'
+    } finally {
+        rankingLoading.value = false
+    }
 }
 const loadUserRanking = async () => {
-    const cached = getCache('userRanking')
-    if (cached) { userRanking.value = cached; return }
-    const data = await rankingApi.getList('user_active', 'week', 5)
-    userRanking.value = data?.list || []
-    setCache('userRanking', data?.list, 5 * 60 * 1000)
+    try {
+        const cached = getCache('userRanking')
+        if (cached) { userRanking.value = cached; return }
+        const data = await rankingApi.getList('user_active', 'week', 5)
+        userRanking.value = data?.list || []
+        setCache('userRanking', data?.list, 5 * 60 * 1000)
+    } catch (err) {
+        rankingError.value = err.message || '加载失败'
+    }
 }
 const loadRecommendUsers = async () => {
-    const data = await rankingApi.getList('contributor', 'week', 3)
-    recommendUsers.value = data?.list || []
+    recommendLoading.value = true
+    recommendError.value = ''
+    try {
+        const data = await rankingApi.getList('contributor', 'week', 3)
+        recommendUsers.value = data?.list || []
+    } catch (err) {
+        recommendError.value = err.message || '加载失败'
+    } finally {
+        recommendLoading.value = false
+    }
 }
 const loadAll = async () => {
-    loading.value = true
-    error.value = ''
-    try {
-        await Promise.all([loadCategories(), loadArticleRanking(), loadUserRanking(), loadRecommendUsers()])
-    } catch (err) {
-        error.value = err.message || '加载失败'
-    } finally {
-        loading.value = false
-    }
+    await Promise.all([loadCategories(), loadArticleRanking(), loadUserRanking(), loadRecommendUsers()])
 }
 const followUser = async (user) => {
     const data = await followApi.toggleFollow(user.user_id)
@@ -135,6 +160,7 @@ onMounted(() => { loadAll() })
 <style scoped>
 .faxian-page { padding-bottom: 60px; background: #f5f5f5; min-height: 100vh; }
 .loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.section-loading { display: flex; justify-content: center; align-items: center; padding: 40px 0; }
 .error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
 .error-text { font-size: 14px; color: #999; }
 .search-header { background: #fff; padding: 8px 12px; }

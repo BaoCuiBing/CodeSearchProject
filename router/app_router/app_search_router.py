@@ -1,9 +1,8 @@
 import logging
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 from sqlalchemy import func
 from models.model import Post, User, Tag, PostTag, SearchHistory, Category
-from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
 search_bp = Blueprint("search", url_prefix="/api/search")

@@ -2,10 +2,9 @@ import json
 import logging
 from datetime import datetime, timedelta
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 from sqlalchemy import func
 from models.model import User, Post, Category, Tag, PostTag, Comment, Favorite, Like
-from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
 admin_article_bp = Blueprint("admin_article", url_prefix="/api/admin/article")

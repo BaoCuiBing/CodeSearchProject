@@ -1,8 +1,7 @@
 import logging
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 from models.model import Report, Post, Comment, User
-from models.db_init import get_db_session
 
 logger = logging.getLogger(__name__)
 report_bp = Blueprint("report", url_prefix="/api/report")

@@ -1,9 +1,9 @@
 from datetime import datetime
 import logging
 from sanic import Blueprint, response
-from sanic_ext import openapi
+from utils.openapi_helper import openapi
 from models.model import User, SystemSetting
-from models.db_init import get_db_session, _init_default_data
+from models.db_init import _init_default_data
 from models.db_base import Base
 
 logger = logging.getLogger(__name__)
@@ -100,9 +100,10 @@ async def reset_database(request):
         temp_db = Database()
         Base.metadata.drop_all(bind=temp_db.engine)
         Base.metadata.create_all(bind=temp_db.engine)
-        new_session = temp_db.SessionLocal()
+        temp_db.init_session()
+        new_session = temp_db.get_session()
         _init_default_data(new_session)
-        new_session.close()
+        new_session.commit()
         logger.info(f"管理员{admin_id}重置数据库成功")
         return response.json({"code": 200, "msg": "重置成功", "data": {"success": True}})
     except Exception as e:

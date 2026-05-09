@@ -1,10 +1,8 @@
 <template>
     <div class="category-detail-page">
         <PageNavBar :title="category.name" />
-        <div v-if="loading" class="loading-wrap">
-            <van-loading size="24px" vertical>加载中...</van-loading>
-        </div>
-        <van-empty v-else-if="error" :description="error" />
+        <div v-if="categoryLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+        <van-empty v-else-if="categoryError" :description="categoryError" />
         <template v-else>
             <div class="category-info">
                 <van-icon :name="category.icon" size="48" color="#1989fa" />
@@ -13,16 +11,20 @@
                 <span class="post-count">{{ category.post_count }} 篇文章</span>
             </div>
             <div class="post-list">
-                <van-empty v-if="posts.length === 0" description="暂无文章" />
-                <PostCard v-for="post in posts" :key="post.post_id" :title="post.title" :summary="post.summary" @click="goToDetail(post.post_id)">
-                    <template #footer>
-                        <div class="post-meta">
-                            <span>{{ post.author?.username || '' }}</span>
-                            <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
-                            <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ post.like_count }}</span>
-                        </div>
-                    </template>
-                </PostCard>
+                <div v-if="postsLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
+                <van-empty v-else-if="postsError" :description="postsError" />
+                <template v-else>
+                    <van-empty v-if="posts.length === 0" description="暂无文章" />
+                    <PostCard v-for="post in posts" :key="post.post_id" :title="post.title" :summary="post.summary" @click="goToDetail(post.post_id)">
+                        <template #footer>
+                            <div class="post-meta">
+                                <span>{{ post.author?.username || '' }}</span>
+                                <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
+                                <span><van-icon name="good-job-o" color="#ff6b6b" /> {{ post.like_count }}</span>
+                            </div>
+                        </template>
+                    </PostCard>
+                </template>
             </div>
         </template>
     </div>
@@ -37,33 +39,43 @@ import PostCard from '@/components/PostCard.vue'
 const router = useRouter()
 const route = useRoute()
 const categoryIcons = ['cluster-o', 'desktop-o', 'phone-o', 'records', 'setting-o', 'photo-fail', 'chart-trending-o', 'bag-o']
-const loading = ref(true)
-const error = ref('')
+const categoryLoading = ref(true)
+const categoryError = ref('')
+const postsLoading = ref(true)
+const postsError = ref('')
 const category = ref({ name: '', icon: '', description: '', post_count: 0 })
 const posts = ref([])
 const loadCategory = async () => {
-    const categoryId = parseInt(route.query.id)
-    const data = await categoryApi.getList()
-    const found = (data || []).find(c => c.category_id === categoryId)
-    if (found) {
-        category.value = { ...found, icon: categoryIcons[categoryId % categoryIcons.length] }
+    categoryLoading.value = true
+    categoryError.value = ''
+    try {
+        const categoryId = parseInt(route.query.id)
+        const data = await categoryApi.getList()
+        const found = (data || []).find(c => c.category_id === categoryId)
+        if (found) {
+            category.value = { ...found, icon: categoryIcons[categoryId % categoryIcons.length] }
+        }
+    } catch (err) {
+        categoryError.value = err.message || '加载失败'
+    } finally {
+        categoryLoading.value = false
     }
 }
 const loadPosts = async () => {
-    const categoryId = route.query.id
-    const data = await articleApi.getList({ category_id: categoryId, page: 1 })
-    posts.value = data?.list || []
+    postsLoading.value = true
+    postsError.value = ''
+    try {
+        const categoryId = route.query.id
+        const data = await articleApi.getList({ category_id: categoryId, page: 1 })
+        posts.value = data?.list || []
+    } catch (err) {
+        postsError.value = err.message || '加载失败'
+    } finally {
+        postsLoading.value = false
+    }
 }
 const loadAll = async () => {
-    loading.value = true
-    error.value = ''
-    try {
-        await Promise.all([loadCategory(), loadPosts()])
-    } catch (err) {
-        error.value = err.message || '加载失败'
-    } finally {
-        loading.value = false
-    }
+    await Promise.all([loadCategory(), loadPosts()])
 }
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
 onMounted(() => { loadAll() })
@@ -72,6 +84,7 @@ onMounted(() => { loadAll() })
 <style scoped>
 .category-detail-page { background: #f5f5f5; min-height: 100vh; }
 .loading-wrap { display: flex; justify-content: center; align-items: center; padding: 80px 0; }
+.section-loading { display: flex; justify-content: center; align-items: center; padding: 40px 0; }
 .error-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 80px 0; gap: 12px; }
 .error-text { font-size: 14px; color: #999; }
 .category-info { background: #fff; padding: 24px; text-align: center; margin-bottom: 8px; }

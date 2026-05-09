@@ -1,6 +1,10 @@
 <template>
     <div class="app-container">
-        <router-view />
+        <router-view v-slot="{ Component }">
+            <keep-alive :include="['ShouYe', 'FaXian', 'Message', 'MySelf']">
+                <component :is="Component" />
+            </keep-alive>
+        </router-view>
         <van-tabbar v-if="showTabbar" route active-color="#1989fa" inactive-color="#7d7e80">
             <van-tabbar-item replace to="/shouye" icon="wap-home-o">首页</van-tabbar-item>
             <van-tabbar-item replace to="/faxian" icon="fire-o">发现</van-tabbar-item>

@@ -16,6 +16,7 @@
                 </template>
             </PostCardList>
         </div>
+        <van-back-top right="30px" bottom="80px" />
     </div>
 </template>
 
@@ -54,7 +55,7 @@ const loadArticles = async () => {
         loading.value = false
     }
 }
-const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
+const goToDetail = (post) => { router.push({ path: '/article', query: { id: post.post_id } }) }
 onMounted(() => { loadArticles() })
 </script>
 

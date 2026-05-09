@@ -1,6 +1,6 @@
 import { getUserId } from './local_storage.js'
 import { showDialog, Toast } from 'vant'
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || ''
+const BASE_URL = 'http://127.0.0.1:8848'
 const request = async (method, url, data, isFormData) => {
     const options = { method, headers: {} }
     if (isFormData) {
