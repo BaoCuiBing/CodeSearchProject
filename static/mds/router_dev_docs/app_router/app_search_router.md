@@ -20,7 +20,7 @@
 #### 请求参数
 | 参数名 | 类型 | 必填 | 说明 | 位置 |
 |--------|------|------|------|------|
-| user_id | int | yes | 当前用户ID（用于记录搜索历史） | Query |
+| user_id | int | no | 当前用户ID（用于记录搜索历史，不传则不记录） | Query |
 | keyword | string | yes | 搜索关键词 | Query |
 | type | string | no | 搜索类型：article/question/all，默认all | Query |
 | page | int | no | 页码，默认1 | Query |

@@ -52,6 +52,7 @@
                 </div>
             </van-tab>
         </van-tabs>
+    <van-back-top right="30px" bottom="80px" />
     </div>
 </template>
 

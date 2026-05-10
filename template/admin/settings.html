@@ -50,6 +50,13 @@
             </div>
         </div>
         <div class="setting-item">
+            <div class="setting-label">APP关于页面</div>
+            <div class="setting-value">
+                <span class="setting-desc" id="about_config_display" style="margin-right:10px;">已设置0个配置项</span>
+                <button class="layui-btn layui-btn-sm setting-btn" onclick="openAboutConfigDialog()">设置</button>
+            </div>
+        </div>
+        <div class="setting-item">
             <div class="setting-label">重置数据库</div>
             <div class="setting-value">
                 <button type="button" class="layui-btn layui-btn-danger layui-btn-sm" onclick="resetDatabase()">重置数据库</button>
@@ -79,6 +86,7 @@
                 updateCarouselDesc(data.carousel_imgs);
                 var switchVal = data.special_ancestor_worship === 'true';
                 form.val('settingsForm', {special_ancestor_worship: switchVal});
+                updateAboutConfigDesc(data.about_config);
                 SendLog.log_info('系统设置加载成功', 'settings');
             } else { SendLog.log_warning('系统设置加载失败: ' + res.msg, 'settings'); }
         }).catch(function(err) { SendLog.log_error('系统设置请求异常: ' + err.message, 'settings'); });
@@ -149,6 +157,14 @@
         try { var parsed = JSON.parse(value); document.getElementById('carousel_imgs_display').textContent = '已设置' + (parsed.imgs ? parsed.imgs.length : 0) + '个图片'; }
         catch(e) { document.getElementById('carousel_imgs_display').textContent = '未设置'; }
     };
+    function updateAboutConfigDesc(value) {
+        try { var parsed = JSON.parse(value); var count = (parsed.info_list ? parsed.info_list.length : 0) + (parsed.tech_stack ? parsed.tech_stack.length : 0); document.getElementById('about_config_display').textContent = '已设置' + count + '个配置项'; }
+        catch(e) { document.getElementById('about_config_display').textContent = '已设置0个配置项'; }
+    }
+    function openAboutConfigDialog() {
+        SendLog.log_info('打开APP关于页面设置弹窗', 'settings');
+        lostoryOption.openDialog('APP关于页面设置', '/admin/dialogs/settings_about_info.html', ['700px', '500px']);
+    }
     </script>
 </body>
 </html>

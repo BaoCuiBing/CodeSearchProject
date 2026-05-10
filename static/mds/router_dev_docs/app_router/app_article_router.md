@@ -102,6 +102,7 @@ GET /api/article/1?user_id=1
 | data.updated_at | datetime | 更新时间 |
 | data.is_liked | bool | 当前用户是否点赞（动态查询likes表） |
 | data.is_favorited | bool | 当前用户是否收藏（动态查询favorites表） |
+| data.is_followed | bool | 当前用户是否关注作者（动态查询follows表） |
 
 #### 响应示例（失败）
 ```json

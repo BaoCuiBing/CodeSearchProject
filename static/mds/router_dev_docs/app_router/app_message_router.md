@@ -98,7 +98,7 @@ Content-Type: application/json
 - **路径**: `/api/message/notifications/read-all`
 - **方法**: `PUT`
 - **函数名**: `mark_all_notifications_read`
-- **OpenAPI摘要**: 标记所有通知为已读
+- **OpenAPI摘要**: 标记所有通知为已读（同时标记系统公告为已读）
 
 #### 响应格式
 | 字段 | 类型 | 说明 |
@@ -186,6 +186,7 @@ DELETE /api/message/notification/1?user_id=1
 | data.follow | int | 关注未读数 |
 | data.system | int | 系统消息未读数 |
 | data.system_msg | int | 系统公告未读数 |
+| data.chat_unread | int | 私信未读数 |
 
 #### 请求参数
 | 参数名 | 类型 | 必填 | 说明 | 位置 |
@@ -306,7 +307,46 @@ GET /api/message/conversation/user/2?user_id=1&page=1&page_size=20
 
 ---
 
-### 8. 发送私信（APP端）
+### 8. 标记会话消息为已读（APP端）
+- **路径**: `/api/message/conversation/read`
+- **方法**: `PUT`
+- **函数名**: `mark_conversation_read`
+- **OpenAPI摘要**: 标记指定用户发来的所有私信为已读
+
+#### 请求参数
+| 参数名 | 类型 | 必填 | 说明 | 位置 |
+|--------|------|------|------|------|
+| user_id | int | yes | 当前用户ID | Body (JSON) |
+| from_user_id | int | yes | 发送者用户ID | Body (JSON) |
+
+#### 响应格式
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| code | int | 状态码 |
+| msg | string | 提示信息 |
+
+#### 请求示例
+```
+PUT /api/message/conversation/read
+Content-Type: application/json
+
+{
+    "user_id": 1,
+    "from_user_id": 2
+}
+```
+
+#### 响应示例（失败）
+```json
+{
+    "code": 400,
+    "msg": "参数错误"
+}
+```
+
+---
+
+### 9. 发送私信（APP端）
 - **路径**: `/api/message/send`
 - **方法**: `POST`
 - **函数名**: `send_private_message`
@@ -349,7 +389,7 @@ Content-Type: application/json
 
 ---
 
-### 9. 删除会话（APP端）
+### 10. 删除会话（APP端）
 - **路径**: `/api/message/conversation/user/<to_user_id>`
 - **方法**: `DELETE`
 - **函数名**: `delete_conversation`

@@ -69,7 +69,7 @@ const onTabChange = async (index) => {
     if (index === 1 && userRanking.value.length === 0) { await loadUserRanking() }
 }
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
-const goToProfile = (userId) => { router.push({ path: '/user-profile', query: { id: userId } }) }
+const goToProfile = (userId) => { router.push({ path: '/profile', query: { id: userId } }) }
 onMounted(() => { loadArticleRanking() })
 </script>
 

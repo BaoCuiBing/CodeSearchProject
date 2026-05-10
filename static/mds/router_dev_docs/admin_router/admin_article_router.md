@@ -265,12 +265,10 @@ GET /api/admin/article/1?admin_id=1
 | 参数名 | 类型 | 必填 | 说明 | 位置 |
 |--------|------|------|------|------|
 | admin_id | int | yes | 管理员ID（需校验users.role=admin） | Query |
-| reason | string | no | 删除原因 | Query |
-| notify_author | bool | no | 是否通知作者，默认true | Query |
 
 #### 请求示例
 ```
-DELETE /api/admin/article/1?admin_id=1&reason=包含违规内容&notify_author=true
+DELETE /api/admin/article/1?admin_id=1
 ```
 
 #### 响应示例（失败）
@@ -295,15 +293,13 @@ DELETE /api/admin/article/1?admin_id=1&reason=包含违规内容&notify_author=t
 | admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
 | ids | array | yes | 文章ID列表，如[1,2,3] | Body (JSON) |
 | action | string | yes | 操作类型：publish/unpublish/delete/top/untop | Body (JSON) |
-| reason | string | no | 操作原因 | Body (JSON) |
 
 #### 请求示例
 ```json
 {
     "admin_id": 1,
     "ids": [1, 2, 3],
-    "action": "delete",
-    "reason": "批量清理违规内容"
+    "action": "delete"
 }
 ```
 

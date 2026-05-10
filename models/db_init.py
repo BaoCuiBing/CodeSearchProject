@@ -3,6 +3,7 @@ import re
 import json
 import shutil
 import logging
+from sqlalchemy import text
 from config import PROJECT_DIR
 from models.db_base import Database, Base
 from models.model import User, File, Report, SearchHistory, Category, Post, Tag, PostTag, Comment, Favorite, Like, Follow, Message, Notification, SystemMessage, SystemMessageTarget, SystemSetting
@@ -28,6 +29,17 @@ def _strip_md_tags(text):
     text = re.sub(r'\n{2,}', '\n', text)
     return text.strip()
 
+def _read_protocol_file(filename):
+    """读取协议文件并转换为纯文本"""
+    filepath = os.path.join(PROJECT_DIR, "static", "mds", "protocol_mds", filename)
+    try:
+        with open(filepath, "r", encoding="utf-8") as f:
+            content = f.read()
+        return _strip_md_tags(content)
+    except Exception as e:
+        logger.error(f"读取协议文件失败:{filename},{str(e)}")
+        return ""
+
 def _init_default_data(session):
     """初始化默认数据(管理员账号和系统设置)"""
     logger.info("开始初始化默认数据...")
@@ -41,11 +53,15 @@ def _init_default_data(session):
         logger.info("管理员账号创建完成: usernumber=admin")
     else:
         logger.info("管理员账号已存在,跳过创建")
+    agreement_text = _read_protocol_file("用户协议.md")
+    privacy_text = _read_protocol_file("隐私协议.md")
+    about_config_value = json.dumps({"info_list": [{"title": "官方网站", "value": "codesearch.example.com"}, {"title": "GitHub", "value": "github.com/codesearch"}, {"title": "联系我们", "value": "support@codesearch.com"}, {"title": "用户协议", "value": agreement_text}, {"title": "隐私政策", "value": privacy_text}], "tech_stack": [{"name": "Sanic", "url": "https://sanic.dev/"}, {"name": "Vue3", "url": "https://vuejs.org/"}, {"name": "Vant", "url": "https://vant-ui.github.io/"}, {"name": "MySQL", "url": "https://dev.mysql.com/doc/"}]}, ensure_ascii=False)
     settings = [
         {"key": "site_name", "value": "CodeSearch", "description": "站点名称"},
         {"key": "site_description", "value": "CodeSearch是一个专业的代码搜索与知识分享社区，汇聚海量编程教程、技术文档与开源代码资源，支持精准搜索、分类浏览、收藏互动等功能，助力开发者高效学习、快速解决问题，共同成长进步。", "description": "站点描述"},
         {"key": "carousel_imgs", "value": '{"imgs": []}', "description": "首页轮播图"},
-        {"key": "special_ancestor_worship", "value": "false", "description": "是否为清明节模式"}
+        {"key": "special_ancestor_worship", "value": "false", "description": "是否为清明节模式"},
+        {"key": "about_config", "value": about_config_value, "description": "关于我们页面配置"}
     ]
     for s in settings:
         exist = session.query(SystemSetting).filter(SystemSetting.key == s["key"]).first()
@@ -394,21 +410,29 @@ def init_database():
     return db
 
 def reset_database():
-    """重置数据库,删除所有表后重新创建"""
+    """重置数据库,删除所有表后重新创建(独立会话,不影响sanic服务)"""
     db = Database()
+    print("正在删除所有数据表...")
+    with db.engine.connect() as conn:
+        conn.execute(text("SET FOREIGN_KEY_CHECKS=0"))
+        conn.commit()
+    Base.metadata.drop_all(bind=db.engine)
+    with db.engine.connect() as conn:
+        conn.execute(text("SET FOREIGN_KEY_CHECKS=1"))
+        conn.commit()
+    print("数据表删除完成")
+    print("正在创建数据表...")
+    Base.metadata.create_all(bind=db.engine)
+    print("数据表创建完成")
+    db.init_session()
     session = db.get_session()
     try:
-        print("正在删除所有数据表...")
-        Base.metadata.drop_all(bind=db.engine)
-        print("数据表删除完成")
-        print("正在创建数据表...")
-        Base.metadata.create_all(bind=db.engine)
-        print("数据表创建完成")
         _init_default_data(session)
         print("管理员账号创建完成: usernumber=admin, password=admin123")
         print("系统设置初始化完成")
     finally:
         session.close()
+        db.engine.dispose()
     return db
 
 if __name__ == "__main__":

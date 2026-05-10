@@ -77,5 +77,5 @@ onMounted(() => { loadAll() })
 .search-content { padding: 16px; }
 .section-title { font-size: 14px; color: #999; margin-bottom: 12px; }
 .history-list, .hot-list { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
-.hot-list .van-tag { padding: 6px 14px; }
+.history-list .van-tag, .hot-list .van-tag { padding: 6px 14px; }
 </style>

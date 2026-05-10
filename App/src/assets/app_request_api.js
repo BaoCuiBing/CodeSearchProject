@@ -1,5 +1,4 @@
 import { getUserId } from './local_storage.js'
-import { showDialog, Toast } from 'vant'
 const BASE_URL = 'http://127.0.0.1:8848'
 const request = async (method, url, data, isFormData) => {
     const options = { method, headers: {} }
@@ -13,22 +12,12 @@ const request = async (method, url, data, isFormData) => {
         const res = await fetch(`${BASE_URL}${url}`, options)
         const json = await res.json()
         if (json.code !== 200) {
-            if (json.code === 403) {
-                showDialog({ message: '权限不足' }).then(() => { window.location.hash = '#/login' })
-            } else if (json.code === 404) {
-                showDialog({ message: '资源不存在' })
-            } else if (json.code >= 500) {
-                showDialog({ message: '服务器繁忙，请稍后重试' })
-            } else {
-                showDialog({ message: json.msg || '请求失败' })
-            }
-            throw new Error(json.msg)
+            throw new Error(json.msg || '请求失败')
         }
         return json.data
     } catch (err) {
         if (err instanceof TypeError) {
-            showDialog({ message: '网络连接失败，请检查网络' })
-            throw new Error('加载失败')
+            throw new Error('网络连接失败，请检查网络')
         }
         throw err
     }
@@ -76,7 +65,10 @@ export const articleApi = {
     getList: (params = {}) => get('/api/article/list', params),
     toggleLike: (postId) => post('/api/article/like', { user_id: getUserId(), post_id: postId }),
     getRecommend: (type, limit, random = false) => get('/api/article/recommend', { type, limit, random }),
-    getToc: (postId) => get(`/api/article/${postId}/toc`)
+    getToc: (postId) => get(`/api/article/${postId}/toc`),
+    saveDraft: (data) => { data.user_id = getUserId(); data.status = 'draft'; return post('/api/article', data) },
+    getDrafts: (params = {}) => { params.user_id = getUserId(); return get('/api/article/drafts', params) },
+    deleteDraft: (postId) => del(`/api/article/${postId}`, { user_id: getUserId() })
 }
 export const categoryApi = {
     getList: () => get('/api/category/list')
@@ -115,7 +107,8 @@ export const messageApi = {
     getConversations: (page, pageSize) => get('/api/message/conversations', { user_id: getUserId(), page, page_size: pageSize }),
     getConversationMessages: (toUserId, page, pageSize) => get(`/api/message/conversation/user/${toUserId}`, { user_id: getUserId(), page, page_size: pageSize }),
     sendMessage: (toUserId, content) => post('/api/message/send', { from_user_id: getUserId(), to_user_id: toUserId, content }),
-    deleteConversation: (toUserId) => del(`/api/message/conversation/user/${toUserId}`, { user_id: getUserId() })
+    deleteConversation: (toUserId) => del(`/api/message/conversation/user/${toUserId}`, { user_id: getUserId() }),
+    markConversationRead: (fromUserId) => put('/api/message/conversation/read', { user_id: getUserId(), from_user_id: fromUserId })
 }
 export const searchApi = {
     search: (keyword, params = {}) => { params.user_id = getUserId(); params.keyword = keyword; return get('/api/search', params) },
@@ -143,5 +136,6 @@ export const uploadApi = {
     }
 }
 export const systemApi = {
-    getCarousel: () => get('/api/system/carousel')
+    getCarousel: () => get('/api/system/carousel'),
+    getAboutConfig: () => get('/api/system/about')
 }

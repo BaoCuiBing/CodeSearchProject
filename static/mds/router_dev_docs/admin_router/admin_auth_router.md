@@ -99,6 +99,5 @@
 | 参数名 | 类型 | 必填 | 说明 | 位置 |
 |--------|------|------|------|------|
 | admin_id | int | yes | 管理员ID（需校验users.role=admin） | Body (JSON) |
-| old_password | string | yes | 当前密码 | Body (JSON) |
 | new_password | string | yes | 新密码（8位以上） | Body (JSON) |
 | confirm_password | string | yes | 确认新密码 | Body (JSON) |

@@ -40,7 +40,7 @@ const loadNotices = async () => {
         loading.value = false
     }
 }
-onMounted(() => { loadNotices() })
+onMounted(() => { loadNotices(); messageApi.markAllNotificationsRead() })
 </script>
 
 <style scoped>

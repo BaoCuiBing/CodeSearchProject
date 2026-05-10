@@ -24,12 +24,31 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { messageApi } from '@/assets/app_request_api.js'
-import { getUserId } from '@/assets/local_storage.js'
+import { getUserId, getUser, setUser } from '@/assets/local_storage.js'
+import { profileApi } from '@/assets/app_request_api.js'
 import PageNavBar from '@/components/PageNavBar.vue'
 const route = useRoute()
 const chatUser = ref({ user_id: route.query.user_id || 1, username: route.query.username || '用户', avatar: route.query.avatar || '' })
 const selfAvatar = ref('')
 const selfUserId = ref(getUserId())
+const loadSelfAvatar = async () => {
+    const cachedUser = getUser()
+    if (cachedUser?.avatar) {
+        selfAvatar.value = cachedUser.avatar
+        return
+    }
+    try {
+        const data = await profileApi.getProfile(selfUserId.value)
+        selfAvatar.value = data?.avatar || ''
+        setUser({ user_id: selfUserId.value, username: cachedUser?.username || '', avatar: selfAvatar.value })
+    } catch (e) {
+        console.error('加载头像失败', e)
+    }
+}
+onMounted(() => {
+    loadSelfAvatar()
+    loadMessages()
+})
 const inputMessage = ref('')
 const loading = ref(true)
 const error = ref('')

@@ -1,22 +1,23 @@
 <template>
     <div class="my-questions-page">
         <PageNavBar title="我的提问" />
-        <div v-if="loading" class="loading-wrap">
+        <div v-if="loading && questions.length === 0" class="loading-wrap">
             <van-loading size="24px" vertical>加载中...</van-loading>
         </div>
         <van-empty v-else-if="error" :description="error" />
         <div v-else class="question-list">
-            <van-empty v-if="questions.length === 0" description="暂无提问" />
-            <PostCard v-for="q in questions" :key="q.post_id" :title="q.title" :summary="q.summary" @click="goToDetail(q.post_id)">
-                <template #footer>
+            <van-empty v-if="!loading && questions.length === 0" description="暂无提问" />
+            <PostCardList v-else :loading="loading" :finished="finished" :posts="questions" @load="loadQuestions" @click="goToDetail">
+                <template #footer="{ post }">
                     <div class="question-stats">
-                        <span><van-icon name="eye-o" /> {{ q.view_count }}</span>
-                        <span><van-icon name="chat-o" /> {{ q.comment_count }}</span>
+                        <span><van-icon name="eye-o" /> {{ post.view_count }}</span>
+                        <span><van-icon name="chat-o" /> {{ post.comment_count }}</span>
                     </div>
                 </template>
-            </PostCard>
+            </PostCardList>
         </div>
         <van-floating-bubble :gap="{x: 30, y: 80}" icon="plus" @click="goToPostEdit" />
+        <van-back-top right="30px" bottom="130px" />
     </div>
 </template>
 
@@ -26,24 +27,30 @@ import { useRouter } from 'vue-router'
 import { articleApi } from '@/assets/app_request_api.js'
 import { getUserId } from '@/assets/local_storage.js'
 import PageNavBar from '@/components/PageNavBar.vue'
-import PostCard from '@/components/PostCard.vue'
+import PostCardList from '@/components/PostCardList.vue'
 const router = useRouter()
-const loading = ref(true)
+const loading = ref(false)
+const finished = ref(false)
 const error = ref('')
 const questions = ref([])
+const page = ref(1)
 const loadQuestions = async () => {
+    if (loading.value || finished.value) return
     loading.value = true
     error.value = ''
     try {
-        const data = await articleApi.getList({ user_id: getUserId(), type: 'question', page: 1 })
-        questions.value = data?.list || []
+        const data = await articleApi.getList({ user_id: getUserId(), type: 'question', page: page.value })
+        const list = data?.list || []
+        if (list.length === 0) { finished.value = true }
+        else { questions.value = [...questions.value, ...list]; page.value++ }
     } catch (err) {
         error.value = err.message || '加载失败'
+        finished.value = true
     } finally {
         loading.value = false
     }
 }
-const goToDetail = (questionId) => { router.push({ path: '/article', query: { id: questionId } }) }
+const goToDetail = (post) => { router.push({ path: '/article', query: { id: post.post_id } }) }
 const goToPostEdit = () => { router.push('/post-edit') }
 onMounted(() => { loadQuestions() })
 </script>

@@ -41,11 +41,17 @@ async def search_content(request):
     posts = query.offset((page - 1) * page_size).limit(page_size).all()
     search_history_id = None
     if user_id:
-        history = SearchHistory(user_id=user_id, keyword=keyword)
-        db.add(history)
-        db.flush()
-        search_history_id = history.id
-        db.commit()
+        existing = db.query(SearchHistory).filter(SearchHistory.user_id == user_id, SearchHistory.keyword == keyword).first()
+        if existing:
+            existing.created_at = func.now()
+            db.commit()
+            search_history_id = existing.id
+        else:
+            history = SearchHistory(user_id=user_id, keyword=keyword)
+            db.add(history)
+            db.flush()
+            search_history_id = history.id
+            db.commit()
     post_list = []
     for p in posts:
         author = db.query(User).filter(User.id == p.user_id).first()

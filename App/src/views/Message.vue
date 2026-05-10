@@ -166,11 +166,13 @@ const goToDetail = (msg) => {
     else if (msg.type === 'follow') { router.push({ path: '/profile', query: { id: msg.related_id } }) }
     else if (msg.related_id > 0) { router.push({ path: '/article', query: { id: msg.related_id } }) }
 }
-const goToChat = (chat) => { 
+const goToChat = async (chat) => {
     const userId = chat.user?.user_id || chat.actor?.user_id
     const username = chat.user?.username || chat.actor?.username
     const avatar = chat.user?.avatar || chat.actor?.avatar
-    router.push({ path: '/chat', query: { user_id: userId, username: username, avatar: avatar } }) 
+    await messageApi.markConversationRead(userId)
+    if (chat.unread_count !== undefined) { chat.unread_count = 0 }
+    router.push({ path: '/chat', query: { user_id: userId, username: username, avatar: avatar } })
 }
 const deleteConversation = async (chat) => {
     await messageApi.deleteConversation(chat.user?.user_id)

@@ -37,12 +37,14 @@ async def create_article(request):
         return response.json({"code": 404, "msg": "用户不存在"})
     summary = data.get("summary")
     if not summary:
-        summary = re.sub(r'[#\*\[\]\(\)]', '', content)[:200]
+        text = re.sub(r'<[^>]+>', '', content)
+        summary = re.sub(r'[#\*\[\]\(\)]', '', text)[:200]
     cover_image = json.dumps(data["cover_image"]) if data.get("cover_image") else None
     category_id = data.get("category_id")
-    tags = data.get("tags", [])
-    logger.info(f"发布文章:user_id={user_id},type={post_type},title={title}")
-    new_post = Post(user_id=user_id, type=post_type, title=title, content=content, summary=summary, cover_image=cover_image, category_id=category_id)
+    tags = data.get("tag_ids", [])
+    status = data.get("status", "published")
+    logger.info(f"发布文章:user_id={user_id},type={post_type},title={title},status={status}")
+    new_post = Post(user_id=user_id, type=post_type, title=title, content=content, summary=summary, cover_image=cover_image, category_id=category_id, status=status)
     db.add(new_post)
     db.flush()
     for tag_id in tags:
@@ -51,6 +53,28 @@ async def create_article(request):
     db.commit()
     logger.info(f"发布文章成功:post_id={new_post.id}")
     return response.json({"code": 200, "msg": "发布成功", "data": {"post_id": new_post.id}})
+
+@article_bp.get("/drafts")
+@openapi.summary("获取用户草稿列表")
+async def get_drafts(request):
+    db = request.ctx.db
+    user_id = request.args.get("user_id")
+    if not user_id:
+        logger.warning("获取草稿失败:user_id为空")
+        return response.json({"code": 400, "msg": "user_id不能为空"})
+    page = int(request.args.get("page", 1))
+    page_size = int(request.args.get("page_size", 20))
+    logger.info(f"查询草稿列表:user_id={user_id}")
+    query = db.query(Post).filter(Post.user_id == user_id, Post.status == "draft").order_by(Post.updated_at.desc())
+    total = query.count()
+    drafts = query.offset((page - 1) * page_size).limit(page_size).all()
+    draft_list = []
+    for d in drafts:
+        category = db.query(Category).filter(Category.id == d.category_id).first() if d.category_id else None
+        tags = db.query(Tag).join(PostTag).filter(PostTag.post_id == d.id).all()
+        draft_list.append({"post_id": d.id, "type": d.type, "title": d.title, "summary": d.summary, "content": d.content, "category_id": d.category_id, "category_name": category.name if category else "", "tags": [{"tag_id": t.id, "name": t.name} for t in tags], "created_at": str(d.created_at), "updated_at": str(d.updated_at)})
+    logger.info(f"获取草稿列表成功:total={total}")
+    return response.json({"code": 200, "msg": "获取成功", "data": {"list": draft_list, "total": total, "page": page, "page_size": page_size}})
 
 @article_bp.get("/<post_id>")
 @openapi.summary("获取文章或问题详情")

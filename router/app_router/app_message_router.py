@@ -71,6 +71,7 @@ async def mark_all_notifications_read(request):
         logger.warning("标记全部已读失败:user_id为空")
         return response.json({"code": 400, "msg": "user_id不能为空"})
     db.query(Notification).filter(Notification.user_id == user_id, Notification.is_read == 0).update({"is_read": 1})
+    db.query(SystemMessageTarget).filter(SystemMessageTarget.user_id == user_id, SystemMessageTarget.is_read == 0).update({"is_read": 1})
     db.commit()
     return response.json({"code": 200, "msg": "标记成功"})
 
@@ -105,7 +106,9 @@ async def get_unread_notification_count(request):
     system = db.query(Notification).filter(Notification.user_id == user_id, Notification.type == "system", Notification.is_read == 0).count()
     system_msg = db.query(SystemMessageTarget).filter(SystemMessageTarget.user_id == user_id, SystemMessageTarget.is_read == 0).count()
     total += system_msg
-    return response.json({"code": 200, "msg": "获取成功", "data": {"total": total, "comment": comment, "like": like, "follow": follow, "system": system, "system_msg": system_msg}})
+    chat_unread = db.query(Message).filter(Message.to_user_id == user_id, Message.is_read == 0).count()
+    total += chat_unread
+    return response.json({"code": 200, "msg": "获取成功", "data": {"total": total, "comment": comment, "like": like, "follow": follow, "system": system, "system_msg": system_msg, "chat_unread": chat_unread}})
 
 @message_bp.get("/conversations")
 @openapi.summary("获取私信会话列表")
@@ -156,6 +159,21 @@ async def get_conversation_messages(request, to_user_id):
     msg_list = [{"message_id": m.id, "from_user_id": m.from_user_id, "to_user_id": m.to_user_id, "content": m.content, "is_read": bool(m.is_read), "created_at": str(m.created_at)} for m in msgs]
     logger.info(f"获取会话消息成功:total={total}")
     return response.json({"code": 200, "msg": "获取成功", "data": {"list": msg_list, "total": total, "page": page, "page_size": page_size}})
+
+@message_bp.put("/conversation/read")
+@openapi.summary("标记会话消息为已读")
+async def mark_conversation_read(request):
+    db = request.ctx.db
+    data = request.json
+    user_id = data.get("user_id")
+    from_user_id = data.get("from_user_id")
+    if not user_id or not from_user_id:
+        logger.warning("标记会话已读失败:参数为空")
+        return response.json({"code": 400, "msg": "参数错误"})
+    db.query(Message).filter(Message.to_user_id == user_id, Message.from_user_id == from_user_id, Message.is_read == 0).update({"is_read": 1})
+    db.commit()
+    logger.info(f"标记会话已读成功:user_id={user_id},from_user_id={from_user_id}")
+    return response.json({"code": 200, "msg": "标记成功"})
 
 @message_bp.post("/send")
 @openapi.summary("发送私信")

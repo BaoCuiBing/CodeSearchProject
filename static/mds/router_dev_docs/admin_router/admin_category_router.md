@@ -22,7 +22,7 @@
 | page | int | no | 页码，默认1 | Query |
 | page_size | int | no | 每页数量，默认20 | Query |
 | keyword | string | no | 搜索关键词 | Query |
-| sort | string | no | 排序：name/sort/post_count，默认sort | Query |
+| sort | string | no | 排序：name/sort，默认sort | Query |
 | order | string | no | 排序方向：asc/desc，默认asc | Query |
 
 #### 请求示例
@@ -185,7 +185,7 @@ GET /api/admin/category/list?admin_id=1&page=1&page_size=20&sort=sort&order=asc
 | 参数名 | 类型 | 必填 | 说明 | 位置 |
 |--------|------|------|------|------|
 | admin_id | int | yes | 管理员ID（需校验users.role=admin） | Query |
-| move_to_id | int | yes | 关联文章迁移到目标分类ID（有文章关联时必填） | Query |
+| move_to_id | int | no | 关联文章迁移到目标分类ID（有文章关联时可选，为空则删除关联文章） | Query |
 
 #### 请求示例
 ```

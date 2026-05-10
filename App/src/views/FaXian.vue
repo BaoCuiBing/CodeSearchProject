@@ -38,7 +38,7 @@
                     <van-tab title="用户活跃">
                         <div class="ranking-list">
                             <van-empty v-if="userRanking.length === 0" description="暂无数据" />
-                            <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.article_count + ' · 评论 ' + item.comment_count">
+                            <RankingItem v-for="(item, index) in userRanking" :key="item.user_id" :index="index" :title="item.username" :subtitle="'文章 ' + item.article_count + ' · 评论 ' + item.comment_count" @click="goToProfile(item.user_id)">
                                 <template #avatar>
                                     <van-image round width="40px" height="40px" :src="item.avatar" />
                                 </template>
@@ -153,6 +153,7 @@ const onSearch = () => {
 const goToCategory = (catId) => { router.push({ path: '/category', query: { id: catId } }) }
 const goToRankings = () => { router.push('/rankings') }
 const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
+const goToProfile = (userId) => { router.push({ path: '/profile', query: { id: userId } }) }
 const goToPostEdit = () => { router.push('/post-edit') }
 onMounted(() => { loadAll() })
 </script>

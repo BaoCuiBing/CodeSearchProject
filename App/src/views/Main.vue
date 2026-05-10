@@ -33,7 +33,7 @@
                         <div v-if="recommendLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
                         <van-empty v-else-if="recommendError" :description="recommendError" />
                         <van-empty v-else-if="recommendPosts.length === 0" description="暂无推荐" />
-                        <PostCard v-else v-for="post in recommendPosts" :key="post.post_id" :title="post.title" :summary="post.summary" @click="goToDetail(post.post_id)">
+                        <PostCard v-else v-for="post in recommendPosts" :key="post.post_id" :title="post.title" :summary="post.summary" @click="goToDetail(post)">
                             <template #header>
                                 <div class="post-header">
                                     <van-image round width="32px" height="32px" :src="post.author?.avatar || ''" />
@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onActivated } from 'vue'
 import { useRouter } from 'vue-router'
 import { showDialog } from 'vant'
 import { tagApi, articleApi, systemApi } from '@/assets/app_request_api.js'
@@ -191,12 +191,12 @@ const loadRecommendPosts = async () => {
         recommendLoading.value = false
     }
 }
-onMounted(async () => {
-    if (!isLogin()) { showDialog({ title: '提示', message: '请先登录', showCancelButton: false, confirmButtonText: '去登录' }).then(handleLoginConfirm); return }
-    loadBanners()
-    loadHotTags()
-    loadRecommendPosts()
-})
+const checkLogin = () => {
+    if (!isLogin()) { showDialog({ title: '提示', message: '请先登录', showCancelButton: false, confirmButtonText: '去登录' }).then(handleLoginConfirm); return false }
+    return true
+}
+onMounted(() => { if (checkLogin()) { loadBanners(); loadHotTags(); loadRecommendPosts() } })
+onActivated(() => { if (checkLogin()) { loadBanners(); loadHotTags(); loadRecommendPosts() } })
 const loadArticlePosts = async () => {
     if (articleLoading.value || articleFinished.value) return
     articleLoading.value = true
@@ -241,7 +241,7 @@ const onSearch = () => {
 const onSearchFocus = () => { router.push('/search') }
 const goToTags = () => { router.push('/tags') }
 const goToTag = (tagId, tagName) => { router.push({ path: '/tag', query: { id: tagId, name: tagName } }) }
-const goToDetail = (postId) => { router.push({ path: '/article', query: { id: postId } }) }
+const goToDetail = (post) => { router.push({ path: '/article', query: { id: post.post_id } }) }
 const handleLoginConfirm = () => { router.push('/login') }
 </script>
 

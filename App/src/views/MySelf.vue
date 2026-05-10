@@ -9,7 +9,8 @@
             <div class="user-info">
                 <van-image round width="64px" height="64px" :src="user?.avatar || ''" />
                 <div class="user-meta">
-                    <h3>{{ user?.username || '未登录' }}</h3>
+                    <h3 v-if="user" @click="goToProfile">{{ user.username }}</h3>
+                    <h3 v-else class="login-text" @click="goToLogin">登录</h3>
                     <p class="user-bio">{{ user?.bio || '这个人很懒，什么都没写' }}</p>
                 </div>
                 <van-icon name="setting-o" size="24" color="#999" @click="goToSettings" />
@@ -43,7 +44,7 @@
                 <van-cell title="关于我们" icon="info-o" is-link @click="goToAbout" />
             </van-cell-group>
         </div>
-        <div class="menu-section">
+        <div v-if="isLogin()" class="menu-section">
             <van-button block type="danger" class="logout-btn" @click="handleLogout">退出登录</van-button>
         </div>
     </div>
@@ -81,8 +82,9 @@ const goToFavorites = () => { router.push('/my-favorites') }
 const goToProfile = () => { router.push('/profile') }
 const goToSecurity = () => { router.push('/security') }
 const goToAbout = () => { router.push('/about') }
+const goToLogin = () => { router.push('/login') }
 const handleLogout = () => {
-    showConfirmDialog({ title: '确认退出', message: '确定要退出登录吗？' }).then(() => { clearUser(); router.replace('/login') }).catch(() => {})
+    showConfirmDialog({ title: '确认退出', message: '确定要退出登录吗？' }).then(() => { clearUser(); user.value = null; error.value = '' }).catch(() => {})
 }
 onMounted(() => { loadUserProfile() })
 </script>
@@ -96,6 +98,7 @@ onMounted(() => { loadUserProfile() })
 .user-info { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
 .user-meta { flex: 1; }
 .user-meta h3 { margin: 0 0 8px; font-size: 20px; color: #333; }
+.login-text { color: #1989fa; cursor: pointer; }
 .user-meta p { margin: 0; font-size: 14px; color: #999; }
 .user-bio { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
 .user-stats { display: flex; justify-content: space-around; }

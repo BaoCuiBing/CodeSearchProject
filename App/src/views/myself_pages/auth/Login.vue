@@ -15,7 +15,6 @@
                 <van-button type="primary" block round :loading="loading" @click="handleLogin">登录</van-button>
                 <div class="form-links">
                     <span class="link" @click="goToRegister">注册账号</span>
-                    <span class="link" @click="goToForget">忘记密码?</span>
                 </div>
             </div>
         </div>
@@ -49,7 +48,6 @@ const handleLogin = async () => {
     }
 }
 const goToRegister = () => { router.push('/register') }
-const goToForget = () => { showToast('功能开发中') }
 </script>
 
 <style scoped>
