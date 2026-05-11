@@ -50,7 +50,7 @@
                 </div>
                 <div v-if="commentsLoading" class="section-loading"><van-loading size="20px" vertical>加载中...</van-loading></div>
                 <van-empty v-else-if="commentsError" :description="commentsError" />
-                <div v-else v-for="comment in comments" :key="comment.comment_id" class="comment-item">
+                <div v-else v-for="comment in comments" :key="comment.comment_id" :id="'comment-' + comment.comment_id" class="comment-item" :class="{ 'highlight-comment': highlightedComment === comment.comment_id }">
                     <van-image round width="32px" height="32px" :src="comment.user?.avatar || ''" />
                     <div class="comment-body">
                         <div class="comment-user">{{ comment.user?.username || '' }}</div>
@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { showToast } from 'vant'
 import { articleApi, commentApi, followApi, favoriteApi } from '@/assets/app_request_api.js'
@@ -80,6 +80,7 @@ const showCommentSheet = ref(false)
 const commentContent = ref('')
 const commentLoading = ref(false)
 const showShareSheet = ref(false)
+const highlightedComment = ref(null)
 const shareOptions = [{ name: '复制链接', icon: 'link' }]
 const onShareSelect = (option) => {
     if (option.name === '复制链接') {
@@ -118,6 +119,15 @@ const loadComments = async () => {
 }
 const loadAll = async () => {
     await Promise.all([loadArticle(), loadComments()])
+    const highlight = route.query.highlight_comment
+    if (highlight === 'all') {
+        await nextTick()
+        const commentSection = document.querySelector('.comment-section')
+        if (commentSection) { commentSection.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
+    } else if (highlight === 'input') {
+        await nextTick()
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' })
+    }
 }
 const toggleLike = async () => {
     const postId = route.query.id
@@ -174,7 +184,8 @@ onMounted(() => { loadAll() })
 .action-item { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12px; color: #666; }
 .comment-section { background: #fff; padding: 16px; }
 .comment-header { font-size: 16px; font-weight: 500; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #eee; }
-.comment-item { display: flex; gap: 12px; margin-bottom: 16px; }
+.comment-item { display: flex; gap: 12px; margin-bottom: 16px; transition: background-color 0.3s; }
+.highlight-comment { background-color: #fff3e0; border-radius: 8px; padding: 8px; }
 .comment-body { flex: 1; }
 .comment-user { font-size: 14px; color: #333; font-weight: 500; margin-bottom: 4px; }
 .comment-text { font-size: 14px; color: #666; line-height: 1.5; margin-bottom: 4px; }

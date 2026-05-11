@@ -137,5 +137,6 @@ export const uploadApi = {
 }
 export const systemApi = {
     getCarousel: () => get('/api/system/carousel'),
-    getAboutConfig: () => get('/api/system/about')
+    getAboutConfig: () => get('/api/system/about'),
+    getSpecialMode: () => get('/api/system/special_mode')
 }

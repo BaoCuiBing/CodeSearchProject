@@ -4,7 +4,7 @@ import logging
 from sanic import Blueprint, response
 from utils.openapi_helper import openapi
 from sqlalchemy import func
-from models.model import User, Post, Tag, PostTag, Comment, Like, Favorite, Category, Follow
+from models.model import User, Post, Tag, PostTag, Comment, Like, Favorite, Category, Follow, Notification
 
 logger = logging.getLogger(__name__)
 
@@ -227,6 +227,8 @@ async def toggle_like(request):
         db.add(Like(user_id=user_id, target_id=post_id, target_type="post"))
         post.like_count = (post.like_count or 0) + 1
         is_liked = True
+        if post.user_id != user_id:
+            db.add(Notification(user_id=post.user_id, type="like", content=f"点赞了您的文章《{post.title}》", related_id=post_id))
         logger.info(f"点赞:user_id={user_id},post_id={post_id}")
     db.commit()
     return response.json({"code": 200, "msg": "操作成功", "data": {"is_liked": is_liked, "like_count": post.like_count}})

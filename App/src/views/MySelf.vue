@@ -84,7 +84,7 @@ const goToSecurity = () => { router.push('/security') }
 const goToAbout = () => { router.push('/about') }
 const goToLogin = () => { router.push('/login') }
 const handleLogout = () => {
-    showConfirmDialog({ title: '确认退出', message: '确定要退出登录吗？' }).then(() => { clearUser(); user.value = null; error.value = '' }).catch(() => {})
+    showConfirmDialog({ title: '确认退出', message: '确定要退出登录吗？' }).then(() => { clearUser(); user.value = null; error.value = ''; router.replace('/shouye') }).catch(() => {})
 }
 onMounted(() => { loadUserProfile() })
 </script>

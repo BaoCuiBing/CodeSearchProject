@@ -1,7 +1,7 @@
 import logging
 from sanic import Blueprint, response
 from utils.openapi_helper import openapi
-from models.model import Post, Comment, User, Like
+from models.model import Post, Comment, User, Like, Notification
 
 logger = logging.getLogger(__name__)
 comment_bp = Blueprint("comment", url_prefix="/api/comment")
@@ -74,6 +74,10 @@ async def create_comment(request):
     new_comment = Comment(user_id=user_id, post_id=post_id, content=content, parent_id=parent_id)
     db.add(new_comment)
     post.comment_count = (post.comment_count or 0) + 1
+    if post.user_id != user_id:
+        post_author = db.query(User).filter(User.id == post.user_id).first()
+        if post_author:
+            db.add(Notification(user_id=post.user_id, type="comment", content=f"评论了您的文章《{post.title}》", related_id=post.id))
     db.commit()
     logger.info(f"发布评论成功:comment_id={new_comment.id}")
     return response.json({"code": 200, "msg": "评论成功", "data": {"comment_id": new_comment.id}})
@@ -124,9 +128,15 @@ async def toggle_comment_like(request):
         db.delete(like)
         comment.like_count = max(0, (comment.like_count or 0) - 1)
         is_liked = False
+        logger.info(f"取消点赞评论:user_id={user_id},comment_id={comment_id}")
     else:
         db.add(Like(user_id=user_id, target_id=comment_id, target_type="comment"))
         comment.like_count = (comment.like_count or 0) + 1
         is_liked = True
+        if comment.user_id != user_id:
+            comment_author = db.query(User).filter(User.id == comment.user_id).first()
+            if comment_author:
+                db.add(Notification(user_id=comment.user_id, type="like", content=f"点赞了您的评论", related_id=comment_id))
+        logger.info(f"点赞评论:user_id={user_id},comment_id={comment_id}")
     db.commit()
     return response.json({"code": 200, "msg": "操作成功", "data": {"is_liked": is_liked, "like_count": comment.like_count}})

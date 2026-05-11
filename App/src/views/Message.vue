@@ -12,26 +12,31 @@
                     <van-empty v-else-if="notificationsError" :description="notificationsError" />
                     <div v-else class="message-list">
                         <van-empty v-if="allMessages.length === 0" description="暂无消息" />
-                        <div v-for="msg in allMessages" :key="msg.notification_id" class="message-item" :class="{ unread: !msg.is_read }" @click="msg.type === 'chat' ? goToChat(msg) : goToDetail(msg)">
-                            <template v-if="msg.type === 'chat'">
-                                <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
-                                <div class="msg-content">
-                                    <div class="msg-title">{{ msg.actor?.username || '' }}：{{ msg.content }}</div>
-                                    <div class="msg-time">{{ msg.created_at }}</div>
-                                </div>
-                                <van-badge v-if="!msg.is_read" dot color="#ff6b6b" />
+                        <van-swipe-cell v-for="msg in allMessages" :key="msg.notification_id">
+                            <div class="message-item" :class="{ unread: !msg.is_read }" @click="msg.type === 'chat' ? goToChat(msg) : goToDetail(msg)">
+                                <template v-if="msg.type === 'chat'">
+                                    <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
+                                    <div class="msg-content">
+                                        <div class="msg-title">{{ msg.actor?.username || '' }}：{{ msg.content }}</div>
+                                        <div class="msg-time">{{ msg.created_at }}</div>
+                                    </div>
+                                    <van-badge v-if="!msg.is_read" dot color="#ff6b6b" />
+                                </template>
+                                <template v-else>
+                                    <div class="msg-icon" :class="msg.type">
+                                        <van-icon :name="getIcon(msg.type)" color="#fff" size="20" />
+                                    </div>
+                                    <div class="msg-content">
+                                        <div class="msg-title">{{ msg.content }}</div>
+                                        <div class="msg-time">{{ msg.created_at }}</div>
+                                    </div>
+                                    <van-badge v-if="!msg.is_read" dot color="#ff6b6b" />
+                                </template>
+                            </div>
+                            <template #right>
+                                <van-button square type="danger" text="删除" @click="handleDeleteNotification(msg)" />
                             </template>
-                            <template v-else>
-                                <div class="msg-icon" :class="msg.type">
-                                    <van-icon :name="getIcon(msg.type)" color="#fff" size="20" />
-                                </div>
-                                <div class="msg-content">
-                                    <div class="msg-title">{{ msg.content }}</div>
-                                    <div class="msg-time">{{ msg.created_at }}</div>
-                                </div>
-                                <van-badge v-if="!msg.is_read" dot color="#ff6b6b" />
-                            </template>
-                        </div>
+                        </van-swipe-cell>
                     </div>
                 </van-tab>
                 <van-tab title="私信">
@@ -59,14 +64,19 @@
                     <van-empty v-else-if="notificationsError" :description="notificationsError" />
                     <div v-else class="message-list">
                         <van-empty v-if="commentMessages.length === 0" description="暂无评论" />
-                        <div v-for="msg in commentMessages" :key="msg.notification_id" class="message-item" :class="{ unread: !msg.is_read }" @click="goToDetail(msg)">
-                            <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
-                            <div class="msg-content">
-                                <div class="msg-title">{{ msg.actor?.username || '' }} {{ msg.content }}</div>
-                                <div class="msg-time">{{ msg.created_at }}</div>
+                        <van-swipe-cell v-for="msg in commentMessages" :key="msg.notification_id">
+                            <div class="message-item" :class="{ unread: !msg.is_read }" @click="goToDetail(msg)">
+                                <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
+                                <div class="msg-content">
+                                    <div class="msg-title">{{ msg.actor?.username || '' }} {{ msg.content }}</div>
+                                    <div class="msg-time">{{ msg.created_at }}</div>
+                                </div>
+                                <van-badge v-if="!msg.is_read" dot color="#ff6b6b" />
                             </div>
-                            <van-badge v-if="!msg.is_read" dot color="#ff6b6b" />
-                        </div>
+                            <template #right>
+                                <van-button square type="danger" text="删除" @click="handleDeleteNotification(msg)" />
+                            </template>
+                        </van-swipe-cell>
                     </div>
                 </van-tab>
                 <van-tab title="点赞">
@@ -74,14 +84,19 @@
                     <van-empty v-else-if="notificationsError" :description="notificationsError" />
                     <div v-else class="message-list">
                         <van-empty v-if="likeMessages.length === 0" description="暂无点赞" />
-                        <div v-for="msg in likeMessages" :key="msg.notification_id" class="message-item" :class="{ unread: !msg.is_read }" @click="goToDetail(msg)">
-                            <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
-                            <div class="msg-content">
-                                <div class="msg-title">{{ msg.actor?.username || '' }} {{ msg.content }}</div>
-                                <div class="msg-time">{{ msg.created_at }}</div>
+                        <van-swipe-cell v-for="msg in likeMessages" :key="msg.notification_id">
+                            <div class="message-item" :class="{ unread: !msg.is_read }" @click="goToDetail(msg)">
+                                <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
+                                <div class="msg-content">
+                                    <div class="msg-title">{{ msg.actor?.username || '' }} {{ msg.content }}</div>
+                                    <div class="msg-time">{{ msg.created_at }}</div>
+                                </div>
+                                <van-badge v-if="!msg.is_read" dot color="#ff6b6b" />
                             </div>
-                            <van-badge v-if="!msg.is_read" dot color="#ff6b6b" />
-                        </div>
+                            <template #right>
+                                <van-button square type="danger" text="删除" @click="handleDeleteNotification(msg)" />
+                            </template>
+                        </van-swipe-cell>
                     </div>
                 </van-tab>
                 <van-tab title="关注">
@@ -89,14 +104,19 @@
                     <van-empty v-else-if="notificationsError" :description="notificationsError" />
                     <div v-else class="message-list">
                         <van-empty v-if="followMessages.length === 0" description="暂无关注" />
-                        <div v-for="msg in followMessages" :key="msg.notification_id" class="message-item" :class="{ unread: !msg.is_read }" @click="goToDetail(msg)">
-                            <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
-                            <div class="msg-content">
-                                <div class="msg-title">{{ msg.actor?.username || '' }} {{ msg.content }}</div>
-                                <div class="msg-time">{{ msg.created_at }}</div>
+                        <van-swipe-cell v-for="msg in followMessages" :key="msg.notification_id">
+                            <div class="message-item" :class="{ unread: !msg.is_read }" @click="goToDetail(msg)">
+                                <van-image round width="40px" height="40px" :src="msg.actor?.avatar || ''" />
+                                <div class="msg-content">
+                                    <div class="msg-title">{{ msg.actor?.username || '' }} {{ msg.content }}</div>
+                                    <div class="msg-time">{{ msg.created_at }}</div>
+                                </div>
+                                <van-badge v-if="!msg.is_read" dot color="#ff6b6b" />
                             </div>
-                            <van-badge v-if="!msg.is_read" dot color="#ff6b6b" />
-                        </div>
+                            <template #right>
+                                <van-button square type="danger" text="删除" @click="handleDeleteNotification(msg)" />
+                            </template>
+                        </van-swipe-cell>
                     </div>
                 </van-tab>
             </van-tabs>
@@ -107,6 +127,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { showConfirmDialog, showToast } from 'vant'
 import { messageApi } from '@/assets/app_request_api.js'
 const router = useRouter()
 const activeTab = ref(0)
@@ -156,15 +177,33 @@ const onTabChange = async (index) => {
 const markAllRead = async () => {
     await messageApi.markAllNotificationsRead()
     allMessages.value.forEach(m => m.is_read = true)
+    loadUnreadCount()
+}
+const loadUnreadCount = async () => {
+    try {
+        const data = await messageApi.getUnreadCount()
+        const event = new CustomEvent('update-unread-count', { detail: data?.total || 0 })
+        window.dispatchEvent(event)
+    } catch (e) { /* 忽略 */ }
 }
 const getIcon = (type) => {
     const icons = { comment: 'comment-o', like: 'good-job-o', follow: 'user-o', system: 'bullhorn-o' }
     return icons[type] || 'bell-o'
 }
-const goToDetail = (msg) => {
+const goToDetail = async (msg) => {
+    if (!msg.is_read) {
+        msg.is_read = true
+        await messageApi.markNotificationRead(msg.notification_id)
+        loadUnreadCount()
+    }
     if (msg.type === 'system') { router.push('/system-notice') }
     else if (msg.type === 'follow') { router.push({ path: '/profile', query: { id: msg.related_id } }) }
-    else if (msg.related_id > 0) { router.push({ path: '/article', query: { id: msg.related_id } }) }
+    else if (msg.related_id > 0) {
+        const query = { id: msg.related_id }
+        if (msg.type === 'comment') { query.highlight_comment = 'all' }
+        else if (msg.type === 'like') { query.highlight_comment = 'input' }
+        router.push({ path: '/article', query })
+    }
 }
 const goToChat = async (chat) => {
     const userId = chat.user?.user_id || chat.actor?.user_id
@@ -177,6 +216,15 @@ const goToChat = async (chat) => {
 const deleteConversation = async (chat) => {
     await messageApi.deleteConversation(chat.user?.user_id)
     privateChats.value = privateChats.value.filter(c => c.user?.user_id !== chat.user?.user_id)
+}
+const handleDeleteNotification = async (msg) => {
+    try {
+        await showConfirmDialog({ title: '确认删除', message: '确定要删除这条消息吗？' })
+        await messageApi.deleteNotification(msg.notification_id)
+        allMessages.value = allMessages.value.filter(m => m.notification_id !== msg.notification_id)
+        loadUnreadCount()
+        showToast('已删除')
+    } catch (e) { /* 用户取消 */ }
 }
 onMounted(() => { loadAll() })
 </script>

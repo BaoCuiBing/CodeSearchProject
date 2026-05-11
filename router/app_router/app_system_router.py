@@ -40,3 +40,16 @@ async def get_about_config(request):
     except Exception as e:
         logger.error(f"解析关于我们配置失败:{str(e)}")
         return response.json({"code": 500, "msg": "关于我们配置格式错误"})
+
+@system_bp.get("/special_mode")
+@openapi.summary("获取特殊模式配置")
+async def get_special_mode(request):
+    db = request.ctx.db
+    logger.info("查询特殊模式配置")
+    setting = db.query(SystemSetting).filter(SystemSetting.key == "special_ancestor_worship").first()
+    if not setting:
+        logger.warning("获取特殊模式配置失败:配置不存在")
+        return response.json({"code": 404, "msg": "特殊模式配置不存在"})
+    is_enabled = setting.value == "true"
+    logger.info(f"获取特殊模式配置成功: {is_enabled}")
+    return response.json({"code": 200, "msg": "获取成功", "data": {"enabled": is_enabled}})

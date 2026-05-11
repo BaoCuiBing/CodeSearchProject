@@ -1,7 +1,7 @@
 import logging
 from sanic import Blueprint, response
 from utils.openapi_helper import openapi
-from models.model import User, Follow
+from models.model import User, Follow, Notification
 
 logger = logging.getLogger(__name__)
 follow_bp = Blueprint("follow", url_prefix="/api/follow")
@@ -79,6 +79,7 @@ async def toggle_follow_user(request):
     else:
         db.add(Follow(follower_id=follower_id, following_id=following_id))
         is_followed = True
+        db.add(Notification(user_id=following_id, type="follow", content="关注了您", related_id=follower_id))
         logger.info(f"关注:follower_id={follower_id},following_id={following_id}")
     db.commit()
     follower_count = db.query(Follow).filter(Follow.following_id == following_id).count()
