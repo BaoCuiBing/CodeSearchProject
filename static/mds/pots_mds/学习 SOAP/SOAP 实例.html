@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>https://www.runoob.com/soap/soap-example.html</title>
+</head>
+<body>
+<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 10px 10px 20px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 985.359px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="article-body">
+		
+			<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 973.359px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="article-intro" id="content">
+			
+			<h1 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 25.2px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 0px 10px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 34px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">SOAP <span style="color: rgb(100, 133, 76); background-color: rgba(0, 0, 0, 0); font-size: 25.2px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; border: 0px none rgb(100, 133, 76); border-bottom: 0px none rgb(100, 133, 76); border-left: 0px none rgb(100, 133, 76); border-right: 0px none rgb(100, 133, 76); border-top: 0px none rgb(100, 133, 76); text-align: start; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="color_h1">实例</span>
+</h1>
+<hr style="color: rgb(212, 212, 212); background-color: rgb(212, 212, 212); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 6px 0px; border: 0px none rgb(212, 212, 212); border-bottom: 0px none rgb(212, 212, 212); border-left: 0px none rgb(212, 212, 212); border-right: 0px none rgb(212, 212, 212); border-top: 0px none rgb(212, 212, 212); text-align: start; width: 834.797px; height: 1px; vertical-align: baseline; display: block; position: static; clear: both; background: rgb(212, 212, 212) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"></hr>
+<h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">一个 SOAP 实例
+</h2>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 53.1875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">在下面的例子中，一个 GetStockPrice 请求被发送到了服务器。此请求有一个 StockName 参数，而在响应中则会返回一个 Price 参数。此功能的命名空间被定义在此地址中： "http://www.example.org/stock"</p>
+
+<h3 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 8px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">SOAP 请求：</h3>
+
+<div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; margin: 12px 0px; padding: 12px 14px; border: 1px solid rgba(120, 140, 100, 0.12); border-bottom: 1px solid rgba(120, 140, 100, 0.12); border-left: 1px solid rgba(120, 140, 100, 0.12); border-right: 1px solid rgba(120, 140, 100, 0.12); border-top: 1px solid rgba(120, 140, 100, 0.12); text-align: start; width: 804.797px; height: 353.547px; vertical-align: baseline; display: block; position: static; box-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0px 0px inset; background: rgba(0, 0, 0, 0) linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)) repeat scroll 0% 0% / auto padding-box border-box; background-image: linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)); background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="code notranslate"><div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; border: 0px none rgb(43, 43, 43); border-bottom: 0px none rgb(43, 43, 43); border-left: 0px none rgb(43, 43, 43); border-right: 0px none rgb(43, 43, 43); border-top: 0px none rgb(43, 43, 43); text-align: start; width: 804.797px; height: 353.547px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+
+POST /InStock HTTP/1.1<br>
+Host: www.example.org<br>
+Content-Type: application/soap+xml; charset=utf-8<br>
+Content-Length: nnn<br><br>
+<?xml version="1.0"?><br>
+<soap:Envelope<br>
+xmlns:soap="http://www.w3.org/2001/12/soap-envelope"<br>
+soap:encodingStyle="http://www.w3.org/2001/12/soap-encoding"><br><br>
+  <soap:Body xmlns:m="http://www.example.org/stock"><br>
+   <m:GetStockPrice><br>
+         
+      <m:StockName>IBM</m:StockName><br>
+  </m:GetStockPrice><br>
+  </soap:Body><br><br>
+</soap:Envelope>
+</div></div>
+
+<h3 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 8px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">SOAP 响应：</h3>
+
+<div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; margin: 12px 0px; padding: 12px 14px; border: 1px solid rgba(120, 140, 100, 0.12); border-bottom: 1px solid rgba(120, 140, 100, 0.12); border-left: 1px solid rgba(120, 140, 100, 0.12); border-right: 1px solid rgba(120, 140, 100, 0.12); border-top: 1px solid rgba(120, 140, 100, 0.12); text-align: start; width: 804.797px; height: 332.75px; vertical-align: baseline; display: block; position: static; box-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0px 0px inset; background: rgba(0, 0, 0, 0) linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)) repeat scroll 0% 0% / auto padding-box border-box; background-image: linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)); background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="code notranslate"><div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; border: 0px none rgb(43, 43, 43); border-bottom: 0px none rgb(43, 43, 43); border-left: 0px none rgb(43, 43, 43); border-right: 0px none rgb(43, 43, 43); border-top: 0px none rgb(43, 43, 43); text-align: start; width: 804.797px; height: 332.75px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+
+HTTP/1.1 200 OK<br>
+Content-Type: application/soap+xml; charset=utf-8<br>
+Content-Length: nnn<br><br>
+<?xml version="1.0"?><br>
+<soap:Envelope<br>
+xmlns:soap="http://www.w3.org/2001/12/soap-envelope"<br>
+soap:encodingStyle="http://www.w3.org/2001/12/soap-encoding"><br><br>
+  <soap:Body xmlns:m="http://www.example.org/stock"><br>
+     
+    <m:GetStockPriceResponse><br>
+         
+      <m:Price>34.5</m:Price><br>
+     
+    </m:GetStockPriceResponse><br>
+  </soap:Body><br><br>
+</soap:Envelope>
+</div></div>			
+						
+			</div>
+			
+		</div>
+</body>
+</html>

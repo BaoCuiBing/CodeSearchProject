@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>https://www.runoob.com/vue3/vue3-quiz.html</title>
+</head>
+<body>
+<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 10px 10px 20px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 1281.84px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="article-body">
+		
+			<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 1261.84px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="article-intro" id="content">
+			
+			<h1 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 25.2px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 0px 10px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 34px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">Vue3 测验</h1>
+ <script style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; vertical-align: baseline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" src="https://static.jyshare.com/assets/js/runoob-quiz.js"></script>
+
+    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 20px 10px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 814.797px; height: 547.969px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-container">
+        <header style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 20px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: center; width: 814.797px; height: 56.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-header">
+            <h1 style="color: rgb(100, 133, 76); background-color: rgba(0, 0, 0, 0); font-size: 18.75px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 0px 5px; border: 0px none rgb(100, 133, 76); border-bottom: 0px none rgb(100, 133, 76); border-left: 0px none rgb(100, 133, 76); border-right: 0px none rgb(100, 133, 76); border-top: 0px none rgb(100, 133, 76); text-align: center; width: 814.797px; height: 25px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">知识挑战</h1>
+            <p style="color: rgb(75, 85, 99); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: center; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 814.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">通过这些互动问题测试学习情况</p>
+        </header>
+
+        <div style="color: rgb(51, 51, 51); background-color: rgb(255, 255, 255); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 15px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 814.797px; height: 456.375px; vertical-align: baseline; display: block; position: static; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-card">
+            <div style="color: rgb(51, 51, 51); background-color: rgb(100, 133, 76); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 40.7344px; height: 5px; vertical-align: baseline; display: block; position: static; background: rgb(100, 133, 76) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: width 0.3s ease-in-out; opacity: 1; box-sizing: content-box" class="runoob-quiz-progress-bar"></div>
+            
+            <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 15px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 421.375px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-content">
+                <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 372.375px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" id="quiz-container">
+                <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 372.375px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-fade-in">
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 10px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 21px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-question-header">
+                        <span style="color: rgb(100, 133, 76); background-color: rgb(224, 231, 255); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 500; padding: 2.5px 7.5px; border: 0px none rgb(100, 133, 76); border-bottom: 0px none rgb(100, 133, 76); border-left: 0px none rgb(100, 133, 76); border-right: 0px none rgb(100, 133, 76); border-top: 0px none rgb(100, 133, 76); text-align: start; width: 91.3594px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgb(224, 231, 255) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-question-number">
+                            第 1 题 / 共 20 题
+                        </span>
+                    </div>
+                    <h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 600; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-question-text">Vue 3 是什么？</h2>
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 290.5px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-options-container">
+                        
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 7.5px; padding: 20px; border: 2px solid rgb(229, 231, 235); border-bottom: 2px solid rgb(229, 231, 235); border-left: 2px solid rgb(229, 231, 235); border-right: 2px solid rgb(229, 231, 235); border-top: 2px solid rgb(229, 231, 235); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.3s; opacity: 1; box-sizing: content-box" class="runoob-quiz-option">
+                        <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-content">
+                            <div style="color: rgb(75, 85, 99); background-color: rgb(243, 244, 246); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 7.5px 0px 0px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: start; width: 20px; height: 20px; vertical-align: baseline; display: flex; position: static; background: rgb(243, 244, 246) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-letter ">
+                                A
+                            </div>
+                            <span style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 100.75px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box">一种后端框架</span>
+                            
+                        </div>
+                    </div>
+                
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 7.5px; padding: 20px; border: 2px solid rgb(229, 231, 235); border-bottom: 2px solid rgb(229, 231, 235); border-left: 2px solid rgb(229, 231, 235); border-right: 2px solid rgb(229, 231, 235); border-top: 2px solid rgb(229, 231, 235); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.3s; opacity: 1; box-sizing: content-box" class="runoob-quiz-option">
+                        <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-content">
+                            <div style="color: rgb(75, 85, 99); background-color: rgb(243, 244, 246); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 7.5px 0px 0px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: start; width: 20px; height: 20px; vertical-align: baseline; display: flex; position: static; background: rgb(243, 244, 246) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-letter ">
+                                B
+                            </div>
+                            <span style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 83.9531px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box">一种数据库</span>
+                            
+                        </div>
+                    </div>
+                
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 7.5px; padding: 20px; border: 2px solid rgb(229, 231, 235); border-bottom: 2px solid rgb(229, 231, 235); border-left: 2px solid rgb(229, 231, 235); border-right: 2px solid rgb(229, 231, 235); border-top: 2px solid rgb(229, 231, 235); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.3s; opacity: 1; box-sizing: content-box" class="runoob-quiz-option">
+                        <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-content">
+                            <div style="color: rgb(75, 85, 99); background-color: rgb(243, 244, 246); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 7.5px 0px 0px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: start; width: 20px; height: 20px; vertical-align: baseline; display: flex; position: static; background: rgb(243, 244, 246) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-letter ">
+                                C
+                            </div>
+                            <span style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 100.75px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box">一种前端框架</span>
+                            
+                        </div>
+                    </div>
+                
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 7.5px; padding: 20px; border: 2px solid rgb(229, 231, 235); border-bottom: 2px solid rgb(229, 231, 235); border-left: 2px solid rgb(229, 231, 235); border-right: 2px solid rgb(229, 231, 235); border-top: 2px solid rgb(229, 231, 235); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.3s; opacity: 1; box-sizing: content-box" class="runoob-quiz-option">
+                        <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-content">
+                            <div style="color: rgb(75, 85, 99); background-color: rgb(243, 244, 246); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 7.5px 0px 0px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: start; width: 20px; height: 20px; vertical-align: baseline; display: flex; position: static; background: rgb(243, 244, 246) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-letter ">
+                                D
+                            </div>
+                            <span style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 100.75px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box">一种操作系统</span>
+                            
+                        </div>
+                    </div>
+                
+                    </div>
+                    <div style="color: rgb(51, 51, 51); background-color: rgb(249, 250, 251); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 10px 0px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; vertical-align: baseline; display: block; position: static; background: rgb(249, 250, 251) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: max-height 0.3s ease-in-out; opacity: 1; box-sizing: content-box" class="runoob-quiz-explanation" id="explanation">
+                        <h3 style="color: rgb(55, 65, 81); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 8px 0px 5px; border: 0px none rgb(55, 65, 81); border-bottom: 0px none rgb(55, 65, 81); border-left: 0px none rgb(55, 65, 81); border-right: 0px none rgb(55, 65, 81); border-top: 0px none rgb(55, 65, 81); text-align: start; width: 784.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="explanation-title">
+                            <i style="color: rgb(55, 65, 81); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: FontAwesome; font-weight: 400; line-height: 16.8px; border: 0px none rgb(55, 65, 81); border-bottom: 0px none rgb(55, 65, 81); border-left: 0px none rgb(55, 65, 81); border-right: 0px none rgb(55, 65, 81); border-top: 0px none rgb(55, 65, 81); text-align: start; width: 14.4062px; height: 16.7969px; vertical-align: baseline; display: inline-block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="fa fa-info-circle"></i> 解析
+                        </h3>
+                        <p style="color: rgb(107, 114, 128); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(107, 114, 128); border-bottom: 0px none rgb(107, 114, 128); border-left: 0px none rgb(107, 114, 128); border-right: 0px none rgb(107, 114, 128); border-top: 0px none rgb(107, 114, 128); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 784.797px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="explanation-text"></p>
+                    </div>
+                </div>
+            </div>
+                
+                <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 20px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: center; vertical-align: baseline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" id="result-container" class="runoob-quiz-hidden runoob-quiz-result-container">
+                    <h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: center; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">测验完成！</h2>
+                    <div style="color: rgb(100, 133, 76); background-color: rgba(0, 0, 0, 0); font-size: 22.5px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 10px 0px; border: 0px none rgb(100, 133, 76); border-bottom: 0px none rgb(100, 133, 76); border-left: 0px none rgb(100, 133, 76); border-right: 0px none rgb(100, 133, 76); border-top: 0px none rgb(100, 133, 76); text-align: center; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" id="score-display" class="runoob-quiz-score-display">0/0</div>
+                    <p style="color: rgb(75, 85, 99); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; margin: 0px 0px 15px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: center; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" id="result-message" class="runoob-quiz-result-message"></p>
+                    <button style="color: rgb(255, 255, 255); background-color: rgb(100, 133, 76); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 500; padding: 5px 15px; border: 0px none rgb(255, 255, 255); border-bottom: 0px none rgb(255, 255, 255); border-left: 0px none rgb(255, 255, 255); border-right: 0px none rgb(255, 255, 255); border-top: 0px none rgb(255, 255, 255); text-align: center; vertical-align: baseline; display: inline-block; position: static; background: rgb(100, 133, 76) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: background-color 0.3s; opacity: 1; box-sizing: border-box" id="restart-btn" class="runoob-quiz-btn runoob-quiz-btn-primary">
+                        <i style="color: rgb(255, 255, 255); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: FontAwesome; font-weight: 400; line-height: 14px; border: 0px none rgb(255, 255, 255); border-bottom: 0px none rgb(255, 255, 255); border-left: 0px none rgb(255, 255, 255); border-right: 0px none rgb(255, 255, 255); border-top: 0px none rgb(255, 255, 255); text-align: center; vertical-align: baseline; display: inline-block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="fa fa-repeat"></i> 重新开始
+                    </button>
+                </div>
+                
+                <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 20px 0px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 29px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-button-container">
+                    <button style="color: rgb(75, 85, 99); background-color: rgb(229, 231, 235); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 500; padding: 5px 15px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: center; vertical-align: baseline; position: static; background: rgb(229, 231, 235) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: background-color 0.3s; opacity: 1; box-sizing: border-box" id="prev-btn" class="runoob-quiz-btn runoob-quiz-btn-secondary runoob-quiz-hidden">
+                        <i style="color: rgb(75, 85, 99); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: FontAwesome; font-weight: 400; line-height: 14px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: center; vertical-align: baseline; display: inline-block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="fa fa-arrow-left"></i> 上一题
+                    </button>
+                    <button style="color: rgb(255, 255, 255); background-color: rgb(100, 133, 76); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 500; padding: 5px 15px; border: 0px none rgb(255, 255, 255); border-bottom: 0px none rgb(255, 255, 255); border-left: 0px none rgb(255, 255, 255); border-right: 0px none rgb(255, 255, 255); border-top: 0px none rgb(255, 255, 255); text-align: center; width: 87.8906px; height: 29px; vertical-align: baseline; display: block; position: static; background: rgb(100, 133, 76) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: background-color 0.3s; opacity: 1; box-sizing: border-box" id="next-btn" class="runoob-quiz-btn runoob-quiz-btn-primary">下一题 <i style="color: rgb(255, 255, 255); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: FontAwesome; font-weight: 400; line-height: 14px; border: 0px none rgb(255, 255, 255); border-bottom: 0px none rgb(255, 255, 255); border-left: 0px none rgb(255, 255, 255); border-right: 0px none rgb(255, 255, 255); border-top: 0px none rgb(255, 255, 255); text-align: center; width: 12px; height: 14px; vertical-align: baseline; display: inline-block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="fa fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+<hr style="color: rgb(212, 212, 212); background-color: rgb(212, 212, 212); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 6px 0px; border: 0px none rgb(212, 212, 212); border-bottom: 0px none rgb(212, 212, 212); border-left: 0px none rgb(212, 212, 212); border-right: 0px none rgb(212, 212, 212); border-top: 0px none rgb(212, 212, 212); text-align: start; width: 834.797px; height: 1px; vertical-align: baseline; display: block; position: static; clear: both; background: rgb(212, 212, 212) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"></hr><h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">更多测验</h2>
+
+<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 20px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 558px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="quiz-links">
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9901" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">1.</span> Vue3 测验一
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9904" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">2.</span> Vue3 测验二
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9905" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">3.</span> Vue3 测验三
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9906" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">4.</span> Vue3 测验四
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9907/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">5.</span> Vue3 测验五
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9908/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">6.</span> Vue3 测验六
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9909/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">7.</span> Vue3 测验七
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9910" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">8.</span> Vue3 测验八
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9911" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">9.</span> Vue3 测验九
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9912" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">10.</span> Vue3 测验十
+  </a>
+</div>
+<style style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; vertical-align: baseline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+  .quiz-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  
+  .quiz-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid #e9ecef;
+  }
+  
+  .quiz-link:hover {
+    background-color: #e9ecef;
+    transform: translateX(4px);
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .quiz-number {
+    font-weight: bold;
+    color: rgba(30, 30, 46, 0.95);
+    margin-right: 8px;
+    min-width: 24px;
+  }
+</style>
+<script style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; vertical-align: baseline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+  // 测验数据（新格式）
+     const quizData = {
+        title: "Vue 3 基础测验",
+        description: "测试你对 Vue 3 的了解",
+        questions: [
+        {
+          'q': 'Vue 3 是什么？',
+          'options': [
+            '一种后端框架',
+            '一种数据库',
+            '一种前端框架',
+            '一种操作系统'
+          ],
+          'correctIndex': 2,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Vue 3 是一种前端框架。'
+        },
+        {
+          'q': 'Vue 3 的核心概念是什么？',
+          'options': [
+            '模块',
+            '组件',
+            '服务',
+            '控制器'
+          ],
+          'correctIndex': 1,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Vue 3 的核心概念是组件。'
+        },
+        {
+          'q': 'Vue 3 中的 Composition API 是用来做什么的？',
+          'options': [
+            '定义路由',
+            '管理样式',
+            '操作 DOM',
+            '定义组件的逻辑和状态'
+          ],
+          'correctIndex': 3,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Composition API 用于定义组件的逻辑和状态。'
+        },
+        {
+          'q': 'Vue 3 中的模板语法使用什么符号来插值数据？',
+          'options': [
+            '[[]]',
+            '<%= %>',
+            '{{ }}',
+            '${ }'
+          ],
+          'correctIndex': 2,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Vue 3 的模板语法使用 {{ }} 来插值数据。'
+        },
+        {
+          'q': 'Vue 3 中的生命周期钩子之一是？',
+          'options': [
+            'onStart',
+            'onMounted',
+            'onCreate',
+            'onInit'
+          ],
+          'correctIndex': 1,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Vue 3 的生命周期钩子之一是 onMounted。'
+        },
+        {
+          'q': 'Vue 3 中用于绑定事件的指令是？',
+          'options': [
+            'v-bind',
+            'v-if',
+            'v-for',
+            'v-on'
+          ],
+          'correctIndex': 3,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Vue 3 中用于绑定事件的指令是 v-on。'
+        },
+        {
+          'q': 'Vue 3 中如何定义一个响应式数据？',
+          'options': [
+            '使用 state',
+            '使用 props',
+            '使用 ref 或 reactive',
+            '使用 data'
+          ],
+          'correctIndex': 2,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Vue 3 中可以使用 ref 或 reactive 定义响应式数据。'
+        },
+        {
+          'q': 'Vue 3 中的 v-for 指令用于？',
+          'options': [
+            '绑定样式',
+            '循环渲染列表',
+            '条件渲染',
+            '绑定事件'
+          ],
+          'correctIndex': 1,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，v-for 指令用于循环渲染列表。'
+        },
+        {
+          'q': 'Vue 3 中的单文件组件的默认扩展名是？',
+          'options': [
+            '.js',
+            '.html',
+            '.vue',
+            '.jsx'
+          ],
+          'correctIndex': 2,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Vue 3 的单文件组件默认扩展名是 .vue。'
+        },
+        {
+          'q': 'Vue 3 中的路由管理通常使用哪个库？',
+          'options': [
+            'Vuex',
+            'React Router',
+            'Angular Router',
+            'Vue Router'
+          ],
+          'correctIndex': 3,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Vue 3 的路由管理通常使用 Vue Router。'
+        },
+        {
+          'q': 'Vue 3 中的 v-bind 指令的作用是什么？',
+          'options': [
+            '绑定事件',
+            '绑定属性或样式',
+            '条件渲染',
+            '循环渲染'
+          ],
+          'correctIndex': 1,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，v-bind 用于绑定属性或样式。'
+        },
+        {
+          'q': 'Vue 3 中的 v-if 指令用于？',
+          'options': [
+            '条件渲染',
+            '循环渲染',
+            '绑定事件',
+            '绑定样式'
+          ],
+          'correctIndex': 0,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，v-if 指令用于条件渲染。'
+        },
+        {
+          'q': 'Vue 3 中的 v-model 指令用于？',
+          'options': [
+            '双向数据绑定',
+            '单向数据绑定',
+            '事件绑定',
+            '样式绑定'
+          ],
+          'correctIndex': 0,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，v-model 用于双向数据绑定。'
+        },
+        {
+          'q': 'Vue 3 中的 watch 是用来做什么的？',
+          'options': [
+            '监听数据变化',
+            '定义组件',
+            '绑定事件',
+            '操作 DOM'
+          ],
+          'correctIndex': 0,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，watch 用于监听数据变化。'
+        },
+        {
+          'q': 'Vue 3 中的 computed 是用来做什么的？',
+          'options': [
+            '定义响应式数据',
+            '绑定事件',
+            '操作 DOM',
+            '定义计算属性'
+          ],
+          'correctIndex': 3,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，computed 用于定义计算属性。'
+        },
+        {
+          'q': 'Vue 3 中的 props 是用来做什么的？',
+          'options': [
+            '传递数据给子组件',
+            '定义响应式数据',
+            '绑定事件',
+            '操作 DOM'
+          ],
+          'correctIndex': 0,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，props 用于传递数据给子组件。'
+        },
+        {
+          'q': 'Vue 3 中的 emits 是用来做什么的？',
+          'options': [
+            '定义响应式数据',
+            '操作 DOM',
+            '子组件向父组件发送事件',
+            '父组件向子组件传递数据'
+          ],
+          'correctIndex': 2,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，emits 用于子组件向父组件发送事件。'
+        },
+        {
+          'q': 'Vue 3 中的 setup 函数是用来做什么的？',
+          'options': [
+            '初始化组件逻辑',
+            '定义路由',
+            '管理样式',
+            '操作 DOM'
+          ],
+          'correctIndex': 0,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，setup 函数用于初始化组件逻辑。'
+        },
+        {
+          'q': 'Vue 3 中的 Teleport 是用来做什么的？',
+          'options': [
+            '定义路由',
+            '管理样式',
+            '操作 DOM',
+            '将组件渲染到 DOM 的其他位置'
+          ],
+          'correctIndex': 3,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Teleport 用于将组件渲染到 DOM 的其他位置。'
+        },
+        {
+          'q': 'Vue 3 中的 Fragment 是用来做什么的？',
+          'options': [
+            '支持多个根节点',
+            '定义路由',
+            '管理样式',
+            '操作 DOM'
+          ],
+          'correctIndex': 0,
+          'correctResponse': '回答正确。',
+          'incorrectResponse': '回答错误，Fragment 用于支持多个根节点。'
+        }
+       ]
+};
+
+        // 启动测验
+        $(document).ready(function () {
+            $('#quiz-container').runoobQuiz({
+                data: quizData,
+                onFinish: function (score, total) {
+                    console.log("测验完成！得分：" + score + "/" + total);
+                }
+            });
+        });
+</script>			
+						
+			</div>
+			
+		</div>
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>https://www.runoob.com/typescript/ts-quiz.html</title>
+</head>
+<body>
+<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 10px 10px 20px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 1338.84px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="article-body">
+		
+			<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 1318.84px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="article-intro" id="content">
+			
+			<h1 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 25.2px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 0px 10px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 34px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">TypeScript 测验</h1>
+<script style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; vertical-align: baseline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" src="https://static.jyshare.com/assets/js/runoob-quiz.js"></script>
+
+    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 20px 10px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 814.797px; height: 547.969px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-container">
+        <header style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 20px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: center; width: 814.797px; height: 56.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-header">
+            <h1 style="color: rgb(100, 133, 76); background-color: rgba(0, 0, 0, 0); font-size: 18.75px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 0px 5px; border: 0px none rgb(100, 133, 76); border-bottom: 0px none rgb(100, 133, 76); border-left: 0px none rgb(100, 133, 76); border-right: 0px none rgb(100, 133, 76); border-top: 0px none rgb(100, 133, 76); text-align: center; width: 814.797px; height: 25px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">知识挑战</h1>
+            <p style="color: rgb(75, 85, 99); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: center; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 814.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">通过这些互动问题测试学习情况</p>
+        </header>
+
+        <div style="color: rgb(51, 51, 51); background-color: rgb(255, 255, 255); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 15px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 814.797px; height: 456.375px; vertical-align: baseline; display: block; position: static; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-card">
+            <div style="color: rgb(51, 51, 51); background-color: rgb(100, 133, 76); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 31.3281px; height: 5px; vertical-align: baseline; display: block; position: static; background: rgb(100, 133, 76) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: width 0.3s ease-in-out; opacity: 1; box-sizing: content-box" class="runoob-quiz-progress-bar"></div>
+            
+            <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 15px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 421.375px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-content">
+                <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 372.375px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" id="quiz-container">
+                <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 372.375px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-fade-in">
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 10px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 21px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-question-header">
+                        <span style="color: rgb(100, 133, 76); background-color: rgb(224, 231, 255); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 500; padding: 2.5px 7.5px; border: 0px none rgb(100, 133, 76); border-bottom: 0px none rgb(100, 133, 76); border-left: 0px none rgb(100, 133, 76); border-right: 0px none rgb(100, 133, 76); border-top: 0px none rgb(100, 133, 76); text-align: start; width: 91.3594px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgb(224, 231, 255) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-question-number">
+                            第 1 题 / 共 26 题
+                        </span>
+                    </div>
+                    <h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 600; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-question-text">TypeScript 是什么？</h2>
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 290.5px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-options-container">
+                        
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 7.5px; padding: 20px; border: 2px solid rgb(229, 231, 235); border-bottom: 2px solid rgb(229, 231, 235); border-left: 2px solid rgb(229, 231, 235); border-right: 2px solid rgb(229, 231, 235); border-top: 2px solid rgb(229, 231, 235); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.3s; opacity: 1; box-sizing: content-box" class="runoob-quiz-option">
+                        <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-content">
+                            <div style="color: rgb(75, 85, 99); background-color: rgb(243, 244, 246); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 7.5px 0px 0px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: start; width: 20px; height: 20px; vertical-align: baseline; display: flex; position: static; background: rgb(243, 244, 246) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-letter ">
+                                A
+                            </div>
+                            <span style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 306.016px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box">TypeScript 是 JavaScript 的另外一个称呼</span>
+                            
+                        </div>
+                    </div>
+                
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 7.5px; padding: 20px; border: 2px solid rgb(229, 231, 235); border-bottom: 2px solid rgb(229, 231, 235); border-left: 2px solid rgb(229, 231, 235); border-right: 2px solid rgb(229, 231, 235); border-top: 2px solid rgb(229, 231, 235); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.3s; opacity: 1; box-sizing: content-box" class="runoob-quiz-option">
+                        <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-content">
+                            <div style="color: rgb(75, 85, 99); background-color: rgb(243, 244, 246); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 7.5px 0px 0px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: start; width: 20px; height: 20px; vertical-align: baseline; display: flex; position: static; background: rgb(243, 244, 246) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-letter ">
+                                B
+                            </div>
+                            <span style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 155.812px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box">TypeScript 是 js 框架</span>
+                            
+                        </div>
+                    </div>
+                
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 7.5px; padding: 20px; border: 2px solid rgb(229, 231, 235); border-bottom: 2px solid rgb(229, 231, 235); border-left: 2px solid rgb(229, 231, 235); border-right: 2px solid rgb(229, 231, 235); border-top: 2px solid rgb(229, 231, 235); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.3s; opacity: 1; box-sizing: content-box" class="runoob-quiz-option">
+                        <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-content">
+                            <div style="color: rgb(75, 85, 99); background-color: rgb(243, 244, 246); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 7.5px 0px 0px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: start; width: 20px; height: 20px; vertical-align: baseline; display: flex; position: static; background: rgb(243, 244, 246) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-letter ">
+                                C
+                            </div>
+                            <span style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 272.438px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box">TypeScript 是 JavaScript 的一个超集</span>
+                            
+                        </div>
+                    </div>
+                
+                    <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 0px 7.5px; padding: 20px; border: 2px solid rgb(229, 231, 235); border-bottom: 2px solid rgb(229, 231, 235); border-left: 2px solid rgb(229, 231, 235); border-right: 2px solid rgb(229, 231, 235); border-top: 2px solid rgb(229, 231, 235); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.3s; opacity: 1; box-sizing: content-box" class="runoob-quiz-option">
+                        <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 740.797px; height: 23px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-content">
+                            <div style="color: rgb(75, 85, 99); background-color: rgb(243, 244, 246); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 0px 7.5px 0px 0px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: start; width: 20px; height: 20px; vertical-align: baseline; display: flex; position: static; background: rgb(243, 244, 246) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-option-letter ">
+                                D
+                            </div>
+                            <span style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 67.1719px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box">以上都是</span>
+                            
+                        </div>
+                    </div>
+                
+                    </div>
+                    <div style="color: rgb(51, 51, 51); background-color: rgb(249, 250, 251); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 10px 0px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; vertical-align: baseline; display: block; position: static; background: rgb(249, 250, 251) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: max-height 0.3s ease-in-out; opacity: 1; box-sizing: content-box" class="runoob-quiz-explanation" id="explanation">
+                        <h3 style="color: rgb(55, 65, 81); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 8px 0px 5px; border: 0px none rgb(55, 65, 81); border-bottom: 0px none rgb(55, 65, 81); border-left: 0px none rgb(55, 65, 81); border-right: 0px none rgb(55, 65, 81); border-top: 0px none rgb(55, 65, 81); text-align: start; width: 784.797px; height: 23px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="explanation-title">
+                            <i style="color: rgb(55, 65, 81); background-color: rgba(0, 0, 0, 0); font-size: 16.8px; font-family: FontAwesome; font-weight: 400; line-height: 16.8px; border: 0px none rgb(55, 65, 81); border-bottom: 0px none rgb(55, 65, 81); border-left: 0px none rgb(55, 65, 81); border-right: 0px none rgb(55, 65, 81); border-top: 0px none rgb(55, 65, 81); text-align: start; width: 14.4062px; height: 16.7969px; vertical-align: baseline; display: inline-block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="fa fa-info-circle"></i> 解析
+                        </h3>
+                        <p style="color: rgb(107, 114, 128); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(107, 114, 128); border-bottom: 0px none rgb(107, 114, 128); border-left: 0px none rgb(107, 114, 128); border-right: 0px none rgb(107, 114, 128); border-top: 0px none rgb(107, 114, 128); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 784.797px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="explanation-text"></p>
+                    </div>
+                </div>
+            </div>
+                
+                <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 20px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: center; vertical-align: baseline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" id="result-container" class="runoob-quiz-hidden runoob-quiz-result-container">
+                    <h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: center; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">测验完成！</h2>
+                    <div style="color: rgb(100, 133, 76); background-color: rgba(0, 0, 0, 0); font-size: 22.5px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 10px 0px; border: 0px none rgb(100, 133, 76); border-bottom: 0px none rgb(100, 133, 76); border-left: 0px none rgb(100, 133, 76); border-right: 0px none rgb(100, 133, 76); border-top: 0px none rgb(100, 133, 76); text-align: center; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" id="score-display" class="runoob-quiz-score-display">0/0</div>
+                    <p style="color: rgb(75, 85, 99); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; margin: 0px 0px 15px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: center; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" id="result-message" class="runoob-quiz-result-message"></p>
+                    <button style="color: rgb(255, 255, 255); background-color: rgb(100, 133, 76); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 500; padding: 5px 15px; border: 0px none rgb(255, 255, 255); border-bottom: 0px none rgb(255, 255, 255); border-left: 0px none rgb(255, 255, 255); border-right: 0px none rgb(255, 255, 255); border-top: 0px none rgb(255, 255, 255); text-align: center; vertical-align: baseline; display: inline-block; position: static; background: rgb(100, 133, 76) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: background-color 0.3s; opacity: 1; box-sizing: border-box" id="restart-btn" class="runoob-quiz-btn runoob-quiz-btn-primary">
+                        <i style="color: rgb(255, 255, 255); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: FontAwesome; font-weight: 400; line-height: 14px; border: 0px none rgb(255, 255, 255); border-bottom: 0px none rgb(255, 255, 255); border-left: 0px none rgb(255, 255, 255); border-right: 0px none rgb(255, 255, 255); border-top: 0px none rgb(255, 255, 255); text-align: center; vertical-align: baseline; display: inline-block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="fa fa-repeat"></i> 重新开始
+                    </button>
+                </div>
+                
+                <div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 20px 0px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 784.797px; height: 29px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="runoob-quiz-button-container">
+                    <button style="color: rgb(75, 85, 99); background-color: rgb(229, 231, 235); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 500; padding: 5px 15px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: center; vertical-align: baseline; position: static; background: rgb(229, 231, 235) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: background-color 0.3s; opacity: 1; box-sizing: border-box" id="prev-btn" class="runoob-quiz-btn runoob-quiz-btn-secondary runoob-quiz-hidden">
+                        <i style="color: rgb(75, 85, 99); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: FontAwesome; font-weight: 400; line-height: 14px; border: 0px none rgb(75, 85, 99); border-bottom: 0px none rgb(75, 85, 99); border-left: 0px none rgb(75, 85, 99); border-right: 0px none rgb(75, 85, 99); border-top: 0px none rgb(75, 85, 99); text-align: center; vertical-align: baseline; display: inline-block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="fa fa-arrow-left"></i> 上一题
+                    </button>
+                    <button style="color: rgb(255, 255, 255); background-color: rgb(100, 133, 76); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 500; padding: 5px 15px; border: 0px none rgb(255, 255, 255); border-bottom: 0px none rgb(255, 255, 255); border-left: 0px none rgb(255, 255, 255); border-right: 0px none rgb(255, 255, 255); border-top: 0px none rgb(255, 255, 255); text-align: center; width: 87.8906px; height: 29px; vertical-align: baseline; display: block; position: static; background: rgb(100, 133, 76) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: background-color 0.3s; opacity: 1; box-sizing: border-box" id="next-btn" class="runoob-quiz-btn runoob-quiz-btn-primary">下一题 <i style="color: rgb(255, 255, 255); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: FontAwesome; font-weight: 400; line-height: 14px; border: 0px none rgb(255, 255, 255); border-bottom: 0px none rgb(255, 255, 255); border-left: 0px none rgb(255, 255, 255); border-right: 0px none rgb(255, 255, 255); border-top: 0px none rgb(255, 255, 255); text-align: center; width: 12px; height: 14px; vertical-align: baseline; display: inline-block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="fa fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+<hr style="color: rgb(212, 212, 212); background-color: rgb(212, 212, 212); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 6px 0px; border: 0px none rgb(212, 212, 212); border-bottom: 0px none rgb(212, 212, 212); border-left: 0px none rgb(212, 212, 212); border-right: 0px none rgb(212, 212, 212); border-top: 0px none rgb(212, 212, 212); text-align: start; width: 834.797px; height: 1px; vertical-align: baseline; display: block; position: static; clear: both; background: rgb(212, 212, 212) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"></hr>
+<h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">其他相关测试</h2>
+<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 20px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 615px; vertical-align: baseline; display: flex; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="quiz-links">
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/7156" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">1.</span> TypeScript 测验一
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/7157" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">2.</span> TypeScript 测验二
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/7158" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">3.</span> TypeScript 测验三
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9925/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">4.</span> TypeScript 测验四
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9927/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">5.</span> TypeScript 测验五
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9928/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">6.</span> TypeScript 测验六
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9929/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">7.</span> TypeScript 测验七
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9930/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">8.</span> TypeScript 测验八
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9931/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">9.</span> TypeScript 测验九
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9932/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">10.</span> TypeScript 测验十
+  </a>
+  <a style="color: rgb(0, 102, 0); background-color: rgb(248, 249, 250); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 12px 16px; border: 1px solid rgb(233, 236, 239); border-bottom: 1px solid rgb(233, 236, 239); border-left: 1px solid rgb(233, 236, 239); border-right: 1px solid rgb(233, 236, 239); border-top: 1px solid rgb(233, 236, 239); text-align: start; width: 800.797px; height: 19px; vertical-align: baseline; display: flex; position: static; background: rgb(248, 249, 250) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: 0.2s; opacity: 1; box-sizing: content-box" href="https://www.jyshare.com/quiz/9933/" class="quiz-link" target="_blank">
+    <span style="color: rgba(30, 30, 46, 0.95); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 8px 0px 0px; border: 0px none rgba(30, 30, 46, 0.95); border-bottom: 0px none rgba(30, 30, 46, 0.95); border-left: 0px none rgba(30, 30, 46, 0.95); border-right: 0px none rgba(30, 30, 46, 0.95); border-top: 0px none rgba(30, 30, 46, 0.95); text-align: start; min-width: 24px; width: 24px; height: 16px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: content-box" class="quiz-number">11.</span> TypeScript 测验十一
+  </a>
+</div>
+
+<style style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; vertical-align: baseline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+  .quiz-links {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 20px 0;
+  }
+  
+  .quiz-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 16px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    color: #333;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid #e9ecef;
+  }
+  
+  .quiz-link:hover {
+    background-color: #e9ecef;
+    transform: translateX(4px);
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+  }
+  
+  .quiz-number {
+    font-weight: bold;
+    color: rgba(30, 30, 46, 0.95);
+    margin-right: 8px;
+    min-width: 24px;
+  }
+</style>
+<script style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; vertical-align: baseline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+  // 测验数据（新格式）
+     const quizData = {
+  title: "TypeScript - 测验",
+  description: "测试你对 TypeScript 的了解",
+    questions: [
+       {
+        'q': 'TypeScript 是什么？',
+        'options': [
+          'TypeScript 是 JavaScript 的另外一个称呼',
+          'TypeScript 是 js 框架',
+          'TypeScript 是 JavaScript 的一个超集',
+          '以上都是'
+        ],
+        'correctIndex': 2,
+        'correctResponse': '回答正确。',
+        'incorrectResponse': '回答错误，TypeScript 是 JavaScript 的一个超集，支持 ECMAScript 6 标准（ES6 教程）。'
+      },
+      {
+        'q': 'TypeScript 语言第一个版本是哪一年发行的？',
+        'options': [
+          '2012年10月1日',
+          '2008年10月1日',
+          '2006年10月1日',
+          '2004年10月1日'
+        ],
+        'correctIndex': 0,
+        'correctResponse': '回答正确。',
+        'incorrectResponse': '回答错误，TypeScript于2012年10月首次发布0.8版本。'
+      },
+      {
+        'q': 'TypeScript 语言的文件名后缀是？',
+        'options': [
+          '.t',
+          '.ts',
+          '.tt',
+          '.js'
+        ],
+        'correctIndex': 1,
+        'correctResponse': '回答正确。',
+        'incorrectResponse': 'TypeScript 语言的文件名后缀是 <strong>.ts</strong>。'
+      },
+      {
+        'q': 'TypeScript 是哪个公司开发的？',
+        'options': [
+          '苹果',
+          'Sun',
+          '微软',
+          '甲骨文'
+        ],
+        'correctIndex': 2,
+        'correctResponse': '回答正确。',
+        'incorrectResponse': '回答错误，TypeScript是一种开源的编程语言，该语言项目由微软进行维护和管理。'
+      },
+      {
+        'q': 'TypeScript 可转译成 JavaScript？',
+        'options': [
+          '正确',
+          '错误'
+        ],
+        'correctIndex': 0,
+        'correctResponse': '回答正确。',
+        'incorrectResponse': '回答错误。'
+      },
+      {
+        'q': 'TypeScript 支持 ECMAScript 6 标准？',
+        'options': [
+          '正确',
+          '错误'
+        ],
+        'correctIndex': 0,
+        'correctResponse': '回答正确。',
+        'incorrectResponse': '回答错误，TypeScript 添加了ECMAScript 2015标准中定义的类、模块和箭头函数等语法的支持。'
+      },
+      {
+        'q': 'TypeScript 输出 "Hello, world!" 正确的是？',
+        'options': [
+          'cout << "Hello, world!" << endl;',
+          'console.print << "Hello, world!"',
+          'print "Hello, world!"',
+          'console.log("Hello, world!")'
+        ],
+        'correctIndex': 3,
+        'correctResponse': '回答正确。',
+        'incorrectResponse': '回答错误。'
+      },
+      {
+        'q': 'TypeScript 支持面向对象？',
+        'options': [
+          '正确',
+          '错误'
+        ],
+        'correctIndex': 0,
+        'correctResponse': '回答正确。',
+        'incorrectResponse': '回答错误。'
+      },
+   
+     
+      {
+        q: "TypeScript 最主要的特性是？",
+        options: [
+          "类型系统",
+          "更快的运行速度",
+          "更小的文件体积",
+          "更好的动画支持"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，TypeScript 最主要的特性是类型系统。"
+      },
+      {
+        q: "TypeScript 代码最终会被编译成？",
+        options: [
+          "Java",
+          "JavaScript",
+          "C++",
+          "Python"
+        ],
+        correctIndex: 1,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，TypeScript 会被编译成 JavaScript。"
+      },
+      {
+        q: "TypeScript 中声明变量推荐使用哪个关键字？",
+        options: [
+          "var",
+          "let",
+          "const",
+          "static"
+        ],
+        correctIndex: 2,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，推荐使用 const。"
+      },
+      {
+        q: "TypeScript 中如何定义字符串类型变量？",
+        options: [
+          "let str: string;",
+          "let str = string;",
+          "string str;",
+          "let str: String;"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 let str: string;。"
+      },
+      {
+        q: "TypeScript 支持哪种面向对象特性？",
+        options: [
+          "类",
+          "接口",
+          "继承",
+          "以上都是"
+        ],
+        correctIndex: 3,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，TypeScript 支持类、接口和继承。"
+      },
+      {
+        q: "TypeScript 中接口的关键字是？",
+        options: [
+          "interface",
+          "implements",
+          "protocol",
+          "type"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 interface。"
+      },
+      {
+        q: "TypeScript 中联合类型的写法是？",
+        options: [
+          "number|string",
+          "number|string[]",
+          "number|or|string",
+          "number or string"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 number|string。"
+      },
+      {
+        q: "TypeScript 中类型断言的语法是？",
+        options: [
+          "value as type",
+          "type as value",
+          "assert type value",
+          "type:value"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 value as type。"
+      },
+      {
+        q: "TypeScript 中可选参数的写法是？",
+        options: [
+          "param?",
+          "?param",
+          "param:optional",
+          "optional param"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 param?。"
+      },
+      {
+        q: "TypeScript 中泛型的语法是？",
+        options: [
+          "function<T>()",
+          "function<T> {}",
+          "function(T)",
+          "function<T>[]"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 function<T>()。"
+      },
+      {
+        q: "TypeScript 中如何定义只读属性？",
+        options: [
+          "readonly",
+          "const",
+          "static",
+          "final"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 readonly。"
+      },
+      {
+        q: "TypeScript 中数组类型的写法是？",
+        options: [
+          "number[]",
+          "Array<number>",
+          "两者都可以",
+          "只能用 number[]"
+        ],
+        correctIndex: 2,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，number[] 和 Array<number> 都可以。"
+      },
+      {
+        q: "TypeScript 中类型别名的关键字是？",
+        options: [
+          "alias",
+          "type",
+          "typedef",
+          "as"
+        ],
+        correctIndex: 1,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 type。"
+      },
+      {
+        q: "TypeScript 中如何让一个属性可选？",
+        options: [
+          "在属性名后加 ?",
+          "用 optional 关键字",
+          "用 maybe 关键字",
+          "用 undefined"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是在属性名后加 ?。"
+      },
+      {
+        q: "TypeScript 中如何导入模块？",
+        options: [
+          "import ... from ...",
+          "require(...)",
+          "include ...",
+          "using ..."
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 import ... from ...。"
+      },
+      {
+        q: "TypeScript 中如何定义枚举？",
+        options: [
+          "enum",
+          "enumeration",
+          "enumtype",
+          "enum()"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 enum。"
+      },
+      {
+        q: "TypeScript 中如何声明一个 never 类型的函数？",
+        options: [
+          "function fn(): never {}",
+          "function fn(): void {}",
+          "function fn(): any {}",
+          "function fn(): null {}"
+        ],
+        correctIndex: 0,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，正确答案是 function fn(): never {}。"
+      },
+      {
+        q: "TypeScript 中下列哪个不是基本类型？",
+        options: [
+          "number",
+          "string",
+          "boolean",
+          "object"
+        ],
+        correctIndex: 3,
+        correctResponse: "回答正确。",
+        incorrectResponse: "回答错误，object 不是基本类型。"
+      }
+      
+    ]
+  };
+
+        // 启动测验
+        $(document).ready(function () {
+            $('#quiz-container').runoobQuiz({
+                data: quizData,
+                onFinish: function (score, total) {
+                    console.log("测验完成！得分：" + score + "/" + total);
+                }
+            });
+        });
+</script>			
+						
+			</div>
+			
+		</div>
+</body>
+</html>

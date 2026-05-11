@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>https://www.runoob.com/xsl/xsl-editxml.html</title>
+</head>
+<body>
+<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 10px 10px 20px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 3739.48px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="article-body">
+		
+			<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 3739.48px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="article-intro" id="content">
+			
+			<h1 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 25.2px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 0px 10px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 34px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">XSLT - <span style="color: rgb(100, 133, 76); background-color: rgba(0, 0, 0, 0); font-size: 25.2px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; border: 0px none rgb(100, 133, 76); border-bottom: 0px none rgb(100, 133, 76); border-left: 0px none rgb(100, 133, 76); border-right: 0px none rgb(100, 133, 76); border-top: 0px none rgb(100, 133, 76); text-align: start; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="color_h1">编辑 XML</span>
+</h1>
+<hr style="color: rgb(212, 212, 212); background-color: rgb(212, 212, 212); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 6px 0px; border: 0px none rgb(212, 212, 212); border-bottom: 0px none rgb(212, 212, 212); border-left: 0px none rgb(212, 212, 212); border-right: 0px none rgb(212, 212, 212); border-top: 0px none rgb(212, 212, 212); text-align: start; width: 834.797px; height: 1px; vertical-align: baseline; display: block; position: static; clear: both; background: rgb(212, 212, 212) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"></hr>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="intro">存储在 XML 文件中的数据可通过因特网浏览器进行编辑。</p>
+<hr style="color: rgb(212, 212, 212); background-color: rgb(212, 212, 212); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 6px 0px; border: 0px none rgb(212, 212, 212); border-bottom: 0px none rgb(212, 212, 212); border-left: 0px none rgb(212, 212, 212); border-right: 0px none rgb(212, 212, 212); border-top: 0px none rgb(212, 212, 212); text-align: start; width: 834.797px; height: 1px; vertical-align: baseline; display: block; position: static; clear: both; background: rgb(212, 212, 212) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"></hr>
+<h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">打开、编辑并保存 XML</h2>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">现在，我们会为您展示如何打开、编辑及保存存储于服务器上的 XML 文件。</p>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 53.1875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">我们将使用 XSL 把 XML 文档转换到一个 HTML 表单中。XML 元素的值会被写到 HTML 表单中的 HTML 输入域。这个 HTML 表单是可编辑的。在被编辑完成后，数据会被提交回服务器，XML 文件会得到更新（这部分由 ASP 完成）。</p>
+<hr style="color: rgb(212, 212, 212); background-color: rgb(212, 212, 212); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 6px 0px; border: 0px none rgb(212, 212, 212); border-bottom: 0px none rgb(212, 212, 212); border-left: 0px none rgb(212, 212, 212); border-right: 0px none rgb(212, 212, 212); border-top: 0px none rgb(212, 212, 212); text-align: start; width: 834.797px; height: 1px; vertical-align: baseline; display: block; position: static; clear: both; background: rgb(212, 212, 212) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"></hr>
+<h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">XML 文件和 XSL 文件</h2>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">首先，请看将被使用的 XML 文档（"tool.xml"）：</p>
+
+<div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; margin: 12px 0px; padding: 12px 14px; border: 1px solid rgba(120, 140, 100, 0.12); border-bottom: 1px solid rgba(120, 140, 100, 0.12); border-left: 1px solid rgba(120, 140, 100, 0.12); border-right: 1px solid rgba(120, 140, 100, 0.12); border-top: 1px solid rgba(120, 140, 100, 0.12); text-align: start; width: 804.797px; height: 249.562px; vertical-align: baseline; display: block; position: static; box-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0px 0px inset; background: rgba(0, 0, 0, 0) linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)) repeat scroll 0% 0% / auto padding-box border-box; background-image: linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)); background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="code notranslate"><div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; border: 0px none rgb(43, 43, 43); border-bottom: 0px none rgb(43, 43, 43); border-left: 0px none rgb(43, 43, 43); border-right: 0px none rgb(43, 43, 43); border-top: 0px none rgb(43, 43, 43); text-align: start; width: 804.797px; height: 249.562px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+
+<?xml version="1.0" encoding="ISO-8859-1"?><br>
+<tool><br>
+   
+  <field id="prodName"><br>
+       
+    <value>HAMMER HG2606</value><br>
+   
+  </field><br>
+   
+  <field id="prodNo"><br>
+       
+    <value>32456240</value><br>
+   
+  </field><br>
+   
+  <field id="price"><br>
+       
+    <value>$30.00</value><br>
+   
+  </field><br>
+</tool>
+</div></div>
+
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"><a style="color: rgb(0, 102, 0); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(0, 102, 0); border-bottom: 0px none rgb(0, 102, 0); border-left: 0px none rgb(0, 102, 0); border-right: 0px none rgb(0, 102, 0); border-top: 0px none rgb(0, 102, 0); text-align: start; text-decoration: underline; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: opacity 0.2s; opacity: 1; box-sizing: content-box" target="_blank" href="/try/xml/tool.xml">查看 XML 文件</a>。</p>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">接着，请看下面的样式表（"tool.xsl"）：</p>
+
+<div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; margin: 12px 0px; padding: 12px 14px; border: 1px solid rgba(120, 140, 100, 0.12); border-bottom: 1px solid rgba(120, 140, 100, 0.12); border-left: 1px solid rgba(120, 140, 100, 0.12); border-right: 1px solid rgba(120, 140, 100, 0.12); border-top: 1px solid rgba(120, 140, 100, 0.12); text-align: start; width: 804.797px; height: 790.281px; vertical-align: baseline; display: block; position: static; box-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0px 0px inset; background: rgba(0, 0, 0, 0) linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)) repeat scroll 0% 0% / auto padding-box border-box; background-image: linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)); background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="code notranslate"><div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; border: 0px none rgb(43, 43, 43); border-bottom: 0px none rgb(43, 43, 43); border-left: 0px none rgb(43, 43, 43); border-right: 0px none rgb(43, 43, 43); border-top: 0px none rgb(43, 43, 43); text-align: start; width: 804.797px; height: 790.281px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+
+<?xml version="1.0" encoding="ISO-8859-1"?><br>
+<xsl:stylesheet version="1.0"<br>
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><br><br>
+<xsl:template match="/"><br>
+ 
+<html><br>
+ 
+<body><br>
+ 
+<form method="post" action="edittool.html"><br>
+ 
+<h2>Tool Information (edit):</h2><br>
+ 
+<table border="0"><br>
+   
+<xsl:for-each select="tool/field"><br>
+   
+<tr><br>
+     
+<td><xsl:value-of select="@id"/></td><br>
+     
+<td><br>
+     
+<input type="text"><br>
+     
+<xsl:attribute name="id"><br>
+        <xsl:value-of select="@id" /><br>
+      </xsl:attribute><br>
+     
+<xsl:attribute name="name"><br>
+        <xsl:value-of select="@id" /><br>
+      </xsl:attribute><br>
+     
+<xsl:attribute name="value"><br>
+        <xsl:value-of select="value" /><br>
+      </xsl:attribute><br>
+     
+</input><br>
+     
+</td><br>
+   
+</tr><br>
+   
+</xsl:for-each><br>
+ 
+</table><br>
+ 
+<br /><br>
+ 
+<input type="submit" id="btn_sub" name="btn_sub" value="Submit" /><br>
+ 
+<input type="reset" id="btn_res" name="btn_res" value="Reset" /><br>
+ 
+</form><br>
+ 
+</body><br>
+ 
+</html><br>
+</xsl:template><br><br>
+</xsl:stylesheet>
+</div></div>
+
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"><a style="color: rgb(0, 102, 0); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(0, 102, 0); border-bottom: 0px none rgb(0, 102, 0); border-left: 0px none rgb(0, 102, 0); border-right: 0px none rgb(0, 102, 0); border-top: 0px none rgb(0, 102, 0); text-align: start; text-decoration: underline; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: opacity 0.2s; opacity: 1; box-sizing: content-box" target="_blank" href="/try/xml/tool.xsl">查看 XSL 文件</a>。</p>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 79.7812px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">上面这个 XSL 文件会循环遍历 XML 文件中的元素，并为每个 XML "field" 元素创建一个输入域。XML "field" 元素的 "id" 属性的值被添加到每个 HTML 输入域的 "id" 和 "name" 属性。每个 XML "value" 元素的值被添加到每个 HTML 输入域的 "value" 属性。结果是，可以得到一个包含 XML 文件中值的可编辑的 HTML 表单。</p>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 53.1875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">然后，我们还有第二个样式表："tool_updated.xsl"。这个 XSL 文件会被用来显示已更新的 XML 数据。这个样式表不会输出可编辑 HTML 表单，而是一个静态的 HTML 表格：</p>
+
+<div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; margin: 12px 0px; padding: 12px 14px; border: 1px solid rgba(120, 140, 100, 0.12); border-bottom: 1px solid rgba(120, 140, 100, 0.12); border-left: 1px solid rgba(120, 140, 100, 0.12); border-right: 1px solid rgba(120, 140, 100, 0.12); border-top: 1px solid rgba(120, 140, 100, 0.12); text-align: start; width: 804.797px; height: 436.734px; vertical-align: baseline; display: block; position: static; box-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0px 0px inset; background: rgba(0, 0, 0, 0) linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)) repeat scroll 0% 0% / auto padding-box border-box; background-image: linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)); background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="code notranslate"><div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; border: 0px none rgb(43, 43, 43); border-bottom: 0px none rgb(43, 43, 43); border-left: 0px none rgb(43, 43, 43); border-right: 0px none rgb(43, 43, 43); border-top: 0px none rgb(43, 43, 43); text-align: start; width: 804.797px; height: 436.734px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+
+<?xml version="1.0" encoding="ISO-8859-1"?><br>
+<xsl:stylesheet version="1.0"<br>
+xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><br><br>
+<xsl:template match="/"><br>
+ 
+<html><br>
+ 
+<body><br>
+ 
+<h2>Updated Tool Information:</h2><br>
+ 
+<table border="1"><br>
+   
+<xsl:for-each select="tool/field"><br>
+   
+<tr><br>
+     
+<td><xsl:value-of select="@id" /></td><br>
+     
+<td><xsl:value-of select="value" /></td><br>
+   
+</tr><br>
+   
+</xsl:for-each><br>
+ 
+</table><br>
+ 
+</body><br>
+ 
+</html><br>
+</xsl:template><br><br>
+</xsl:stylesheet>
+</div></div>
+
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"><a style="color: rgb(0, 102, 0); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(0, 102, 0); border-bottom: 0px none rgb(0, 102, 0); border-left: 0px none rgb(0, 102, 0); border-right: 0px none rgb(0, 102, 0); border-top: 0px none rgb(0, 102, 0); text-align: start; text-decoration: underline; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: opacity 0.2s; opacity: 1; box-sizing: content-box" target="_blank" href="/try/xml/tool_updated.xsl">查看 XSL 文件</a>。</p>
+<hr style="color: rgb(212, 212, 212); background-color: rgb(212, 212, 212); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 6px 0px; border: 0px none rgb(212, 212, 212); border-bottom: 0px none rgb(212, 212, 212); border-left: 0px none rgb(212, 212, 212); border-right: 0px none rgb(212, 212, 212); border-top: 0px none rgb(212, 212, 212); text-align: start; width: 834.797px; height: 1px; vertical-align: baseline; display: block; position: static; clear: both; background: rgb(212, 212, 212) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"></hr>
+<h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">ASP 文件</h2>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">在上面 "tool.xsl" 文件中，HTML 表单的 action 属性的值是 "edittool.asp" 。</p>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">"edittool.asp" 页面包含两个函数：loadFile() 函数载入并转换 XML 文件，updateFile() 函数更新 XML 文件：</p>
+
+<div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; margin: 12px 0px; padding: 12px 14px; border: 1px solid rgba(120, 140, 100, 0.12); border-bottom: 1px solid rgba(120, 140, 100, 0.12); border-left: 1px solid rgba(120, 140, 100, 0.12); border-right: 1px solid rgba(120, 140, 100, 0.12); border-top: 1px solid rgba(120, 140, 100, 0.12); text-align: start; width: 804.797px; height: 1331px; vertical-align: baseline; display: block; position: static; box-shadow: rgba(255, 255, 255, 0.6) 0px 1px 0px 0px inset; background: rgba(0, 0, 0, 0) linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)) repeat scroll 0% 0% / auto padding-box border-box; background-image: linear-gradient(145deg, rgb(247, 245, 239), rgb(238, 243, 230)); background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="code notranslate"><div style="color: rgb(43, 43, 43); background-color: rgba(0, 0, 0, 0); font-size: 13px; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-weight: 400; line-height: 20.8px; border: 0px none rgb(43, 43, 43); border-bottom: 0px none rgb(43, 43, 43); border-left: 0px none rgb(43, 43, 43); border-right: 0px none rgb(43, 43, 43); border-top: 0px none rgb(43, 43, 43); text-align: start; width: 804.797px; height: 1331px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+
+<%<br>
+function loadFile(xmlfile,xslfile)<br>
+Dim xmlDoc,xslDoc<br>'Load XML file<br>
+set xmlDoc = Server.CreateObject("Microsoft.XMLDOM")<br>
+xmlDoc.async = false<br>
+xmlDoc.load(xmlfile)<br>'Load XSL file<br>
+set xslDoc = Server.CreateObject("Microsoft.XMLDOM")<br>
+xslDoc.async = false<br>
+xslDoc.load(xslfile)<br>'Transform file<br>
+Response.Write(xmlDoc.transformNode(xslDoc))<br>
+end function<br><br>
+function updateFile(xmlfile)<br>
+Dim xmlDoc,rootEl,f<br>
+Dim i<br>'Load XML file<br>
+set xmlDoc = Server.CreateObject("Microsoft.XMLDOM")<br>
+xmlDoc.async = false<br>
+xmlDoc.load(xmlfile)<br><br>
+'Set the rootEl variable equal to the root element<br>
+Set rootEl = xmlDoc.documentElement<br><br>
+'Loop through the form collection<br>
+for i = 1 To Request.Form.Count<br>
+ 
+'Eliminate button elements in the form<br>
+ 
+if instr(1,Request.Form.Key(i),"btn_")=0 then<br>
+   
+'The selectSingleNode method queries the XML file for a single node<br>
+   
+'that matches a query. This query requests the value element that is<br>
+   
+'the child of a field element that has an id attribute which matches<br>
+   
+'the current key value in the Form Collection. When there is a match -<br>
+   
+'set the text property equal to the value of the current field in the<br>
+   
+'Form Collection.<br>
+   
+set f = rootEl.selectSingleNode("field[@id='" & _<br>
+   
+Request.Form.Key(i) & "']/value")<br>
+   
+f.Text = Request.Form(i)<br>
+ 
+end if<br>
+next<br><br>
+'Save the modified XML file<br>
+xmlDoc.save xmlfile<br><br>
+'Release all object references<br>
+set xmlDoc=nothing<br>
+set rootEl=nothing<br>
+set f=nothing<br><br>
+'Load the modified XML file with a style sheet that<br>
+'allows the client to see the edited information<br>
+loadFile xmlfile,server.MapPath("tool_updated.xsl")<br>
+end function<br><br>
+'If the form has been submitted update the<br>
+'XML file and display result - if not,<br>
+'transform the XML file for editing<br>
+if Request.Form("btn_sub")="" then<br>
+ 
+loadFile server.MapPath("tool.xml"),server.MapPath("tool.xsl")<br>
+else<br>
+ 
+updateFile server.MapPath("tool.xml")<br>
+end if<br>
+%>
+</div></div>
+
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"><b style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">提示：</b>假如您不了解如何编写 ASP，请学习我们的 <a style="color: rgb(0, 102, 0); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(0, 102, 0); border-bottom: 0px none rgb(0, 102, 0); border-left: 0px none rgb(0, 102, 0); border-right: 0px none rgb(0, 102, 0); border-top: 0px none rgb(0, 102, 0); text-align: start; text-decoration: underline; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: opacity 0.2s; opacity: 1; box-sizing: content-box" href="/asp/asp-tutorial.html">ASP 教程</a>。</p>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 53.1875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"><b style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">注意：</b>我们正在转换并更新位于服务器上的 XML 文件。这是一个跨平台的解决方案。客户端仅能获得从服务器返回的 HTML - 而 HTML 可运行于任何浏览器。</p>
+<br>			
+						
+			</div>
+			
+		</div>
+</body>
+</html>

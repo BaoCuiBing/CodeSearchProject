@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>https://www.runoob.com/dom/dom-validate.html</title>
+</head>
+<body>
+<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 10px 10px 20px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 812.344px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="article-body">
+		
+			<div style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 812.344px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="article-intro" id="content">
+			
+			<h1 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 25.2px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 0px 0px 10px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 34px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">XML DOM <span style="color: rgb(100, 133, 76); background-color: rgba(0, 0, 0, 0); font-size: 25.2px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; border: 0px none rgb(100, 133, 76); border-bottom: 0px none rgb(100, 133, 76); border-left: 0px none rgb(100, 133, 76); border-right: 0px none rgb(100, 133, 76); border-top: 0px none rgb(100, 133, 76); text-align: start; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" class="color_h1">验证 XML 语法</span>
+</h1>
+<hr style="color: rgb(212, 212, 212); background-color: rgb(212, 212, 212); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 6px 0px; border: 0px none rgb(212, 212, 212); border-bottom: 0px none rgb(212, 212, 212); border-left: 0px none rgb(212, 212, 212); border-right: 0px none rgb(212, 212, 212); border-top: 0px none rgb(212, 212, 212); text-align: start; width: 834.797px; height: 1px; vertical-align: baseline; display: block; position: static; clear: both; background: rgb(212, 212, 212) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"></hr>
+<h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">XML 错误将会停止您的 XML 程序
+</h2>
+
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"><b style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">XML 文档中的错误将停止您的 XML 程序。</b>
+</p>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 53.1875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">W3C XML 规范规定如果发现错误，程序不应该继续处理 XML 文档。究其原因是 XML 软件应该是易于编写的，所有的 XML 文档应该是兼容的。
+</p>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 53.1875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">通过 HTML 就有可能创建带有"错误"（如缺少结束标签）的文档。HTML 浏览器如此巨大且不相容的主要原因之一是在遇到 HTML 错误时它们都有自己的方法弄明白文档本应该是什么样的。
+</p>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">通过 XML，这应该是不可能的。</p>
+
+<hr style="color: rgb(212, 212, 212); background-color: rgb(212, 212, 212); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 6px 0px; border: 0px none rgb(212, 212, 212); border-bottom: 0px none rgb(212, 212, 212); border-left: 0px none rgb(212, 212, 212); border-right: 0px none rgb(212, 212, 212); border-top: 0px none rgb(212, 212, 212); text-align: start; width: 834.797px; height: 1px; vertical-align: baseline; display: block; position: static; clear: both; background: rgb(212, 212, 212) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"></hr>
+<h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">验证您的 XML 语法</h2>
+
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">为协助检查您的 XML 语法，请粘贴下面文本区中的 XML 代码，并按"验证 XML"按钮。</p>
+
+<script style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; vertical-align: baseline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+var xt="",h3OK=1
+function checkErrorXML(x)
+{
+xt=""
+h3OK=1
+checkXML(x)
+}
+
+function checkXML(n)
+{
+var l,i,nam
+nam=n.nodeName
+if (nam=="h3")
+	{
+	if (h3OK==0)
+		{
+		return;
+		}
+	h3OK=0
+	}
+if (nam=="#text")
+	{
+	xt=xt + n.nodeValue + "\n"
+	}
+l=n.childNodes.length
+for (i=0;i<l;i++)
+	{
+	checkXML(n.childNodes[i])
+	}
+}
+
+function validateXML()
+{
+// code for IE
+if (window.ActiveXObject)
+  {
+  var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+  xmlDoc.async=false;
+  xmlDoc.loadXML(document.all("validxml").value);
+
+  if(xmlDoc.parseError.errorCode!=0)
+    {
+    txt="Error Code: " + xmlDoc.parseError.errorCode + "\n";
+    txt=txt+"Error Reason: " + xmlDoc.parseError.reason;
+    txt=txt+"Error Line: " + xmlDoc.parseError.line;
+    alert(txt);
+    }
+  else
+    {
+    alert("No errors found");
+    }
+  }
+// code for Mozilla, Firefox, Opera, etc.
+else if (document.implementation && document.implementation.createDocument)
+  {
+var parser=new DOMParser();
+var text=document.getElementById("validxml").value;
+var xmlDoc=parser.parseFromString(text,"text/xml");
+if (xmlDoc.getElementsByTagName("parsererror").length>0)
+    {
+    checkErrorXML(xmlDoc.getElementsByTagName("parsererror")[0]);
+    alert(xt)
+    }
+  else
+    {
+    alert("No errors found");
+    }
+  }
+else
+  {
+  alert('Your browser cannot handle this script');
+  }
+}
+</script>
+
+<form style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 208px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">
+<textarea style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 2px; border: 1px solid rgb(118, 118, 118); border-bottom: 1px solid rgb(118, 118, 118); border-left: 1px solid rgb(118, 118, 118); border-right: 1px solid rgb(118, 118, 118); border-top: 1px solid rgb(118, 118, 118); text-align: start; overflow-wrap: break-word; width: 540px; height: 160px; vertical-align: baseline; display: inline-block; position: static; background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: text; transition: all; opacity: 1; box-sizing: content-box; white-space: pre-wrap" id="validxml"><?xml version="1.0" ?> 
+<note>
+<to>Tove</to> 
+<from>Jani</Ffrom> 
+<heading>Reminder</heading> 
+<body>Don't forget me this weekend!</body> 
+</note>
+</textarea><br><br>
+<input style="color: rgb(0, 0, 0); background-color: rgb(240, 240, 240); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 1px 6px; border: 2px outset rgb(0, 0, 0); border-bottom: 2px outset rgb(0, 0, 0); border-left: 2px outset rgb(0, 0, 0); border-right: 2px outset rgb(0, 0, 0); border-top: 2px outset rgb(0, 0, 0); text-align: center; width: 76.6875px; height: 25px; vertical-align: baseline; display: inline-block; position: static; background: rgb(240, 240, 240) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: default; transition: all; opacity: 1; box-sizing: border-box; white-space: pre"></input>
+</form>
+<hr style="color: rgb(212, 212, 212); background-color: rgb(212, 212, 212); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; margin: 6px 0px; border: 0px none rgb(212, 212, 212); border-bottom: 0px none rgb(212, 212, 212); border-left: 0px none rgb(212, 212, 212); border-right: 0px none rgb(212, 212, 212); border-top: 0px none rgb(212, 212, 212); text-align: start; width: 834.797px; height: 1px; vertical-align: baseline; display: block; position: static; clear: both; background: rgb(212, 212, 212) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"></hr>
+<h2 style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 21.6px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 38.88px; margin: 2px 0px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 38.875px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">验证您的 XML 文件</h2>
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">如需检查 XML 文件的语法，请在下面输入字段中键入文件的 URL，并按"验证 XML"按钮。</p>
+<form style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; width: 834.797px; height: 124.781px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box" target="_blank">
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 124.781px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">文件名：<br>
+<input style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; padding: 1px 2px; border: 2px inset rgb(118, 118, 118); border-bottom: 2px inset rgb(118, 118, 118); border-left: 2px inset rgb(118, 118, 118); border-right: 2px inset rgb(118, 118, 118); border-top: 2px inset rgb(118, 118, 118); text-align: start; word-break: break-word; overflow-wrap: break-word; width: 380px; height: 16px; vertical-align: baseline; display: inline-block; position: static; background: rgb(255, 255, 255) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: text; transition: all; opacity: 1; box-sizing: content-box"></input>
+<br><br>
+<input style="color: rgb(255, 255, 255); background-color: rgb(144, 181, 117); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; margin: 10px 0px 0px; padding: 7px 10px; border: 1px solid rgba(87, 121, 63, 0.8); border-bottom: 1px solid rgba(87, 121, 63, 0.8); border-left: 1px solid rgba(87, 121, 63, 0.8); border-right: 1px solid rgba(87, 121, 63, 0.8); border-top: 1px solid rgba(87, 121, 63, 0.8); text-align: center; word-break: break-word; overflow-wrap: break-word; width: 80px; height: 35px; vertical-align: baseline; display: inline-block; position: static; box-shadow: rgba(0, 0, 0, 0.4) 0px 1px 2px 0px, rgba(255, 255, 255, 0.25) 0px 1px 0px 0px inset; background: rgb(144, 181, 117) linear-gradient(to top, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.15)) repeat scroll 0% 0% / auto padding-box border-box; background-image: linear-gradient(to top, rgba(0, 0, 0, 0.15), rgba(255, 255, 255, 0.15)); background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; cursor: pointer; transition: all; opacity: 1; box-sizing: border-box; white-space: pre"></input>
+</p>
+</form>
+
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">为了验证一个错误的XML文件，请把下面的 URL 粘贴到上面的输入字段中：http://www.w3cschool.cc/dom/cd_catalog.xml</p>
+
+<p style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 400; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; width: 834.797px; height: 26.5938px; vertical-align: baseline; display: block; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box"><b style="color: rgb(51, 51, 51); background-color: rgba(0, 0, 0, 0); font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-weight: 700; line-height: 26.6px; border: 0px none rgb(51, 51, 51); border-bottom: 0px none rgb(51, 51, 51); border-left: 0px none rgb(51, 51, 51); border-right: 0px none rgb(51, 51, 51); border-top: 0px none rgb(51, 51, 51); text-align: start; letter-spacing: 0.28px; word-break: break-word; overflow-wrap: break-word; vertical-align: baseline; display: inline; position: static; background: rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box; background-position: 0% 0%; background-repeat: repeat; list-style: outside none disc; transition: all; opacity: 1; box-sizing: content-box">注意：</b>当您访问这个文件时，如果显示 "Access denied" 的错误，这是因为您的浏览器安全设置不允许跨域访问。</p>
+<br>			
+						
+			</div>
+			
+		</div>
+</body>
+</html>
